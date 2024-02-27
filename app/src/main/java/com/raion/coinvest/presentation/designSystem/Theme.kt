@@ -1,4 +1,4 @@
-package com.raion.coinvest.ui.theme
+package com.raion.coinvest.presentation.designSystem
 
 import android.app.Activity
 import android.os.Build

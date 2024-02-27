@@ -1,4 +1,4 @@
-package com.raion.coinvest.ui.theme
+package com.raion.coinvest.presentation.designSystem
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
