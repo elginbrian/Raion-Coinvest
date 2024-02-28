@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.raion.coinvest" />
+                  <option name="mobileSdkAppId" value="1:900151464989:android:c3c1f2451f41fb148e22f4" />
+                  <option name="projectId" value="raion-coinvest" />
+                  <option name="projectNumber" value="900151464989" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

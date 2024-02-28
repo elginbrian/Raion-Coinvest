@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "900151464989",
+    "project_id": "raion-coinvest",
+    "storage_bucket": "raion-coinvest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900151464989:android:c3c1f2451f41fb148e22f4",
+        "android_client_info": {
+          "package_name": "com.raion.coinvest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "900151464989-lm9k4e90v9u2oan2tvrlg83vitpibe83.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.raion.coinvest",
+            "certificate_hash": "a8bba1f5d7678127e89003396e2973452bdfa332"
+          }
+        },
+        {
+          "client_id": "900151464989-vrtlicd1ob5vv8vmna4kl8en7fsrqc0c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAScHLrhczfeYaqnkVbk33csYapL_6jyH4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "900151464989-vrtlicd1ob5vv8vmna4kl8en7fsrqc0c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
