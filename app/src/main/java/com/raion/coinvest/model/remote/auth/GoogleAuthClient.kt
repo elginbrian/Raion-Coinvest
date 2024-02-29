@@ -1,4 +1,4 @@
-package com.raion.coinvest.model.remote
+package com.raion.coinvest.model.remote.auth
 
 import android.content.Context
 import android.content.Intent
@@ -30,7 +30,7 @@ class GoogleAuthClient (
         return result?.pendingIntent?.intentSender
     }
 
-    suspend fun signInWithIntent(intent: Intent): SignInResult{
+    suspend fun signInWithGoogle(intent: Intent): SignInResult {
         val credential = oneTapClient.getSignInCredentialFromIntent(intent)
         val googleIdToken = credential.googleIdToken
         val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)

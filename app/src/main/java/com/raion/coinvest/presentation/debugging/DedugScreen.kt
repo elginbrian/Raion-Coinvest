@@ -1,7 +1,9 @@
 package com.raion.coinvest.presentation.debugging
 
+import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -12,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.raion.coinvest.model.remote.SignInState
+import com.raion.coinvest.model.remote.auth.SignInState
 
 /*
 Ini file buat aku (Elgin) ngetest data dari back-end nya,
@@ -23,8 +25,10 @@ nanti pas project kelar bakal dihapus
 @Composable
 fun DebugScreen(
     state: SignInState,
-    onSignInClick: () -> Unit
-){
+    onSignInWithGoogle: () -> Unit,
+    onSignInWithEmail: () -> Unit,
+    onSignInWithTwitter: (Context) -> Unit
+    ){
     val context = LocalContext.current
     LaunchedEffect(key1 = state.signInError){
         state.signInError?.let {error ->
@@ -32,14 +36,23 @@ fun DebugScreen(
         }
     }
     
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly
     ){
-        Button(onClick = { onSignInClick() }) {
-            Text(text = "Sign in")
+        Button(onClick = { onSignInWithGoogle() }) {
+            Text(text = "Sign in with Google")
+        }
+
+        Button(onClick = { onSignInWithEmail() }) {
+            Text(text = "Sign in with Email")
+        }
+
+        Button(onClick = { onSignInWithTwitter(context) }) {
+            Text(text = "Sign in with Twitter")
         }
     }
 }

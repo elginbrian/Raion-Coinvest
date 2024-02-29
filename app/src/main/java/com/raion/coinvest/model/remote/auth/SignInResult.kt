@@ -1,4 +1,4 @@
-package com.raion.coinvest.model.remote
+package com.raion.coinvest.model.remote.auth
 
 data class SignInResult(
     val data: UserData?,
