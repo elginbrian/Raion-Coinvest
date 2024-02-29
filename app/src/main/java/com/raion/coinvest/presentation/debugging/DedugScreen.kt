@@ -1,10 +1,13 @@
 package com.raion.coinvest.presentation.debugging
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -24,10 +27,10 @@ nanti pas project kelar bakal dihapus
 
 @Composable
 fun DebugScreen(
+    viewModel: DebugViewModel,
     state: SignInState,
     onSignInWithGoogle: () -> Unit,
-    onSignInWithEmail: () -> Unit,
-    onSignInWithTwitter: (Context) -> Unit
+    onChangeScreen: () -> Unit
     ){
     val context = LocalContext.current
     LaunchedEffect(key1 = state.signInError){
@@ -47,12 +50,24 @@ fun DebugScreen(
             Text(text = "Sign in with Google")
         }
 
-        Button(onClick = { onSignInWithEmail() }) {
-            Text(text = "Sign in with Email")
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+            Button(onClick = { viewModel.createUserWithEmail() }) {
+                Text(text = "Sign in with Email")
+            }
+            Button(onClick = { viewModel.loginWithEmail() }) {
+                Text(text = "Login with Email")
+            }
         }
 
-        Button(onClick = { onSignInWithTwitter(context) }) {
+        Button(onClick = { viewModel.createUserWithTwitter(context) }) {
             Text(text = "Sign in with Twitter")
         }
+
+        Button(onClick = { onChangeScreen() }) {
+            Text(text = "Go to DebugScreen2")
+        }
+
+        //val response = viewModel.getLatestListing()
+        //Log.d("response", response.toString())
     }
 }

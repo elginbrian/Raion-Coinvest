@@ -12,7 +12,7 @@ import com.raion.coinvest.R
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.CancellationException
 
-class GoogleAuthClient (
+class GoogleAuthRepository (
     private val context: Context,
     private val oneTapClient: SignInClient
 ) {
