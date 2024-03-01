@@ -1,14 +1,14 @@
-package com.raion.coinvest.model.remote.auth
+package com.raion.coinvest.data.remote.auth
 
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
-import android.nfc.Tag
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import com.google.firebase.Firebase
 import com.google.firebase.auth.OAuthProvider
 import com.google.firebase.auth.auth
+import com.raion.coinvest.data.remote.auth.model.SignInResult
+import com.raion.coinvest.data.remote.auth.model.UserData
 import kotlinx.coroutines.tasks.await
 
 class TwitterAuthRepository() {

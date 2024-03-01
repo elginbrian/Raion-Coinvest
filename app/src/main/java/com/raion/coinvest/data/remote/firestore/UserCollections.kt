@@ -1,26 +1,27 @@
-package com.raion.coinvest.model.remote.firestore
+package com.raion.coinvest.data.remote.firestore
 
 import android.content.ContentValues.TAG
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import kotlinx.coroutines.tasks.await
 
 class UserCollections {
     val db = Firebase.firestore
 
     suspend fun addUsersToFireStore(
-        uid: String,
-        username: String,
-        accountType: String
+        user: UserDataClass
     ){
-        val user = hashMapOf(
-            "uid" to uid,
-            "username" to username,
-            "accountType" to accountType
+        val userHashMap = hashMapOf(
+            "userId" to user.userId,
+            "userName" to user.userName,
+            "email" to user.email,
+            "accountType" to user.accountType,
+            "profilePicture" to user.profilePicture
         )
 
-        db.collection("users").add(user).addOnSuccessListener { documentReference ->
+        db.collection("users").add(userHashMap).addOnSuccessListener { documentReference ->
             Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
 
         }.addOnFailureListener { e ->

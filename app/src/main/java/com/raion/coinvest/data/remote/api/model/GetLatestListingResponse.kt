@@ -1,4 +1,4 @@
-package com.raion.coinvest.model.remote.api
+package com.raion.coinvest.data.remote.api.model
 
 data class GetLatestListingResponse(
     val data: List<CryptoData>,

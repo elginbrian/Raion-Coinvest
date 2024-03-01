@@ -1,4 +1,4 @@
-package com.raion.coinvest.model.remote.auth
+package com.raion.coinvest.data.remote.auth
 
 import android.content.Context
 import android.content.Intent
@@ -9,6 +9,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.raion.coinvest.R
+import com.raion.coinvest.data.remote.auth.model.SignInResult
+import com.raion.coinvest.data.remote.auth.model.UserData
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.CancellationException
 

@@ -104,9 +104,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation("com.google.firebase:firebase-firestore")
-
-    // Facebook
-    implementation("com.facebook.android:facebook-login:14.1.0")
+    implementation("com.google.firebase:firebase-storage")
 }
 
 kapt{

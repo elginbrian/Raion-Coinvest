@@ -1,9 +1,8 @@
-package com.raion.coinvest.model.remote.api
+package com.raion.coinvest.data.remote.api
 
-import com.raion.coinvest.R
+import com.raion.coinvest.data.remote.api.model.GetLatestListingResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Headers
 
 interface CoinMarketCapApi {
     @GET("/v1/cryptocurrency/listings/latest")

@@ -1,7 +1,5 @@
 package com.raion.coinvest.presentation.debugging
 
-import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,8 +14,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.raion.coinvest.model.remote.auth.SignInState
+import com.raion.coinvest.data.remote.auth.model.SignInState
+import com.raion.coinvest.presentation.designSystem.CoinvestSora
 
 /*
 Ini file buat aku (Elgin) ngetest data dari back-end nya,
@@ -47,20 +47,20 @@ fun DebugScreen(
         verticalArrangement = Arrangement.SpaceEvenly
     ){
         Button(onClick = { onSignInWithGoogle() }) {
-            Text(text = "Sign in with Google")
+            Text(text = "Sign in with Google", fontFamily = CoinvestSora, fontWeight = FontWeight.Normal)
         }
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             Button(onClick = { viewModel.createUserWithEmail() }) {
-                Text(text = "Sign in with Email")
+                Text(text = "Sign in with Email", fontFamily = CoinvestSora, fontWeight = FontWeight.Bold)
             }
             Button(onClick = { viewModel.loginWithEmail() }) {
-                Text(text = "Login with Email")
+                Text(text = "Login with Email", fontFamily = CoinvestSora, fontWeight = FontWeight.Medium)
             }
         }
 
         Button(onClick = { viewModel.createUserWithTwitter(context) }) {
-            Text(text = "Sign in with Twitter")
+            Text(text = "Sign in with Twitter", fontFamily = CoinvestSora, fontWeight = FontWeight.Light)
         }
 
         Button(onClick = { onChangeScreen() }) {

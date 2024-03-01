@@ -17,7 +17,8 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.raion.coinvest.model.remote.auth.GoogleAuthRepository
+import com.raion.coinvest.data.remote.auth.GoogleAuthRepository
+import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.debugging.DebugScreen
 import com.raion.coinvest.presentation.debugging.DebugScreen2
 import com.raion.coinvest.presentation.debugging.DebugViewModel
@@ -88,9 +89,13 @@ class MainActivity : ComponentActivity() {
                         val viewModel: DebugViewModel by viewModels()
                         DebugScreen2(
                             onAddUsersToFireStore = { viewModel.addUsersToFireStore(
-                                uid = Firebase.auth.currentUser?.uid.orEmpty(),
-                                username = Firebase.auth.currentUser?.displayName.orEmpty(),
-                                accountType = "mentor"
+                                UserDataClass(
+                                    userId = Firebase.auth.currentUser?.uid.orEmpty(),
+                                    userName = Firebase.auth.currentUser?.displayName.orEmpty(),
+                                    email = Firebase.auth.currentUser?.email.orEmpty(),
+                                    accountType = "mentor",
+                                    profilePicture = Firebase.auth.currentUser?.photoUrl.toString()
+                                )
                             ) }
                         )
                     }

@@ -1,4 +1,4 @@
-package com.raion.coinvest.model.remote.auth
+package com.raion.coinvest.data.remote.auth.model
 
 data class SignInState(
     val isSignInSuccessful: Boolean = false,

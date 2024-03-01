@@ -1,10 +1,9 @@
 package com.raion.coinvest.di
 
-import com.raion.coinvest.R
-import com.raion.coinvest.model.remote.api.CoinMarketCapApi
-import com.raion.coinvest.model.remote.auth.EmailAuthRepository
-import com.raion.coinvest.model.remote.auth.TwitterAuthRepository
-import com.raion.coinvest.model.remote.firestore.UserCollections
+import com.raion.coinvest.data.remote.api.CoinMarketCapApi
+import com.raion.coinvest.data.remote.auth.EmailAuthRepository
+import com.raion.coinvest.data.remote.auth.TwitterAuthRepository
+import com.raion.coinvest.data.remote.firestore.UserCollections
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

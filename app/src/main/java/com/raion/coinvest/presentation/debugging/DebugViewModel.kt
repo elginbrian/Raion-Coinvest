@@ -4,13 +4,14 @@ import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.raion.coinvest.model.remote.api.CoinMarketCapApi
-import com.raion.coinvest.model.remote.api.GetLatestListingResponse
-import com.raion.coinvest.model.remote.auth.EmailAuthRepository
-import com.raion.coinvest.model.remote.auth.SignInResult
-import com.raion.coinvest.model.remote.auth.SignInState
-import com.raion.coinvest.model.remote.auth.TwitterAuthRepository
-import com.raion.coinvest.model.remote.firestore.UserCollections
+import com.raion.coinvest.data.remote.api.CoinMarketCapApi
+import com.raion.coinvest.data.remote.api.model.GetLatestListingResponse
+import com.raion.coinvest.data.remote.auth.EmailAuthRepository
+import com.raion.coinvest.data.remote.auth.model.SignInResult
+import com.raion.coinvest.data.remote.auth.TwitterAuthRepository
+import com.raion.coinvest.data.remote.auth.model.SignInState
+import com.raion.coinvest.data.remote.firestore.UserCollections
+import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,9 +48,11 @@ class DebugViewModel @Inject constructor(
     fun createUserWithEmail()                                                   = viewModelScope.launch { emailAuthRepository.createUser(email = "elginbrian94@gmail.com", password = "220406") }
     fun loginWithEmail()                                                        = viewModelScope.launch { emailAuthRepository.loginUser(email = "elginbrian94@gmail.com", password = "220406") }
     fun createUserWithTwitter(context: Context)                                 = viewModelScope.launch { twitterAuthRepository.createUser(context) }
-    fun addUsersToFireStore(uid: String, username: String, accountType: String) = viewModelScope.launch { userCollections.addUsersToFireStore(uid, username, accountType) }
+    fun addUsersToFireStore(user: UserDataClass) = viewModelScope.launch { userCollections.addUsersToFireStore(user) }
     fun getLatestListing(): GetLatestListingResponse?{
-        viewModelScope.launch { _getLatestListingResponse.value = coinMarketCapApi.getLatestListing() }
+        viewModelScope.launch {
+            _getLatestListingResponse.value = coinMarketCapApi.getLatestListing()
+        }
         return _getLatestListingResponse.value
     }
 }
