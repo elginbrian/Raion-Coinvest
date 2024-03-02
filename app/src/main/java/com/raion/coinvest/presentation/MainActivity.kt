@@ -15,8 +15,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.identity.Identity
-import com.raion.coinvest.model.remote.auth.GoogleAuthClient
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.raion.coinvest.data.remote.auth.GoogleAuthRepository
+import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.debugging.DebugScreen
+import com.raion.coinvest.presentation.debugging.DebugScreen2
+import com.raion.coinvest.presentation.debugging.DebugScreen3
 import com.raion.coinvest.presentation.debugging.DebugViewModel
 import com.raion.coinvest.presentation.designSystem.CoinvestTheme
 import com.raion.coinvest.presentation.navigation.NavigationEnum
@@ -27,7 +32,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     private val googleAuthClient by lazy {
-        GoogleAuthClient(
+        GoogleAuthRepository(
             context = applicationContext,
             oneTapClient = Identity.getSignInClient(applicationContext)
         )
@@ -55,20 +60,17 @@ class MainActivity : ComponentActivity() {
                             onResult = { result ->
                                 if(result.resultCode == RESULT_OK){
                                     lifecycleScope.launch {
-                                        val signInResult = googleAuthClient.signInWithGoogle(
-                                            result.data ?: return@launch
-                                        )
+                                        val signInResult = googleAuthClient.signInWithGoogle(result.data ?: return@launch)
                                         viewModel.onSignInResult(signInResult)
                                     }
                                 }
                             }
                         )
                         LaunchedEffect(key1 = state.isSignInSuccessful){
-                            if(state.isSignInSuccessful){
-                                Toast.makeText(applicationContext, "Sign in success", Toast.LENGTH_LONG).show()
-                            }
+                            if(state.isSignInSuccessful){ Toast.makeText(applicationContext, "Sign in success", Toast.LENGTH_LONG).show() }
                         }
                         DebugScreen(
+                            viewModel = viewModel,
                             state = state,
                             onSignInWithGoogle = {
                                 lifecycleScope.launch {
@@ -80,12 +82,23 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             },
-                            onSignInWithEmail = {
-                                viewModel.createUserWithEmail()
-                            },
-                            onSignInWithTwitter = {
-                                viewModel.createUserWithTwitter(it)
-                            }
+                            onChangeScreen = { navController.navigate(route = NavigationEnum.DebugScreen2.name) }
+                        )
+                    }
+
+                    composable(NavigationEnum.DebugScreen2.name){
+                        val viewModel: DebugViewModel by viewModels()
+                        DebugScreen2(
+                            onAddUsersToFireStore   = { viewModel.addUsersToFireStore(it) },
+                            onAddArticleToFireStore = { viewModel.addArticleToFireStore(it) },
+                            onChangeScreen = { navController.navigate(route = NavigationEnum.DebugScreen3.name) }
+                        )
+                    }
+
+                    composable(NavigationEnum.DebugScreen3.name){
+                        val viewModel: DebugViewModel by viewModels()
+                        DebugScreen3(
+                            viewModel = viewModel
                         )
                     }
                     /* kalau mau nambah composable baru bisa disini */

@@ -1,20 +1,20 @@
-package com.raion.coinvest.model.remote.auth
+package com.raion.coinvest.data.remote.auth
 
 import android.content.ContentValues.TAG
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
-import kotlinx.coroutines.Dispatchers
+import com.raion.coinvest.data.remote.auth.model.SignInResult
+import com.raion.coinvest.data.remote.auth.model.UserData
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class EmailAuthRepository {
     val currentUser: FirebaseUser? = Firebase.auth.currentUser
     fun hasUser(): Boolean = Firebase.auth.currentUser != null
     fun getUserId(): String = Firebase.auth.uid.orEmpty()
 
-    suspend fun createUser(email: String, password: String): SignInResult{
+    suspend fun createUser(email: String, password: String): SignInResult {
         var signInResult = SignInResult(null, null)
         try {
             Firebase.auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener{
