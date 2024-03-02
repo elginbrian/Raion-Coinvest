@@ -21,6 +21,7 @@ import com.raion.coinvest.data.remote.auth.GoogleAuthRepository
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.debugging.DebugScreen
 import com.raion.coinvest.presentation.debugging.DebugScreen2
+import com.raion.coinvest.presentation.debugging.DebugScreen3
 import com.raion.coinvest.presentation.debugging.DebugViewModel
 import com.raion.coinvest.presentation.designSystem.CoinvestTheme
 import com.raion.coinvest.presentation.navigation.NavigationEnum
@@ -88,15 +89,16 @@ class MainActivity : ComponentActivity() {
                     composable(NavigationEnum.DebugScreen2.name){
                         val viewModel: DebugViewModel by viewModels()
                         DebugScreen2(
-                            onAddUsersToFireStore = { viewModel.addUsersToFireStore(
-                                UserDataClass(
-                                    userId = Firebase.auth.currentUser?.uid.orEmpty(),
-                                    userName = Firebase.auth.currentUser?.displayName.orEmpty(),
-                                    email = Firebase.auth.currentUser?.email.orEmpty(),
-                                    accountType = "mentor",
-                                    profilePicture = Firebase.auth.currentUser?.photoUrl.toString()
-                                )
-                            ) }
+                            onAddUsersToFireStore   = { viewModel.addUsersToFireStore(it) },
+                            onAddArticleToFireStore = { viewModel.addArticleToFireStore(it) },
+                            onChangeScreen = { navController.navigate(route = NavigationEnum.DebugScreen3.name) }
+                        )
+                    }
+
+                    composable(NavigationEnum.DebugScreen3.name){
+                        val viewModel: DebugViewModel by viewModels()
+                        DebugScreen3(
+                            viewModel = viewModel
                         )
                     }
                     /* kalau mau nambah composable baru bisa disini */

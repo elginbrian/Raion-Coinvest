@@ -6,5 +6,6 @@ enum class NavigationEnum{
         baru setelahnya dipanggil di NavHost MainActivity.kt
     */
     DebugScreen,
-    DebugScreen2;
+    DebugScreen2,
+    DebugScreen3;
 }
