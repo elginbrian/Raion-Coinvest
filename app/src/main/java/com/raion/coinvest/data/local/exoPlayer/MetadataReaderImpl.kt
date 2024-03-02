@@ -1,4 +1,4 @@
-package com.raion.coinvest.data.local.videoplayer
+package com.raion.coinvest.data.local.exoPlayer
 
 import android.app.Application
 import android.net.Uri

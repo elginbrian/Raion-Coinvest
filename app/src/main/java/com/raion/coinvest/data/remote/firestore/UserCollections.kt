@@ -21,11 +21,13 @@ class UserCollections {
             "profilePicture" to user.profilePicture
         )
 
-        db.collection("users").add(userHashMap).addOnSuccessListener { documentReference ->
-            Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+        if(!user.userId.isNullOrEmpty()){
+            db.collection("users").document(user.userId).set(userHashMap).addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot written with ID: $documentReference")
 
-        }.addOnFailureListener { e ->
-            Log.w(TAG, "Error adding document", e)
-        }.await()
+            }.addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }.await()
+        }
     }
 }
