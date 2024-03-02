@@ -20,8 +20,8 @@ class ArticleCollections {
                 "articleContent" to article.articleContent
             )
 
-            db.collection("articles").add(articleHashMap).addOnSuccessListener { documentReference ->
-                Log.d(ContentValues.TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+            db.collection("articles").document(article.articleId).set(articleHashMap).addOnSuccessListener { documentReference ->
+                Log.d(ContentValues.TAG, "DocumentSnapshot written with ID: $documentReference")
 
             }.addOnFailureListener { e ->
                 Log.w(ContentValues.TAG, "Error adding document", e)

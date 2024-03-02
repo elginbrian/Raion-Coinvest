@@ -3,7 +3,6 @@ package com.raion.coinvest.presentation.debugging
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +15,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -33,7 +31,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
-import com.raion.coinvest.data.local.videoplayer.MetadataDataClass
+
 /*
 Ini file buat aku (Elgin) ngetest data dari back-end nya,
 Gaada hubungannya sama mockup UI/UX,
@@ -54,7 +52,7 @@ fun DebugScreen3(
         onResult = { uri -> selectedImageUri.value = uri }
     )
     val singleVideoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
+        contract = ActivityResultContracts.PickVisualMedia(),//ActivityResultContracts.GetContent(),
         onResult = { uri ->
             uri?.let(viewModel::addVideoUri)
             selectedVideoUri.value = uri
@@ -91,7 +89,9 @@ fun DebugScreen3(
                     Text(text = "Pick 1 Photo")
                 }
                 Button(onClick = {
-                    singleVideoPickerLauncher.launch("video/mp4")
+                    singleVideoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly)
+                    )
                 }) {
                     Text(text = "Pick 1 Video")
                 }

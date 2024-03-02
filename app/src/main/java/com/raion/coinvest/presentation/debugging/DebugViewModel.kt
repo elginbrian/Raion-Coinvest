@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import com.raion.coinvest.data.local.videoplayer.MetadataReader
-import com.raion.coinvest.data.local.videoplayer.VideoDataClass
+import com.raion.coinvest.data.local.exoPlayer.MetadataReader
+import com.raion.coinvest.data.local.exoPlayer.VideoDataClass
 import com.raion.coinvest.data.remote.api.CoinMarketCapApi
 import com.raion.coinvest.data.remote.api.model.GetLatestListingResponse
 import com.raion.coinvest.data.remote.auth.EmailAuthRepository

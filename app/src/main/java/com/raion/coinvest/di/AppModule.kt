@@ -3,8 +3,8 @@ package com.raion.coinvest.di
 import android.app.Application
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import com.raion.coinvest.data.local.videoplayer.MetadataReader
-import com.raion.coinvest.data.local.videoplayer.MetadataReaderImpl
+import com.raion.coinvest.data.local.exoPlayer.MetadataReader
+import com.raion.coinvest.data.local.exoPlayer.MetadataReaderImpl
 import com.raion.coinvest.data.remote.api.CoinMarketCapApi
 import com.raion.coinvest.data.remote.auth.EmailAuthRepository
 import com.raion.coinvest.data.remote.auth.TwitterAuthRepository
