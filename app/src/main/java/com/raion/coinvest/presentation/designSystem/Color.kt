@@ -25,3 +25,5 @@ val CoinvestDarkBlue    = Color(0xFF3E3C91)
 val CoinvestBlue        = Color(0xFF414CA8)
 val CoinvestLightBlue   = Color(0xFF455BBC)
 val CoinvestSkyBlue     = Color(0xFFA0A3EB)
+
+val CoinvestBorder = Color(0xFFD9D9D9)
