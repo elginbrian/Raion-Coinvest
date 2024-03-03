@@ -24,6 +24,9 @@ import com.raion.coinvest.presentation.debugging.DebugScreen2
 import com.raion.coinvest.presentation.debugging.DebugScreen3
 import com.raion.coinvest.presentation.debugging.DebugViewModel
 import com.raion.coinvest.presentation.designSystem.CoinvestTheme
+import com.raion.coinvest.presentation.loginSection.LoginHome
+import com.raion.coinvest.presentation.loginSection.LoginViewModel
+import com.raion.coinvest.presentation.loginSection.MenuDaftar
 import com.raion.coinvest.presentation.navigation.NavigationEnum
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -44,17 +47,9 @@ class MainActivity : ComponentActivity() {
                 // NavGraph
                 val navController = rememberNavController()
 
-                NavHost(navController = navController, startDestination = NavigationEnum.DebugScreen.name){
-                    /* Kalau mau nge-run screen lain, startDestination nya diganti dulu biar ga ngebuka DebugScreen */
-
-                    composable(NavigationEnum.DebugScreen.name){
-                        /*
-                           Ini composable buat aku (Elgin) ngetest data dari back-end nya,
-                            Gaada hubungannya sama mockup UI/UX,
-                            nanti pas project kelar bakal dihapus
-                        */
-                        val viewModel: DebugViewModel by viewModels()
-                        val state = viewModel.state.collectAsState().value
+                NavHost(navController = navController, startDestination = NavigationEnum.LoginScreen.name){
+                    composable(NavigationEnum.LoginScreen.name){
+                        val viewModel: LoginViewModel by viewModels()
                         val launcher = rememberLauncherForActivityResult(
                             contract = ActivityResultContracts.StartIntentSenderForResult(),
                             onResult = { result ->
@@ -66,12 +61,9 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         )
-                        LaunchedEffect(key1 = state.isSignInSuccessful){
-                            if(state.isSignInSuccessful){ Toast.makeText(applicationContext, "Sign in success", Toast.LENGTH_LONG).show() }
-                        }
-                        DebugScreen(
+                        LoginHome(
                             viewModel = viewModel,
-                            state = state,
+                            onSignInWithEmail = { return@LoginHome viewModel.createUserWithEmail(it.first, it.second) },
                             onSignInWithGoogle = {
                                 lifecycleScope.launch {
                                     val signInIntentSender = googleAuthClient.signIn()
@@ -83,7 +75,12 @@ class MainActivity : ComponentActivity() {
                                 }
                             },
                             onChangeScreen = { navController.navigate(route = NavigationEnum.DebugScreen2.name) }
+
                         )
+                    }
+
+                    composable(NavigationEnum.RoleSectionScreen.name){
+                        MenuDaftar()
                     }
 
                     composable(NavigationEnum.DebugScreen2.name){
@@ -101,7 +98,6 @@ class MainActivity : ComponentActivity() {
                             viewModel = viewModel
                         )
                     }
-                    /* kalau mau nambah composable baru bisa disini */
                 }
             }
         }

@@ -1,8 +1,9 @@
 package com.raion.coinvest.data.remote.auth.model
 
 data class SignInResult(
-    val data: UserData?,
-    val errorMessage: String?
+    var isSuccess: Boolean = false,
+    var data: UserData?,
+    var errorMessage: String?
 )
 
 data class UserData(

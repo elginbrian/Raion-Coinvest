@@ -15,7 +15,7 @@ class TwitterAuthRepository() {
     private val provider = OAuthProvider.newBuilder("twitter.com")
 
     suspend fun createUser(context: Context): SignInResult {
-        var signInResult = SignInResult(null, null)
+        var signInResult = SignInResult(false,null, null)
         try {
             Firebase.auth
                 .startActivityForSignInWithProvider(context as Activity, provider.build())

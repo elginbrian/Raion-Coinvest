@@ -1,4 +1,4 @@
-package com.raion.coinvest.presentation.login1
+package com.raion.coinvest.presentation.loginSection
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -26,18 +26,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.raion.coinvest.R
-import com.raion.coinvest.presentation.designSystem.CoinvestBlue
 import com.raion.coinvest.presentation.designSystem.CoinvestBorder
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
+import com.raion.coinvest.presentation.transparentTextField.TransparentTextField
+
 
 @Composable
 @Preview
-fun LoginMasuk() {
+fun MenuDaftar() {
     Box(modifier = Modifier
         .fillMaxSize()
         .background(color = Color.White),
@@ -51,35 +51,7 @@ fun LoginMasuk() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ){
-            Spacer(modifier = Modifier.height(250.dp))
-            Card(modifier = Modifier
-                .width(304.dp)
-                .height(55.dp),
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(12.dp),
-                colors = CardDefaults.cardColors(CoinvestLightGrey),
-                border = BorderStroke(2.dp, CoinvestBorder)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(15.dp),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-//                    Spacer(modifier = Modifier.height(30.dp))
-                    Image(painter = painterResource(id = R.drawable.orang),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .width(21.dp)
-                            .height(21.dp))
-                    Spacer(modifier = Modifier.width(25.dp))
-                    TransparentTextField(onValueChange = {}, onFocusChange = {})
-
-                }
-            }
-
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(350.dp))
             Card(modifier = Modifier
                 .width(304.dp)
                 .height(55.dp),
@@ -97,33 +69,6 @@ fun LoginMasuk() {
                 ) {
 //                    Spacer(modifier = Modifier.height(30.dp))
                     Image(painter = painterResource(id = R.drawable.mail),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .width(21.dp)
-                            .height(21.dp))
-                    Spacer(modifier = Modifier.width(25.dp))
-                    TransparentTextField(onValueChange = {}, onFocusChange = {})
-
-                }
-            }
-            Spacer(modifier = Modifier.height(14.dp))
-            Card(modifier = Modifier
-                .width(304.dp)
-                .height(55.dp),
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(12.dp),
-                colors = CardDefaults.cardColors(CoinvestLightGrey),
-                border = BorderStroke(2.dp, CoinvestBorder)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(15.dp),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-//                    Spacer(modifier = Modifier.height(30.dp))
-                    Image(painter = painterResource(id = R.drawable.password),
                         contentDescription = "",
                         modifier = Modifier
                             .width(21.dp)
@@ -158,20 +103,20 @@ fun LoginMasuk() {
                     TransparentTextField(onValueChange = {}, onFocusChange = {})
                 }
             }
-//            Row(modifier = Modifier.width(321.dp),
-//                verticalAlignment = Alignment.CenterVertically) {
-//                Switch(
-//                    checked = checked.value,
-//                    onCheckedChange = {
-//                        checked.value = !checked.value
-//                    },
-//                    modifier = Modifier.scale(0.7f),
-//
-//                    )
-//                Text(text = "Remember Me", fontSize = 11.sp)
-//                Spacer(modifier = Modifier.width(102.dp))
-//                Text(text = "Forgot Password?", fontSize = 11.sp)
-//            }
+            Row(modifier = Modifier.width(321.dp),
+                verticalAlignment = Alignment.CenterVertically) {
+                Switch(
+                    checked = checked.value,
+                    onCheckedChange = {
+                        checked.value = !checked.value
+                    },
+                    modifier = Modifier.scale(0.7f),
+
+                    )
+                Text(text = "Remember Me", fontSize = 11.sp)
+                Spacer(modifier = Modifier.width(102.dp))
+                Text(text = "Forgot Password?", fontSize = 11.sp)
+            }
             Spacer(modifier = Modifier.height(110.dp))
             Image(painter = painterResource(id = R.drawable.loginbaru),
                 contentDescription = "",
@@ -216,5 +161,4 @@ fun LoginMasuk() {
         }
     }
 }
-
 

@@ -3,6 +3,7 @@ package com.raion.coinvest.data.local.exoPlayer
 import android.app.Application
 import android.net.Uri
 import android.provider.MediaStore
+import com.raion.coinvest.data.local.exoPlayer.model.MetadataDataClass
 
 class MetadataReaderImpl(
     private val app: Application
