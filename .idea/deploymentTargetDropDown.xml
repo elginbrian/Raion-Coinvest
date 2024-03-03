@@ -2,12 +2,6 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="FilledButtonExample">
-        <State />
-      </entry>
-      <entry key="LoginMasuk">
-        <State />
-      </entry>
       <entry key="app">
         <State />
       </entry>
