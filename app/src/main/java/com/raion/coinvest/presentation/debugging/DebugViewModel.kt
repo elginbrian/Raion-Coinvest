@@ -17,6 +17,7 @@ import com.raion.coinvest.data.remote.auth.model.SignInResult
 import com.raion.coinvest.data.remote.auth.TwitterAuthRepository
 import com.raion.coinvest.data.remote.auth.model.SignInState
 import com.raion.coinvest.data.remote.firebaseStorage.ImageRepository
+import com.raion.coinvest.data.remote.firebaseStorage.PdfRepository
 import com.raion.coinvest.data.remote.firebaseStorage.VideoRepository
 import com.raion.coinvest.data.remote.firestore.ArticleCollections
 import com.raion.coinvest.data.remote.firestore.UserCollections
@@ -48,7 +49,8 @@ class DebugViewModel @Inject constructor(
     val  player: Player,
     private val metadata: MetadataReader,
     private val imageRepository: ImageRepository,
-    private val videoRepository: VideoRepository
+    private val videoRepository: VideoRepository,
+    private val pdfRepository: PdfRepository
 ): ViewModel() {
     private val _state = MutableStateFlow(SignInState())
     private val _getLatestListingResponse = mutableStateOf<GetLatestListingResponse?>(null)
@@ -71,7 +73,7 @@ class DebugViewModel @Inject constructor(
     fun addArticleToFireStore(article: ArticleDataClass) = viewModelScope.launch { articleCollections.addArticle(article, ) }
     fun addImageToFireStore(imageUri: Uri)               = viewModelScope.launch { imageRepository.uploadImage(imageUri) }
     fun addVideoToFireStore(videoUri: Uri)               = viewModelScope.launch { videoRepository.uploadVideo(videoUri) }
-
+    fun addPdfToFireStore(pdfUri: Uri)                   = viewModelScope.launch { pdfRepository.uploadPdf(pdfUri) }
 
     fun getLatestListing(): GetLatestListingResponse?{
         viewModelScope.launch {

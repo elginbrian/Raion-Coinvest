@@ -9,6 +9,7 @@ import com.raion.coinvest.data.remote.api.CoinMarketCapApi
 import com.raion.coinvest.data.remote.auth.EmailAuthRepository
 import com.raion.coinvest.data.remote.auth.TwitterAuthRepository
 import com.raion.coinvest.data.remote.firebaseStorage.ImageRepository
+import com.raion.coinvest.data.remote.firebaseStorage.PdfRepository
 import com.raion.coinvest.data.remote.firebaseStorage.VideoRepository
 import com.raion.coinvest.data.remote.firestore.ArticleCollections
 import com.raion.coinvest.data.remote.firestore.UserCollections
@@ -57,6 +58,12 @@ object AppModule {
     @Provides
     fun provideVideoRepository(): VideoRepository {
         return VideoRepository()
+    }
+
+    @Singleton
+    @Provides
+    fun providePdfRepository(): PdfRepository {
+        return PdfRepository()
     }
 
     @Provides

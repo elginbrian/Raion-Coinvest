@@ -47,17 +47,27 @@ fun DebugScreen3(
     var selectedVideoUri = remember {
         mutableStateOf<Uri?>(null)
     }
+    var selectedPdfUri = remember {
+        mutableStateOf<Uri?>(null)
+    }
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri -> selectedImageUri.value = uri }
     )
     val singleVideoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),//ActivityResultContracts.GetContent(),
+        contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
             uri?.let(viewModel::addVideoUri)
             selectedVideoUri.value = uri
         }
     )
+
+    val singlePdfPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument(),
+        onResult = {uri -> selectedPdfUri.value = uri
+        }
+    )
+
     val vidioItems = viewModel.videoItems.collectAsState()
     var lifecycle = remember {
         mutableStateOf(Lifecycle.Event.ON_CREATE)
@@ -95,6 +105,12 @@ fun DebugScreen3(
                 }) {
                     Text(text = "Pick 1 Video")
                 }
+
+                Button(onClick = {
+                    singlePdfPickerLauncher.launch(arrayOf("application/pdf"))
+                }) {
+                    Text(text = "Pick 1 Pdf")
+                }
             }
         }
         item {
@@ -108,6 +124,12 @@ fun DebugScreen3(
                 selectedVideoUri.value?.let { viewModel.addVideoToFireStore(it) }
             }) {
                 Text(text = "Upload Video to Firebase")
+            }
+
+            Button(onClick = {
+                selectedPdfUri.value?.let { viewModel.addPdfToFireStore(it) }
+            }) {
+                Text(text = "Upload Pdf to Firebase")
             }
         }
 
@@ -143,6 +165,10 @@ fun DebugScreen3(
                     }
                 )
             }
+        }
+        
+        item { 
+            Text(text = selectedPdfUri.value.toString())
         }
 
         items(vidioItems.value){
