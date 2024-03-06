@@ -39,14 +39,6 @@ fun DebugScreen2(
         profilePicture = Firebase.auth.currentUser?.photoUrl.toString()
     )
 
-    val article = ArticleDataClass(
-        articleId = UUID.randomUUID().toString(),
-        articleTitle = "Lorem Ipsum",
-        articleAuthor = currentUser,
-        articleContent = "Lorem Ipsum Dolor Si Amet",
-        articleCreatedAt = LocalDateTime.now().toString()
-    )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,10 +48,6 @@ fun DebugScreen2(
     ) {
         Button(onClick = { onAddUsersToFireStore(currentUser) }) {
             Text(text = "Add Users to FireStore")
-        } 
-        
-        Button(onClick = { onAddArticleToFireStore(article) }) {
-            Text(text = "Add Articles to FireStore")
         }
 
         Button(onClick = { onChangeScreen() }) {

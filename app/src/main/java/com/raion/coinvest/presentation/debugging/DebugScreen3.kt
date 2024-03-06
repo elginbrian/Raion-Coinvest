@@ -115,12 +115,6 @@ fun DebugScreen3(
         }
         item {
             Button(onClick = {
-                selectedImageUri.value?.let { viewModel.addImageToFireStore(it) }
-            }) {
-                Text(text = "Upload Image to Firebase")
-            }
-
-            Button(onClick = {
                 selectedVideoUri.value?.let { viewModel.addVideoToFireStore(it) }
             }) {
                 Text(text = "Upload Video to Firebase")

@@ -22,7 +22,9 @@ import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.debugging.DebugScreen
 import com.raion.coinvest.presentation.debugging.DebugScreen2
 import com.raion.coinvest.presentation.debugging.DebugScreen3
+import com.raion.coinvest.presentation.debugging.DebugScreen4
 import com.raion.coinvest.presentation.debugging.DebugViewModel
+import com.raion.coinvest.presentation.debugging.DebugViewModel2
 import com.raion.coinvest.presentation.designSystem.CoinvestTheme
 import com.raion.coinvest.presentation.loginSection.LoginHome
 import com.raion.coinvest.presentation.loginSection.LoginViewModel
@@ -74,7 +76,7 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             },
-                            onChangeScreen = { navController.navigate(route = NavigationEnum.DebugScreen2.name) }
+                            onChangeScreen = { navController.navigate(route = NavigationEnum.DebugScreen4.name) }
 
                         )
                     }
@@ -83,19 +85,18 @@ class MainActivity : ComponentActivity() {
                         MenuDaftar()
                     }
 
-                    composable(NavigationEnum.DebugScreen2.name){
-                        val viewModel: DebugViewModel by viewModels()
-                        DebugScreen2(
-                            onAddUsersToFireStore   = { viewModel.addUsersToFireStore(it) },
-                            onAddArticleToFireStore = { viewModel.addArticleToFireStore(it) },
-                            onChangeScreen = { navController.navigate(route = NavigationEnum.DebugScreen3.name) }
-                        )
-                    }
-
                     composable(NavigationEnum.DebugScreen3.name){
                         val viewModel: DebugViewModel by viewModels()
                         DebugScreen3(
                             viewModel = viewModel
+                        )
+                    }
+
+                    composable(NavigationEnum.DebugScreen4.name){
+                        val viewModel: DebugViewModel2 by viewModels()
+                        DebugScreen4(
+                            viewModel    = viewModel,
+                            onUploadPost = { viewModel.addNewPost(it) }
                         )
                     }
                 }

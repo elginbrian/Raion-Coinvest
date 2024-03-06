@@ -71,7 +71,6 @@ class DebugViewModel @Inject constructor(
     fun createUserWithTwitter(context: Context)          = viewModelScope.launch { twitterAuthRepository.createUser(context) }
     fun addUsersToFireStore(user: UserDataClass)         = viewModelScope.launch { userCollections.addUsersToFireStore(user) }
     fun addArticleToFireStore(article: ArticleDataClass) = viewModelScope.launch { articleCollections.addArticle(article, ) }
-    fun addImageToFireStore(imageUri: Uri)               = viewModelScope.launch { imageRepository.uploadImage(imageUri) }
     fun addVideoToFireStore(videoUri: Uri)               = viewModelScope.launch { videoRepository.uploadVideo(videoUri) }
     fun addPdfToFireStore(pdfUri: Uri)                   = viewModelScope.launch { pdfRepository.uploadPdf(pdfUri) }
 

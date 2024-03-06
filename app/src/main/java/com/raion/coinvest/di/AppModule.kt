@@ -44,8 +44,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideArticleCollections(): ArticleCollections{
-        return ArticleCollections()
+    fun provideArticleCollections(imageRepository: ImageRepository): ArticleCollections{
+        return ArticleCollections(imageRepository)
     }
 
     @Provides
