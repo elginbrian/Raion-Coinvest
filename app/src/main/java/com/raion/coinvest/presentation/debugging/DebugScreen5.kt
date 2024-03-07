@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,8 +22,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,37 +34,47 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.raion.coinvest.data.local.exoPlayer.model.VideoDataClass
 import com.raion.coinvest.data.remote.firestore.model.ArticleDataClass
+import com.raion.coinvest.data.remote.firestore.model.CourseContent
+import com.raion.coinvest.data.remote.firestore.model.CourseDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestBlue
 import com.raion.coinvest.presentation.designSystem.CoinvestPurple
-import kotlinx.coroutines.delay
-import java.nio.file.WatchEvent
+import com.raion.coinvest.presentation.videoPlayerCard.VideoPlayerCard
 import java.time.LocalDateTime
 import java.util.UUID
+
 /*
 Ini file buat aku (Elgin) ngetest data dari back-end nya,
 Gaada hubungannya sama mockup UI/UX,
 nanti pas project kelar bakal dihapus
 */
+
 @Composable
-fun DebugScreen4(
-    viewModel: DebugViewModel2,
-    onUploadPost: (ArticleDataClass) -> Unit
+fun DebugScreen5(
+    viewModel: DebugViewModel,
+    viewModel2: DebugViewModel2,
+    onUploadVideo: (CourseDataClass) -> Unit
 ){
-    val header           = remember { mutableStateOf("") }
-    val content          = remember { mutableStateOf("") }
-    val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
-
-    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+    val selectedVideoUri = remember { mutableStateOf<Uri?>(null) }
+    val singleVideoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri -> selectedImageUri.value = uri }
+        onResult = { uri ->
+            //uri?.let(viewModel::addVideoUri)
+            selectedVideoUri.value = uri
+        }
     )
-    val articleList = remember { mutableStateOf<MutableList<ArticleDataClass>>(mutableListOf()) }
+    val header      = remember { mutableStateOf("") }
+    val content     = remember { mutableStateOf("") }
+    val courseList  = remember { mutableStateOf<MutableList<CourseDataClass>>(mutableListOf()) }
 
-    viewModel.getPost(){
-        articleList.value = it
+    LaunchedEffect(key1 = true) {
+        viewModel2.getCourse {
+            courseList.value = it
+            Log.d("", courseList.value.toString())
+        }
     }
 
     Box(modifier = Modifier
@@ -73,8 +82,9 @@ fun DebugScreen4(
         .background(CoinvestBase)){
         LazyColumn(modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)) {
-            item {
+            .padding(16.dp)){
+
+            item{
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -96,14 +106,14 @@ fun DebugScreen4(
                                 .height(40.dp)
                                 .width(280.dp)
                                 .clickable {
-                                    singlePhotoPickerLauncher.launch(
-                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                    singleVideoPickerLauncher.launch(
+                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly)
                                     )
                                 },
                             colors = CardDefaults.cardColors(CoinvestPurple)
-                            ) {
+                        ) {
                             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-                                Text(text = selectedImageUri.value.toString(), color = CoinvestBase)
+                                Text(text = selectedVideoUri.value.toString(), color = CoinvestBase)
                             }
                         }
                         Spacer(modifier = Modifier.height(8.dp))
@@ -112,26 +122,22 @@ fun DebugScreen4(
                                 .height(40.dp)
                                 .width(280.dp)
                                 .clickable {
-                                    onUploadPost(
-                                        ArticleDataClass(
-                                            articleId = UUID
-                                                .randomUUID()
-                                                .toString(),
-                                            articleTitle = header.value,
-                                            articleContent = content.value,
-                                            articleCreatedAt = LocalDateTime
-                                                .now()
-                                                .toString(),
-                                            articleAuthor = UserDataClass(
-                                                userId = Firebase.auth.currentUser?.uid,
-                                                userName = Firebase.auth.currentUser?.displayName,
-                                                profilePicture = Firebase.auth.currentUser?.photoUrl.toString(),
-                                                accountType = "author",
-                                                email = Firebase.auth.currentUser?.email
-                                            ),
-                                            imageUri = selectedImageUri.value ?: Uri.EMPTY
-                                        )
-                                    )
+                                           onUploadVideo(CourseDataClass(
+                                               courseId = UUID.randomUUID().toString(),
+                                               courseName = header.value,
+                                               courseOwner = UserDataClass(
+                                                   userId = Firebase.auth.currentUser?.uid,
+                                                   userName = Firebase.auth.currentUser?.displayName,
+                                                   profilePicture = Firebase.auth.currentUser?.photoUrl.toString(),
+                                                   accountType = "author",
+                                                   email = Firebase.auth.currentUser?.email
+                                               ),
+                                               courseContent = mutableListOf(CourseContent(
+                                                   videoTitle = header.value,
+                                                   videoDescription = content.value,
+                                                   videoUri = selectedVideoUri.value ?: Uri.EMPTY
+                                               ))
+                                           ))
                                 },
                             colors = CardDefaults.cardColors(CoinvestBlue)
                         ) {
@@ -143,25 +149,27 @@ fun DebugScreen4(
                 }
             }
 
-            items(articleList.value){
+            items(courseList.value){
                 Spacer(modifier = Modifier.height(16.dp))
-                PostCard(
-                    header   = it.articleTitle,
-                    content  = it.articleContent,
-                    imageUri = it.imageUri
+                CourseCard(
+                    viewModel = viewModel,
+                    header    = it.courseName,
+                    content   = it.courseOwner.userName.orEmpty(),
+                    videoUri  = it.courseContent[0].videoUri
                 )
-                Log.d("items", it.toString())
             }
         }
     }
 }
 
 @Composable
-fun PostCard(
+fun CourseCard(
+    viewModel: DebugViewModel,
     header: String = "Lorem Ipsum",
-    content: String,
-    imageUri: Uri
+    content: String = "Lorem Ipsum",
+    videoUri: Uri = Uri.EMPTY
 ){
+    viewModel.addVideoUri(videoUri)
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -176,15 +184,8 @@ fun PostCard(
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = content)
             Spacer(modifier = Modifier.height(8.dp))
-            Card(
-                modifier = Modifier
-                    .height(180.dp)
-                    .width(320.dp)
-                    .clickable { },
-                colors = CardDefaults.cardColors(CoinvestPurple)
-            ) {
-                AsyncImage(model = imageUri, contentDescription = "", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
-            }
+
+            VideoPlayerCard(viewModel)
         }
     }
 }

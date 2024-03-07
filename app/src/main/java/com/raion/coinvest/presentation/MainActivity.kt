@@ -20,9 +20,9 @@ import com.google.firebase.auth.auth
 import com.raion.coinvest.data.remote.auth.GoogleAuthRepository
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.debugging.DebugScreen
-import com.raion.coinvest.presentation.debugging.DebugScreen2
 import com.raion.coinvest.presentation.debugging.DebugScreen3
 import com.raion.coinvest.presentation.debugging.DebugScreen4
+import com.raion.coinvest.presentation.debugging.DebugScreen5
 import com.raion.coinvest.presentation.debugging.DebugViewModel
 import com.raion.coinvest.presentation.debugging.DebugViewModel2
 import com.raion.coinvest.presentation.designSystem.CoinvestTheme
@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             },
-                            onChangeScreen = { navController.navigate(route = NavigationEnum.DebugScreen4.name) }
+                            onChangeScreen = { navController.navigate(route = NavigationEnum.DebugScreen5.name) }
 
                         )
                     }
@@ -97,6 +97,16 @@ class MainActivity : ComponentActivity() {
                         DebugScreen4(
                             viewModel    = viewModel,
                             onUploadPost = { viewModel.addNewPost(it) }
+                        )
+                    }
+
+                    composable(NavigationEnum.DebugScreen5.name){
+                        val viewModel: DebugViewModel by viewModels()
+                        val viewModel2: DebugViewModel2 by viewModels()
+                        DebugScreen5(
+                            onUploadVideo = { viewModel2.addNewCourse(it) },
+                            viewModel     = viewModel,
+                            viewModel2    = viewModel2
                         )
                     }
                 }

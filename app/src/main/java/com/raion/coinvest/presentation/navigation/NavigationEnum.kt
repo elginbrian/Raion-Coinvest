@@ -7,6 +7,7 @@ enum class NavigationEnum{
     */
     DebugScreen3,
     DebugScreen4,
+    DebugScreen5,
     LoginScreen,
     RoleSectionScreen;
 }

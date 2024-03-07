@@ -12,6 +12,7 @@ import com.raion.coinvest.data.remote.firebaseStorage.ImageRepository
 import com.raion.coinvest.data.remote.firebaseStorage.PdfRepository
 import com.raion.coinvest.data.remote.firebaseStorage.VideoRepository
 import com.raion.coinvest.data.remote.firestore.ArticleCollections
+import com.raion.coinvest.data.remote.firestore.CourseCollections
 import com.raion.coinvest.data.remote.firestore.UserCollections
 import dagger.Module
 import dagger.Provides
@@ -46,6 +47,12 @@ object AppModule {
     @Singleton
     fun provideArticleCollections(imageRepository: ImageRepository): ArticleCollections{
         return ArticleCollections(imageRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCourseCollections(): CourseCollections {
+        return CourseCollections()
     }
 
     @Provides
