@@ -75,8 +75,13 @@ fun DebugScreen5(
             courseList.value = it
             Log.d("", courseList.value.toString())
         }
+//        viewModel2.getListWithMarketData {
+//            Log.d("Crypto", it.toString())
+//        }
+//        viewModel2.getTrendingSearchList {
+//            Log.d("Crypto", it.toString())
+//        }
     }
-
     Box(modifier = Modifier
         .fillMaxSize()
         .background(CoinvestBase)){
@@ -122,22 +127,28 @@ fun DebugScreen5(
                                 .height(40.dp)
                                 .width(280.dp)
                                 .clickable {
-                                           onUploadVideo(CourseDataClass(
-                                               courseId = UUID.randomUUID().toString(),
-                                               courseName = header.value,
-                                               courseOwner = UserDataClass(
-                                                   userId = Firebase.auth.currentUser?.uid,
-                                                   userName = Firebase.auth.currentUser?.displayName,
-                                                   profilePicture = Firebase.auth.currentUser?.photoUrl.toString(),
-                                                   accountType = "author",
-                                                   email = Firebase.auth.currentUser?.email
-                                               ),
-                                               courseContent = mutableListOf(CourseContent(
-                                                   videoTitle = header.value,
-                                                   videoDescription = content.value,
-                                                   videoUri = selectedVideoUri.value ?: Uri.EMPTY
-                                               ))
-                                           ))
+                                    onUploadVideo(
+                                        CourseDataClass(
+                                            courseId = UUID
+                                                .randomUUID()
+                                                .toString(),
+                                            courseName = header.value,
+                                            courseOwner = UserDataClass(
+                                                userId = Firebase.auth.currentUser?.uid,
+                                                userName = Firebase.auth.currentUser?.displayName,
+                                                profilePicture = Firebase.auth.currentUser?.photoUrl.toString(),
+                                                accountType = "author",
+                                                email = Firebase.auth.currentUser?.email
+                                            ),
+                                            courseContent = mutableListOf(
+                                                CourseContent(
+                                                    videoTitle = header.value,
+                                                    videoDescription = content.value,
+                                                    videoUri = selectedVideoUri.value ?: Uri.EMPTY
+                                                )
+                                            )
+                                        )
+                                    )
                                 },
                             colors = CardDefaults.cardColors(CoinvestBlue)
                         ) {

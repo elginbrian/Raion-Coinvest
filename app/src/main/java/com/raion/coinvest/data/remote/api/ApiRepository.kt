@@ -19,7 +19,7 @@ class ApiRepository @Inject constructor(
         return apiKey
     }
 
-    suspend fun getListWithMarketData(): GetListWithMarketData {
+    suspend fun getListWithMarketData(): List<GetListWithMarketData> {
         return coinGeckoApi.getListWithMarketData(getApiKey())
     }
 

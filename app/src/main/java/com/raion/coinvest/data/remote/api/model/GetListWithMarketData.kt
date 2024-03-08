@@ -1,12 +1,7 @@
 package com.raion.coinvest.data.remote.api.model
 
 import com.google.gson.annotations.SerializedName
-
 data class GetListWithMarketData(
-    val cryptoDataList: List<CryptoData2>
-)
-
-data class CryptoData2(
     val id: String,
     val name: String,
     @SerializedName("market_cap")

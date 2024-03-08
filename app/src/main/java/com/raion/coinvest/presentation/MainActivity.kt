@@ -19,7 +19,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.raion.coinvest.data.remote.auth.GoogleAuthRepository
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
-import com.raion.coinvest.presentation.debugging.DebugScreen
 import com.raion.coinvest.presentation.debugging.DebugScreen3
 import com.raion.coinvest.presentation.debugging.DebugScreen4
 import com.raion.coinvest.presentation.debugging.DebugScreen5

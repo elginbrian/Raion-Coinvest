@@ -1,9 +1,13 @@
 package com.raion.coinvest.presentation.debugging
 
 import android.net.Uri
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.raion.coinvest.data.remote.api.ApiRepository
+import com.raion.coinvest.data.remote.api.model.GetListWithMarketData
+import com.raion.coinvest.data.remote.api.model.GetTrendingSearchList
 import com.raion.coinvest.data.remote.firebaseStorage.ImageRepository
 import com.raion.coinvest.data.remote.firebaseStorage.VideoRepository
 import com.raion.coinvest.data.remote.firestore.ArticleCollections
@@ -15,6 +19,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.delay
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,7 +27,8 @@ class DebugViewModel2 @Inject constructor(
     private val articleCollections: ArticleCollections,
     private val courseCollections: CourseCollections,
     private val imageRepository: ImageRepository,
-    private val videoRepository: VideoRepository
+    private val videoRepository: VideoRepository,
+    private val apiRepository: ApiRepository
 ): ViewModel() {
     val _articleList = mutableStateOf<MutableList<ArticleDataClass>>(mutableListOf())
 
@@ -36,6 +42,33 @@ class DebugViewModel2 @Inject constructor(
     }
 
     private var isFetching = false
+
+    fun getListWithMarketData(
+        onFinished: (List<GetListWithMarketData>) -> Unit
+    ){
+        if(!isFetching){
+            isFetching = true
+            viewModelScope.launch {
+                val result = apiRepository.getListWithMarketData()
+                isFetching = false
+                onFinished(result)
+            }
+        }
+    }
+
+    fun getTrendingSearchList(
+        onFinished: (GetTrendingSearchList) -> Unit
+    ){
+        if(!isFetching){
+            isFetching = true
+            viewModelScope.launch {
+                val result = apiRepository.getTrendingSearchList()
+                isFetching = false
+                onFinished(result)
+            }
+        }
+    }
+
     fun getPost(
         onFinished: (MutableList<ArticleDataClass>) -> Unit
     ){

@@ -12,11 +12,13 @@ val Pink40       = Color(0xFF7D5260)
 
 // COINVEST COLOR PALLET
 val CoinvestBase        = Color(0xFFFFFFFF)
-val CoinvestDarkPurple  = Color(0xFF9A4096)
+//val CoinvestDarkPurple  = Color(0xFF9A4096)
+val CoinvestDarkPurple  = Color(0xFF61008D)
 val CoinvestPurple      = Color(0xFFBC5AA1)
 val CoinvestLightPurple = Color(0xFFDB97BE)
 
-val CoinvestLightGrey   = Color(0xFFE9E6E6)
+//val CoinvestLightGrey   = Color(0xFFE9E6E6)
+val CoinvestLightGrey   = Color(0xFFFAFAFA)
 val CoinvestGrey        = Color(0xFFA3B1C2)
 val CoinvestDarkGrey    = Color(0xFF676F89)
 val CoinvestBlack       = Color(0xFF000000)
