@@ -19,8 +19,10 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.raion.coinvest.data.remote.auth.GoogleAuthRepository
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
+import com.raion.coinvest.presentation.communitySection.CommunityCreatePost
+import com.raion.coinvest.presentation.communitySection.CommunityScreen
+import com.raion.coinvest.presentation.communitySection.CommunityViewModel
 import com.raion.coinvest.presentation.debugging.DebugScreen3
-import com.raion.coinvest.presentation.debugging.DebugScreen4
 import com.raion.coinvest.presentation.debugging.DebugScreen5
 import com.raion.coinvest.presentation.debugging.DebugViewModel
 import com.raion.coinvest.presentation.debugging.DebugViewModel2
@@ -75,7 +77,7 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             },
-                            onChangeScreen = { navController.navigate(route = NavigationEnum.DebugScreen5.name) }
+                            onChangeScreen = { navController.navigate(route = NavigationEnum.CommunityScreen.name) }
 
                         )
                     }
@@ -84,18 +86,26 @@ class MainActivity : ComponentActivity() {
                         MenuDaftar()
                     }
 
+                    composable(NavigationEnum.CommunityScreen.name){
+                        val viewModel: CommunityViewModel by viewModels()
+                        CommunityScreen(
+                            viewModel = viewModel,
+                            onTapFloatingButton = { navController.navigate(route = NavigationEnum.CommunityCreatePost.name)}
+                        )
+                    }
+
+                    composable(NavigationEnum.CommunityCreatePost.name){
+                        val viewModel: CommunityViewModel by viewModels()
+                        CommunityCreatePost(onUploadPost = {
+                            viewModel.addNewPost(it)
+                            navController.navigate(route = NavigationEnum.CommunityScreen.name)
+                        })
+                    }
+
                     composable(NavigationEnum.DebugScreen3.name){
                         val viewModel: DebugViewModel by viewModels()
                         DebugScreen3(
                             viewModel = viewModel
-                        )
-                    }
-
-                    composable(NavigationEnum.DebugScreen4.name){
-                        val viewModel: DebugViewModel2 by viewModels()
-                        DebugScreen4(
-                            viewModel    = viewModel,
-                            onUploadPost = { viewModel.addNewPost(it) }
                         )
                     }
 

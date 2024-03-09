@@ -1,6 +1,7 @@
 package com.raion.coinvest.presentation.communitySection
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -22,6 +24,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,14 +34,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.raion.coinvest.data.remote.firestore.model.ArticleDataClass
 import com.raion.coinvest.presentation.appsBottomBar.AppsBottomBar
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-@Preview
-fun CommunityScreen(){
+//@Preview
+fun CommunityScreen(
+    viewModel: CommunityViewModel,
+    onTapFloatingButton: () -> Unit
+){
+    val articleList = remember { mutableStateOf<MutableList<ArticleDataClass>>(mutableListOf()) }
+    viewModel.getPost(){ articleList.value = it }
+
     Scaffold(
         containerColor = CoinvestBase,
         modifier = Modifier.fillMaxSize(),
@@ -84,10 +95,15 @@ fun CommunityScreen(){
                 item { 
                     Spacer(modifier = Modifier.height(170.dp))
                 }
-                items(15){
+                items(articleList.value){
                     Spacer(modifier = Modifier.height(8.dp))
-                    CommunityPostCard()
+                    CommunityPostCard(it, onClick = {
+
+                    })
                 }
+                 item {
+                     Spacer(modifier = Modifier.height(170.dp))
+                 }
              }
         },
         bottomBar = {
@@ -100,7 +116,8 @@ fun CommunityScreen(){
             Card(
                 modifier = Modifier
                     .width(106.dp)
-                    .height(46.dp),
+                    .height(46.dp)
+                    .clickable { onTapFloatingButton() },
                 shape = RoundedCornerShape(50.dp),
                 colors = CardDefaults.cardColors(CoinvestDarkPurple)
             ) {

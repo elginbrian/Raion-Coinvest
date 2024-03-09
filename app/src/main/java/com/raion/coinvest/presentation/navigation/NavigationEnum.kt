@@ -6,8 +6,9 @@ enum class NavigationEnum{
         baru setelahnya dipanggil di NavHost MainActivity.kt
     */
     DebugScreen3,
-    DebugScreen4,
     DebugScreen5,
     LoginScreen,
-    RoleSectionScreen;
+    RoleSectionScreen,
+    CommunityScreen,
+    CommunityCreatePost;
 }

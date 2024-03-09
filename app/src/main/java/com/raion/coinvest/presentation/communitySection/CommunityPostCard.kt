@@ -1,5 +1,6 @@
 package com.raion.coinvest.presentation.communitySection
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,14 +31,19 @@ import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.raion.coinvest.R
+import com.raion.coinvest.data.remote.firestore.model.ArticleDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 
 @Composable
-@Preview
-fun CommunityPostCard(){
+//@Preview
+fun CommunityPostCard(
+    articleDataClass: ArticleDataClass,
+    onClick: () -> Unit
+){
     Card(modifier = Modifier
         .fillMaxWidth()
-        .heightIn(max = 300.dp),
+        .heightIn(max = 400.dp)
+        .clickable { onClick() },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(CoinvestLightGrey)
     ) {
@@ -48,18 +54,25 @@ fun CommunityPostCard(){
             ) {
                 Card(modifier = Modifier.size(36.dp), shape = CircleShape) {
                     AsyncImage(
-                        model = "", contentDescription = "Profile Picture",
+                        model = articleDataClass.articleAuthor.profilePicture, contentDescription = "Profile Picture",
                         modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop
                         )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Lorem Ipsum", fontSize = 12.sp)
+                Text(text = articleDataClass.articleAuthor.userName.toString(), fontSize = 12.sp)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "xx jam", fontSize = 10.sp)
+                Text(text = articleDataClass.articleAuthor.accountType.toString(), fontSize = 10.sp)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Hello World", fontSize = 14.sp)
+            Text(text = articleDataClass.articleContent, fontSize = 14.sp)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Card(modifier = Modifier
+                .fillMaxWidth()
+                .height(180.dp)) {
+                AsyncImage(model = articleDataClass.imageUri, contentDescription = "", contentScale = ContentScale.Crop)
+            }
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
