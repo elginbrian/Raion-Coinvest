@@ -44,7 +44,8 @@ import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 //@Preview
 fun CommunityScreen(
     viewModel: CommunityViewModel,
-    onTapFloatingButton: () -> Unit
+    onTapFloatingButton: () -> Unit,
+    onTapPost: (Pair<MutableList<ArticleDataClass>,String>) -> Unit
 ){
     val articleList = remember { mutableStateOf<MutableList<ArticleDataClass>>(mutableListOf()) }
     viewModel.getPost(){ articleList.value = it }
@@ -98,7 +99,7 @@ fun CommunityScreen(
                 items(articleList.value){
                     Spacer(modifier = Modifier.height(8.dp))
                     CommunityPostCard(it, onClick = {
-
+                        onTapPost(Pair(articleList.value, it.articleId))
                     })
                 }
                  item {

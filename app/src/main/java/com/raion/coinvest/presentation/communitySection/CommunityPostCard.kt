@@ -71,7 +71,7 @@ fun CommunityPostCard(
             Card(modifier = Modifier
                 .fillMaxWidth()
                 .height(180.dp)) {
-                AsyncImage(model = articleDataClass.imageUri, contentDescription = "", contentScale = ContentScale.Crop)
+                AsyncImage(model = articleDataClass.imageUri, contentDescription = "", contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
             }
             Spacer(modifier = Modifier.height(16.dp))
 
