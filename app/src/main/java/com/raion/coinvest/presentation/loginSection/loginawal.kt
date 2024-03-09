@@ -215,7 +215,7 @@ fun LoginHome(
 
             )
             Spacer(modifier = Modifier.height(10.dp))
-            Text(text = "OR", fontSize = 13.sp)
+            Text(text = "OR", fontSize = 13.sp, color = CoinvestBase)
             Spacer(modifier = Modifier.height(10.dp))
 
             Image(painter = painterResource(id = R.drawable.daftargooglenoshad),

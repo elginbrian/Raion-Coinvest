@@ -1,7 +1,10 @@
-package com.raion.coinvest.presentation.communitySection
+package com.raion.coinvest.presentation.searchBar
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,7 +17,10 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +32,7 @@ import com.raion.coinvest.presentation.transparentTextField.TransparentTextField
 @Composable
 @Preview
 fun SearchBar(){
+    val isClicked = remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -40,8 +47,17 @@ fun SearchBar(){
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(modifier = Modifier.fillMaxSize(0.8f)) {
-                TransparentTextField(onValueChange = {}, onFocusChange = {})
+            Row(modifier = Modifier
+                .fillMaxSize(0.8f)
+                .clickable { isClicked.value = true }) {
+                Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxSize()) {
+                    if(isClicked.value){
+                        Spacer(modifier = Modifier.padding(1.dp))
+                        TransparentTextField(onValueChange = {}, onFocusChange = {})
+                    } else {
+                        Text(text = "Cari")
+                    }
+                }
             }
             Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search",
                 modifier = Modifier.size(32.dp)

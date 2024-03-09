@@ -1,7 +1,6 @@
-package com.raion.coinvest.presentation.communitySection
+package com.raion.coinvest.presentation.communitySearchSection
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,51 +12,39 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
+import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.raion.coinvest.data.remote.firestore.model.ArticleDataClass
 import com.raion.coinvest.presentation.appsBottomBar.AppsBottomBar
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
-import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.searchBar.SearchBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-//@Preview
-fun CommunityScreen(
-    viewModel: CommunityViewModel,
-    onTapFloatingButton: () -> Unit,
-    onTapPost: (Pair<MutableList<ArticleDataClass>,String>) -> Unit
-){
-    val articleList = remember { mutableStateOf<MutableList<ArticleDataClass>>(mutableListOf()) }
-    viewModel.getPost(){ articleList.value = it }
-
+@Preview
+fun CommunitySearchScreen(){
     Scaffold(
         containerColor = CoinvestBase,
-        modifier = Modifier.fillMaxSize(),
         topBar = {
             Card(
                 shape = RectangleShape,
                 colors = CardDefaults.cardColors(CoinvestBase)
-            ) {
+            ){
                 Column(
                     modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -76,57 +63,45 @@ fun CommunityScreen(
                     }
                     SearchBar()
                     Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(32.dp)
-                            .padding(end = 100.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment     = Alignment.CenterVertically
-                    ){
-                        CommunityTabRow()
-                    }
+                    Divider()
                 }
             }
         },
         content = {
-             LazyColumn(modifier = Modifier
-                 .fillMaxSize()
-                 .padding(horizontal = 16.dp)){
-                item { 
-                    Spacer(modifier = Modifier.height(170.dp))
+            LazyColumn(modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)){
+                item {
+                    Spacer(modifier = Modifier.padding(60.dp))
                 }
-                items(articleList.value){
-                    Spacer(modifier = Modifier.height(8.dp))
-                    CommunityPostCard(it, onClick = {
-                        onTapPost(Pair(articleList.value, it.articleId))
-                    })
+                items(5){
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(text = "Lorem Ipsum")
+                        Icon(imageVector = Icons.Rounded.Clear, contentDescription = "Clear")
+                    }
+                    Spacer(modifier = Modifier.padding(4.dp))
                 }
-                 item {
-                     Spacer(modifier = Modifier.height(170.dp))
-                 }
-             }
+                item {
+                    Divider()
+                    Spacer(modifier = Modifier.padding(4.dp))
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(text = "You might like", fontSize = 12.sp)
+                        Text(text = "See all", fontSize = 12.sp)
+                    }
+                    Spacer(modifier = Modifier.padding(2.dp))
+                    LazyRow(modifier = Modifier.fillMaxWidth()){
+                        items(5){
+                            CommunitySearchCard()
+                            Spacer(modifier = Modifier.padding(8.dp))
+                        }
+
+                    }
+                }
+            }
         },
         bottomBar = {
             Box(modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 24.dp, bottom = 24.dp)){
                 AppsBottomBar()
-            }
-
-        },
-        floatingActionButton = {
-            Card(
-                modifier = Modifier
-                    .width(106.dp)
-                    .height(46.dp)
-                    .clickable { onTapFloatingButton() },
-                shape = RoundedCornerShape(50.dp),
-                colors = CardDefaults.cardColors(CoinvestDarkPurple)
-            ) {
-                Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add Post", tint = CoinvestBase)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "Post", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Medium)
-                }
             }
         }
     )
