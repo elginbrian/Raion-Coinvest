@@ -1,27 +1,34 @@
 package com.raion.coinvest.presentation.debugging
 
-import android.annotation.SuppressLint
 import android.net.Uri
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.raion.coinvest.data.remote.api.ApiRepository
+import com.raion.coinvest.data.remote.api.model.GetListWithMarketData
+import com.raion.coinvest.data.remote.api.model.GetTrendingSearchList
 import com.raion.coinvest.data.remote.firebaseStorage.ImageRepository
+import com.raion.coinvest.data.remote.firebaseStorage.VideoRepository
 import com.raion.coinvest.data.remote.firestore.ArticleCollections
+import com.raion.coinvest.data.remote.firestore.CourseCollections
 import com.raion.coinvest.data.remote.firestore.model.ArticleDataClass
+import com.raion.coinvest.data.remote.firestore.model.CourseContent
+import com.raion.coinvest.data.remote.firestore.model.CourseDataClass
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.delay
 import javax.inject.Inject
 
 @HiltViewModel
 class DebugViewModel2 @Inject constructor(
     private val articleCollections: ArticleCollections,
-    private val imageRepository: ImageRepository
+    private val courseCollections: CourseCollections,
+    private val imageRepository: ImageRepository,
+    private val videoRepository: VideoRepository,
+    private val apiRepository: ApiRepository
 ): ViewModel() {
     val _articleList = mutableStateOf<MutableList<ArticleDataClass>>(mutableListOf())
 
@@ -29,38 +36,113 @@ class DebugViewModel2 @Inject constructor(
         articleCollections.addArticle(post)
         imageRepository.uploadImage(post)
     }
+    fun addNewCourse(course: CourseDataClass) = viewModelScope.launch {
+        courseCollections.addCourse(course)
+        videoRepository.uploadVideo(course)
+    }
 
     private var isFetching = false
-    fun getPost(completion: (MutableList<ArticleDataClass>) -> Unit) {
+
+    fun getListWithMarketData(
+        onFinished: (List<GetListWithMarketData>) -> Unit
+    ){
+        if(!isFetching){
+            isFetching = true
+            viewModelScope.launch {
+                val result = apiRepository.getListWithMarketData()
+                isFetching = false
+                onFinished(result)
+            }
+        }
+    }
+
+    fun getTrendingSearchList(
+        onFinished: (GetTrendingSearchList) -> Unit
+    ){
+        if(!isFetching){
+            isFetching = true
+            viewModelScope.launch {
+                val result = apiRepository.getTrendingSearchList()
+                isFetching = false
+                onFinished(result)
+            }
+        }
+    }
+
+    fun getPost(
+        onFinished: (MutableList<ArticleDataClass>) -> Unit
+    ){
         if (!isFetching) {
             isFetching = true
             viewModelScope.launch {
                 val articleList = articleCollections.getArticle()
                 val imageFetchDeferreds = mutableListOf<CompletableDeferred<Unit>>()
 
-                for (index in articleList) {
+                for (article in articleList) {
                     val imageFetchDeferred = CompletableDeferred<Unit>()
                     imageFetchDeferreds.add(imageFetchDeferred)
 
-                    getImage(index.articleId) { imageUri ->
-                        index.imageUri = imageUri
+                    getImage(article.articleId) { imageUri ->
+                        article.imageUri = imageUri
                         imageFetchDeferred.complete(Unit)
                     }
                 }
-
-                // Wait for all image fetches to complete
                 imageFetchDeferreds.awaitAll()
 
                 isFetching = false
-                completion(articleList)
+                onFinished(articleList)
             }
         }
     }
 
-    private fun getImage(articleId: String, completion: (Uri) -> Unit) {
+    fun getCourse(
+        onFinished: (MutableList<CourseDataClass>) -> Unit
+    ){
+        if(!isFetching){
+            isFetching = true
+            viewModelScope.launch{
+                val courseList         = courseCollections.getCourse()
+                val videoFetchDeferred = mutableListOf<CompletableDeferred<Unit>>()
+
+                for(course in courseList){
+                    val videoDeferred = CompletableDeferred<Unit>()
+                    videoFetchDeferred.add(videoDeferred)
+
+                    getVideo(course.courseId){ videoUri ->
+                        course.courseContent.add(element = CourseContent(
+                            videoTitle       = course.courseName,
+                            videoDescription = course.courseName, // need fix
+                            videoUri         = videoUri
+                        )
+                        )
+                        videoDeferred.complete(Unit)
+                    }
+                }
+                videoFetchDeferred.awaitAll()
+
+                isFetching = false
+                onFinished(courseList)
+            }
+        }
+    }
+
+    private fun getImage(
+        articleId: String,
+        onFinished: (Uri) -> Unit
+    ){
         viewModelScope.launch {
             val imageUri = imageRepository.getImage(articleId)
-            completion(imageUri)
+            onFinished(imageUri)
+        }
+    }
+
+    private fun getVideo(
+        courseId: String,
+        onFinished: (Uri) -> Unit
+    ){
+        viewModelScope.launch {
+            val videoUri = videoRepository.getVideo(courseId)
+            onFinished(videoUri)
         }
     }
 }

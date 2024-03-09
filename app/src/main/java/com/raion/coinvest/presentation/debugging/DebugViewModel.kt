@@ -10,8 +10,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import com.raion.coinvest.data.local.exoPlayer.MetadataReader
 import com.raion.coinvest.data.local.exoPlayer.model.VideoDataClass
-import com.raion.coinvest.data.remote.api.CoinMarketCapApi
-import com.raion.coinvest.data.remote.api.model.GetLatestListingResponse
 import com.raion.coinvest.data.remote.auth.EmailAuthRepository
 import com.raion.coinvest.data.remote.auth.model.SignInResult
 import com.raion.coinvest.data.remote.auth.TwitterAuthRepository
@@ -44,7 +42,6 @@ class DebugViewModel @Inject constructor(
     private val twitterAuthRepository: TwitterAuthRepository,
     private val userCollections: UserCollections,
     private val articleCollections: ArticleCollections,
-    private val coinMarketCapApi: CoinMarketCapApi,
     private val savedStateHandle: SavedStateHandle,
     val  player: Player,
     private val metadata: MetadataReader,
@@ -53,7 +50,6 @@ class DebugViewModel @Inject constructor(
     private val pdfRepository: PdfRepository
 ): ViewModel() {
     private val _state = MutableStateFlow(SignInState())
-    private val _getLatestListingResponse = mutableStateOf<GetLatestListingResponse?>(null)
     val state = _state.asStateFlow()
 
     fun onSignInResult(result: SignInResult){
@@ -71,15 +67,8 @@ class DebugViewModel @Inject constructor(
     fun createUserWithTwitter(context: Context)          = viewModelScope.launch { twitterAuthRepository.createUser(context) }
     fun addUsersToFireStore(user: UserDataClass)         = viewModelScope.launch { userCollections.addUsersToFireStore(user) }
     fun addArticleToFireStore(article: ArticleDataClass) = viewModelScope.launch { articleCollections.addArticle(article, ) }
-    fun addVideoToFireStore(videoUri: Uri)               = viewModelScope.launch { videoRepository.uploadVideo(videoUri) }
-    fun addPdfToFireStore(pdfUri: Uri)                   = viewModelScope.launch { pdfRepository.uploadPdf(pdfUri) }
 
-    fun getLatestListing(): GetLatestListingResponse?{
-        viewModelScope.launch {
-            _getLatestListingResponse.value = coinMarketCapApi.getLatestListing()
-        }
-        return _getLatestListingResponse.value
-    }
+    fun addPdfToFireStore(pdfUri: Uri)                   = viewModelScope.launch { pdfRepository.uploadPdf(pdfUri) }
 
     private val videoUris = savedStateHandle.getStateFlow("videoUris", emptyList<Uri>())
     val videoItems = videoUris.map {uris ->

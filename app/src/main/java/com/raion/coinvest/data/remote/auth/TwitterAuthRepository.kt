@@ -11,6 +11,7 @@ import com.raion.coinvest.data.remote.auth.model.SignInResult
 import com.raion.coinvest.data.remote.auth.model.UserData
 import kotlinx.coroutines.tasks.await
 
+/* NO LONGER IN USE */
 class TwitterAuthRepository() {
     private val provider = OAuthProvider.newBuilder("twitter.com")
 

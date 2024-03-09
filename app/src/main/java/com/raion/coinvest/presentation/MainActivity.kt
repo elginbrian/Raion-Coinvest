@@ -1,35 +1,33 @@
 package com.raion.coinvest.presentation
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.identity.Identity
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 import com.raion.coinvest.data.remote.auth.GoogleAuthRepository
-import com.raion.coinvest.data.remote.firestore.model.UserDataClass
-import com.raion.coinvest.presentation.debugging.DebugScreen
-import com.raion.coinvest.presentation.debugging.DebugScreen2
+import com.raion.coinvest.data.remote.firestore.model.ArticleDataClass
+import com.raion.coinvest.presentation.communitySection.CommunityCreatePost
+import com.raion.coinvest.presentation.communitySection.CommunityPostReply
+import com.raion.coinvest.presentation.communitySection.CommunityPostReplying
+import com.raion.coinvest.presentation.communitySection.CommunityScreen
+import com.raion.coinvest.presentation.communitySection.CommunityViewModel
 import com.raion.coinvest.presentation.debugging.DebugScreen3
-import com.raion.coinvest.presentation.debugging.DebugScreen4
+import com.raion.coinvest.presentation.debugging.DebugScreen5
 import com.raion.coinvest.presentation.debugging.DebugViewModel
 import com.raion.coinvest.presentation.debugging.DebugViewModel2
 import com.raion.coinvest.presentation.designSystem.CoinvestTheme
 import com.raion.coinvest.presentation.loginSection.LoginHome
 import com.raion.coinvest.presentation.loginSection.LoginViewModel
 import com.raion.coinvest.presentation.loginSection.MenuDaftar
-import com.raion.coinvest.presentation.navigation.NavigationEnum
+import com.raion.coinvest.presentation.navigation.CoinvestUserFlow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -48,9 +46,11 @@ class MainActivity : ComponentActivity() {
             CoinvestTheme {
                 // NavGraph
                 val navController = rememberNavController()
+                var articleId: String = ""
+                var articleList: MutableList<ArticleDataClass> = mutableListOf()
 
-                NavHost(navController = navController, startDestination = NavigationEnum.LoginScreen.name){
-                    composable(NavigationEnum.LoginScreen.name){
+                NavHost(navController = navController, startDestination = CoinvestUserFlow.LoginScreen.name){
+                    composable(CoinvestUserFlow.LoginScreen.name){
                         val viewModel: LoginViewModel by viewModels()
                         val launcher = rememberLauncherForActivityResult(
                             contract = ActivityResultContracts.StartIntentSenderForResult(),
@@ -76,27 +76,73 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             },
-                            onChangeScreen = { navController.navigate(route = NavigationEnum.DebugScreen4.name) }
+                            onChangeScreen = { navController.navigate(route = CoinvestUserFlow.CommunityScreen.name) }
 
                         )
                     }
 
-                    composable(NavigationEnum.RoleSectionScreen.name){
+                    composable(CoinvestUserFlow.RoleSectionScreen.name){
                         MenuDaftar()
                     }
 
-                    composable(NavigationEnum.DebugScreen3.name){
+                    composable(CoinvestUserFlow.CommunityScreen.name){
+                        val viewModel: CommunityViewModel by viewModels()
+                        CommunityScreen(
+                            viewModel = viewModel,
+                            onTapFloatingButton = { navController.navigate(route = CoinvestUserFlow.CommunityCreatePost.name)},
+                            onTapPost = {
+                                articleList = it.first
+                                articleId   = it.second
+                                navController.navigate(route = CoinvestUserFlow.CommunityPostReply.name)
+                            }
+                        )
+                    }
+
+                    composable(CoinvestUserFlow.CommunityCreatePost.name){
+                        val viewModel: CommunityViewModel by viewModels()
+                        CommunityCreatePost(onUploadPost = {
+                            viewModel.addNewPost(it)
+                            navController.navigate(route = CoinvestUserFlow.CommunityScreen.name)
+                        })
+                    }
+
+                    composable(CoinvestUserFlow.CommunityPostReply.name){
+                        val viewModel: CommunityViewModel by viewModels()
+                        CommunityPostReply(
+                            articleList = articleList,
+                            articleId = articleId,
+                            viewModel = viewModel,
+                            onTapPost = { navController.navigate(route = CoinvestUserFlow.CommunityPostReplying.name) }
+                        )
+                    }
+
+                    composable(CoinvestUserFlow.CommunityPostReplying.name){
+                        val viewModel: CommunityViewModel by viewModels()
+                        CommunityPostReplying(
+                            articleList = articleList,
+                            articleId = articleId,
+                            viewModel = viewModel,
+                            onUploadReply = {
+                                viewModel.addNewComment(it)
+                                navController.navigate(route = CoinvestUserFlow.CommunityPostReply.name)
+                            }
+                        )
+                    }
+
+                    composable(CoinvestUserFlow.DebugScreen3.name){
                         val viewModel: DebugViewModel by viewModels()
                         DebugScreen3(
                             viewModel = viewModel
                         )
                     }
 
-                    composable(NavigationEnum.DebugScreen4.name){
-                        val viewModel: DebugViewModel2 by viewModels()
-                        DebugScreen4(
-                            viewModel    = viewModel,
-                            onUploadPost = { viewModel.addNewPost(it) }
+                    composable(CoinvestUserFlow.DebugScreen5.name){
+                        val viewModel: DebugViewModel by viewModels()
+                        val viewModel2: DebugViewModel2 by viewModels()
+                        DebugScreen5(
+                            onUploadVideo = { viewModel2.addNewCourse(it) },
+                            viewModel     = viewModel,
+                            viewModel2    = viewModel2
                         )
                     }
                 }

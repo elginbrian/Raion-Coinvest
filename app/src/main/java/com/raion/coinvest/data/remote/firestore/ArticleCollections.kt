@@ -32,7 +32,7 @@ class ArticleCollections @Inject constructor(
             }.addOnFailureListener { e ->
                 Log.w(ContentValues.TAG, "Error adding document", e)
             }.await()
-        } catch (e: Exception){
+        } catch (_: Exception){
 
         }
     }

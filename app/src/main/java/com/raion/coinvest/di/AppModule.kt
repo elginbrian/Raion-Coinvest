@@ -5,13 +5,16 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.raion.coinvest.data.local.exoPlayer.MetadataReader
 import com.raion.coinvest.data.local.exoPlayer.MetadataReaderImpl
-import com.raion.coinvest.data.remote.api.CoinMarketCapApi
+import com.raion.coinvest.data.remote.api.ApiRepository
+import com.raion.coinvest.data.remote.api.CoinGeckoApi
 import com.raion.coinvest.data.remote.auth.EmailAuthRepository
 import com.raion.coinvest.data.remote.auth.TwitterAuthRepository
 import com.raion.coinvest.data.remote.firebaseStorage.ImageRepository
 import com.raion.coinvest.data.remote.firebaseStorage.PdfRepository
 import com.raion.coinvest.data.remote.firebaseStorage.VideoRepository
 import com.raion.coinvest.data.remote.firestore.ArticleCollections
+import com.raion.coinvest.data.remote.firestore.CommentCollections
+import com.raion.coinvest.data.remote.firestore.CourseCollections
 import com.raion.coinvest.data.remote.firestore.UserCollections
 import dagger.Module
 import dagger.Provides
@@ -50,6 +53,18 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideCourseCollections(): CourseCollections {
+        return CourseCollections()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCommentCollections(): CommentCollections {
+        return CommentCollections()
+    }
+
+    @Provides
+    @Singleton
     fun provideImageRepository(): ImageRepository {
         return ImageRepository()
     }
@@ -68,12 +83,18 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCoinMarketCapApi(): CoinMarketCapApi{
+    fun provideCoinGeckoApi(): CoinGeckoApi {
         return Retrofit.Builder()
-            .baseUrl("https://pro-api.coinmarketcap.com")
+            .baseUrl("https://api.coingecko.com/api/v3/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(CoinMarketCapApi::class.java)
+            .create(CoinGeckoApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideApiRepository(coinGeckoApi: CoinGeckoApi): ApiRepository{
+        return ApiRepository(coinGeckoApi)
     }
 
     @Singleton
