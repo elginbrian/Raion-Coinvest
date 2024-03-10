@@ -43,8 +43,10 @@ import com.raion.coinvest.presentation.designSystem.CoinvestGrey
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-@Preview
-fun CommunityProfileScreen(){
+//@Preview
+fun CommunityProfileScreen(
+    onChangeTab: (Int) -> Unit
+){
     Scaffold(
         containerColor = CoinvestGrey,
         content = {
@@ -135,7 +137,9 @@ fun CommunityProfileScreen(){
                                 Box(modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)){
-                                    AppsBottomBar()
+                                    AppsBottomBar(currentTab = 3){
+                                        onChangeTab(it)
+                                    }
                                 }
                             },
                             floatingActionButton = {
@@ -168,4 +172,10 @@ fun CommunityProfileScreen(){
             
         }
     )
+}
+
+@Composable
+@Preview
+fun CPSpreview(){
+    CommunityProfileScreen(onChangeTab = {})
 }

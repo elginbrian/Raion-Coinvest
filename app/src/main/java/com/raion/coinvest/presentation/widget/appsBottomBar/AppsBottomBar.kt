@@ -32,9 +32,9 @@ import com.raion.coinvest.R
 import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 
 @Composable
-@Preview
 fun AppsBottomBar(
-    currentTab: Int = 0
+    currentTab: Int = 0,
+    onChangeTab: (Int) -> Unit
 ){
     Card(modifier = Modifier
         .fillMaxWidth()
@@ -43,11 +43,11 @@ fun AppsBottomBar(
         shape = RoundedCornerShape(50.dp),
         colors = CardDefaults.cardColors(CoinvestBase),
         elevation = CardDefaults.cardElevation(12.dp)
-        //border = BorderStroke(2.dp, CoinvestDarkPurple)
         ) {
         val tabIndex = remember {
             mutableStateOf(currentTab)
         }
+
         TabRow(
             modifier = Modifier.fillMaxSize(),
             selectedTabIndex = tabIndex.value,
@@ -56,7 +56,10 @@ fun AppsBottomBar(
             divider = {},
             indicator = {}
         ){
-            Tab(selected = tabIndex.value == 0, onClick = { tabIndex.value = 0 }) {
+            Tab(selected = tabIndex.value == 0, onClick = {
+                tabIndex.value = 0
+                onChangeTab(tabIndex.value)
+            }) {
                 if(tabIndex.value == 0){
                     Card(shape = CircleShape, colors = CardDefaults.cardColors(CoinvestDarkPurple), modifier = Modifier.size(42.dp)) {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
@@ -68,7 +71,10 @@ fun AppsBottomBar(
                 }
             }
 
-            Tab(selected = tabIndex.value == 1, onClick = { tabIndex.value = 1 }) {
+            Tab(selected = tabIndex.value == 1, onClick = {
+                tabIndex.value = 1
+                onChangeTab(tabIndex.value)
+            }) {
                 if(tabIndex.value == 1){
                     Card(shape = CircleShape, colors = CardDefaults.cardColors(CoinvestDarkPurple), modifier = Modifier.size(42.dp)) {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
@@ -81,7 +87,10 @@ fun AppsBottomBar(
 
             }
 
-            Tab(selected = tabIndex.value == 2, onClick = { tabIndex.value = 2 }) {
+            Tab(selected = tabIndex.value == 2, onClick = {
+                tabIndex.value = 2
+                onChangeTab(tabIndex.value)
+            }) {
                 if(tabIndex.value == 2){
                     Card(shape = CircleShape, colors = CardDefaults.cardColors(CoinvestDarkPurple), modifier = Modifier.size(42.dp)) {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
@@ -93,7 +102,10 @@ fun AppsBottomBar(
                 }
             }
 
-            Tab(selected = tabIndex.value == 3, onClick = { tabIndex.value = 3 }) {
+            Tab(selected = tabIndex.value == 3, onClick = {
+                tabIndex.value = 3
+                onChangeTab(tabIndex.value)
+            }) {
                 if(tabIndex.value == 3){
                     Card(shape = CircleShape, colors = CardDefaults.cardColors(CoinvestDarkPurple), modifier = Modifier.size(42.dp)) {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
@@ -105,7 +117,10 @@ fun AppsBottomBar(
                 }
             }
 
-            Tab(selected = tabIndex.value == 4, onClick = { tabIndex.value = 4 }) {
+            Tab(selected = tabIndex.value == 4, onClick = {
+                tabIndex.value = 4
+                onChangeTab(tabIndex.value)
+            }) {
                 if(tabIndex.value == 4){
                     Card(shape = CircleShape, colors = CardDefaults.cardColors(CoinvestDarkPurple), modifier = Modifier.size(42.dp)) {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){

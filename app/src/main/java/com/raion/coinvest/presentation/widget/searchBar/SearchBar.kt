@@ -1,5 +1,6 @@
 package com.raion.coinvest.presentation.widget.searchBar
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.raion.coinvest.presentation.designSystem.CoinvestBorder
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 import com.raion.coinvest.presentation.widget.transparentTextField.TransparentTextField
 
@@ -36,7 +38,8 @@ fun SearchBar(){
             .fillMaxWidth()
             .height(40.dp),
         shape = RoundedCornerShape(50.dp),
-        colors = CardDefaults.cardColors(CoinvestLightGrey)
+        colors = CardDefaults.cardColors(CoinvestLightGrey),
+        border = BorderStroke(1.dp, CoinvestBorder)
     ) {
         Row(
             modifier = Modifier

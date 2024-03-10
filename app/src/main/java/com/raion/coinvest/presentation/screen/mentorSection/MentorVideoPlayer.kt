@@ -42,15 +42,18 @@ import com.raion.coinvest.presentation.widget.videoPlayerCard.VideoPlayerCard
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-@Preview
-fun MentorVideoPlayer(){
+//@Preview
+fun MentorVideoPlayer(
+    onChangeTab: (Int) -> Unit
+){
     Scaffold(
         containerColor = CoinvestGrey,
         topBar = {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp).padding(16.dp),
+                    .height(60.dp)
+                    .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment     = Alignment.CenterVertically
             ){
@@ -125,7 +128,9 @@ fun MentorVideoPlayer(){
                                 Box(modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)){
-                                    AppsBottomBar()
+                                    AppsBottomBar(currentTab = 1){
+                                        onChangeTab(it)
+                                    }
                                 }
                             },
                             floatingActionButton = {
@@ -150,4 +155,10 @@ fun MentorVideoPlayer(){
             }
         }
     )
+}
+
+@Composable
+@Preview
+fun MVCpreview(){
+    MentorVideoPlayer(onChangeTab = {})
 }

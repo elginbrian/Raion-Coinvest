@@ -1,22 +1,41 @@
 package com.raion.coinvest.presentation.navigation
 
 enum class CoinvestUserFlow{
-    /*
-        Nanti tiap screen di deklarasi dulu disini
-        baru setelahnya dipanggil di NavHost MainActivity.kt
-    */
-
     // Debugging
     DebugScreen3,
     DebugScreen5,
 
     // Login Section
-    LoginScreen,
-    RoleSectionScreen,
+    LoginScreen,                // 1
+    RoleSectionScreen,          // 2
+
+    // HomeSection
+    HomeScreen,                 // 3
 
     // CommunitySection
-    CommunityScreen,
-    CommunityCreatePost,
-    CommunityPostReply,
-    CommunityPostReplying;
+    CommunityScreen,            // 4
+    CommunityCreatePost,        // 5
+    CommunityPostReply,         // 6
+    CommunityPostReplying,      // 7
+
+    // CommunitySearchSection
+    CommunitySearchScreen,      // 8
+    CommunitySearchGrid,        // 9
+
+    // CommunityProfileSection
+    CommunityProfileScreen,     // 10
+    CommunityFollowerScreen,    // 11
+
+    // MentorSection
+    MentorScreen,               // 12
+    MentorSearchScreen,         // 13
+    MentorVideoPlayer,          // 14
+
+    // NewsSection
+    NewsScreen,                 // 15
+    NewsPage,                   // 16
+
+    // UserProfileSection
+    UserProfileScreen,          // 17
+    UserFollowerScreen;         // 18
 }

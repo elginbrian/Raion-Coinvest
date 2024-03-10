@@ -1,4 +1,4 @@
-package com.raion.coinvest.presentation.screen.HomeScreen
+package com.raion.coinvest.presentation.screen.homeSection
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

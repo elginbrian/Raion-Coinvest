@@ -44,6 +44,7 @@ import com.raion.coinvest.presentation.widget.searchBar.SearchBar
 //@Preview
 fun CommunityScreen(
     viewModel: CommunityViewModel,
+    onChangeTab: (Int) -> Unit,
     onTapFloatingButton: () -> Unit,
     onTapPost: (Pair<MutableList<ArticleDataClass>,String>) -> Unit
 ){
@@ -109,7 +110,9 @@ fun CommunityScreen(
         },
         bottomBar = {
             Box(modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 24.dp, bottom = 24.dp)){
-                AppsBottomBar()
+                AppsBottomBar(currentTab = 3){
+                    onChangeTab(it)
+                }
             }
 
         },

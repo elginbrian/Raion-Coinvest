@@ -36,8 +36,10 @@ import com.raion.coinvest.presentation.widget.searchBar.SearchBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-@Preview
-fun CommunitySearchGrid(){
+//@Preview
+fun CommunitySearchGrid(
+    onChangeTab: (Int) -> Unit
+){
     Scaffold(
         containerColor = CoinvestBase,
         topBar = {
@@ -68,7 +70,9 @@ fun CommunitySearchGrid(){
             }
         },
         content = {
-            LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier.fillMaxSize().padding(horizontal = 40.dp),
+            LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 40.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ){
@@ -83,9 +87,19 @@ fun CommunitySearchGrid(){
             }
         },
         bottomBar = {
-            Box(modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 24.dp, bottom = 24.dp)){
-                AppsBottomBar()
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)){
+                AppsBottomBar(currentTab = 3){
+                    onChangeTab(it)
+                }
             }
         }
     )
+}
+
+@Composable
+@Preview
+fun CSGpreview(){
+    CommunitySearchGrid(onChangeTab = {})
 }

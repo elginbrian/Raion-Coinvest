@@ -36,8 +36,10 @@ import com.raion.coinvest.presentation.widget.searchBar.SearchBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-@Preview
-fun MentorScreen(){
+//@Preview
+fun MentorScreen(
+    onChangeTab: (Int) -> Unit
+){
     val tabIndex = remember {
         mutableStateOf(0)
     }
@@ -109,8 +111,16 @@ fun MentorScreen(){
             Box(modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)){
-                AppsBottomBar()
+                AppsBottomBar(currentTab = 1){
+                    onChangeTab(it)
+                }
             }
         }
     )
+}
+
+@Composable
+@Preview
+fun MSpreview(){
+    MentorScreen(onChangeTab = {})
 }
