@@ -1,13 +1,13 @@
-package com.raion.coinvest.presentation.screen.communitySection
+package com.raion.coinvest.presentation.screen.newsSection
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.raion.coinvest.data.remote.firebaseStorage.ImageRepository
-import com.raion.coinvest.data.remote.firestore.PostCollections
 import com.raion.coinvest.data.remote.firestore.CommentCollections
-import com.raion.coinvest.data.remote.firestore.model.PostDataClass
+import com.raion.coinvest.data.remote.firestore.NewsCollections
 import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
+import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.awaitAll
@@ -15,14 +15,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CommunityViewModel @Inject constructor(
-    private val postCollections: PostCollections,
-    private val commentCollections: CommentCollections,
-    private val imageRepository: ImageRepository
+class NewsViewModel @Inject constructor(
+    private val imageRepository: ImageRepository,
+    private val newsRepository: NewsCollections,
+    private val commentCollections: CommentCollections
 ): ViewModel() {
-    fun addNewPost(post: PostDataClass) = viewModelScope.launch{
-        postCollections.addPost(post)
-        imageRepository.uploadPostImage(post)
+
+    fun addNews(news: NewsDataClass) = viewModelScope.launch {
+        newsRepository.addNews(news)
+        imageRepository.uploadNewsImage(news)
     }
 
     fun addNewComment(comment: CommentDataClass) = viewModelScope.launch {
@@ -31,28 +32,28 @@ class CommunityViewModel @Inject constructor(
     }
 
     private var isFetching = false
-    fun getPost(
-        onFinished: (MutableList<PostDataClass>) -> Unit
+    fun getNews(
+        onFinished: (MutableList<NewsDataClass>) -> Unit
     ){
         if (!isFetching) {
             isFetching = true
             viewModelScope.launch {
-                val articleList = postCollections.getPost()
+                val newsList = newsRepository.getNews()
                 val imageFetchDeferreds = mutableListOf<CompletableDeferred<Unit>>()
 
-                for (article in articleList) {
+                for (news in newsList) {
                     val imageFetchDeferred = CompletableDeferred<Unit>()
                     imageFetchDeferreds.add(imageFetchDeferred)
 
-                    getImage(article.postId) { imageUri ->
-                        article.imageUri = imageUri
+                    getImage(news.newsId) { imageUri ->
+                        news.imageUri = imageUri
                         imageFetchDeferred.complete(Unit)
                     }
                 }
                 imageFetchDeferreds.awaitAll()
 
                 isFetching = false
-                onFinished(articleList)
+                onFinished(newsList)
             }
         }
     }

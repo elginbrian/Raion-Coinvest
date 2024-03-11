@@ -1,7 +1,6 @@
 package com.raion.coinvest.presentation.screen.debugging
 
 import android.net.Uri
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,31 +9,30 @@ import com.raion.coinvest.data.remote.api.model.GetListWithMarketData
 import com.raion.coinvest.data.remote.api.model.GetTrendingSearchList
 import com.raion.coinvest.data.remote.firebaseStorage.ImageRepository
 import com.raion.coinvest.data.remote.firebaseStorage.VideoRepository
-import com.raion.coinvest.data.remote.firestore.ArticleCollections
+import com.raion.coinvest.data.remote.firestore.PostCollections
 import com.raion.coinvest.data.remote.firestore.CourseCollections
-import com.raion.coinvest.data.remote.firestore.model.ArticleDataClass
+import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.CourseContent
 import com.raion.coinvest.data.remote.firestore.model.CourseDataClass
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.time.delay
 import javax.inject.Inject
 
 @HiltViewModel
 class DebugViewModel2 @Inject constructor(
-    private val articleCollections: ArticleCollections,
+    private val postCollections: PostCollections,
     private val courseCollections: CourseCollections,
     private val imageRepository: ImageRepository,
     private val videoRepository: VideoRepository,
     private val apiRepository: ApiRepository
 ): ViewModel() {
-    val _articleList = mutableStateOf<MutableList<ArticleDataClass>>(mutableListOf())
+    val _articleList = mutableStateOf<MutableList<PostDataClass>>(mutableListOf())
 
-    fun addNewPost(post: ArticleDataClass) = viewModelScope.launch{
-        articleCollections.addArticle(post)
-        imageRepository.uploadImage(post)
+    fun addNewPost(post: PostDataClass) = viewModelScope.launch{
+        postCollections.addPost(post)
+        imageRepository.uploadPostImage(post)
     }
     fun addNewCourse(course: CourseDataClass) = viewModelScope.launch {
         courseCollections.addCourse(course)
@@ -70,19 +68,19 @@ class DebugViewModel2 @Inject constructor(
     }
 
     fun getPost(
-        onFinished: (MutableList<ArticleDataClass>) -> Unit
+        onFinished: (MutableList<PostDataClass>) -> Unit
     ){
         if (!isFetching) {
             isFetching = true
             viewModelScope.launch {
-                val articleList = articleCollections.getArticle()
+                val articleList = postCollections.getPost()
                 val imageFetchDeferreds = mutableListOf<CompletableDeferred<Unit>>()
 
                 for (article in articleList) {
                     val imageFetchDeferred = CompletableDeferred<Unit>()
                     imageFetchDeferreds.add(imageFetchDeferred)
 
-                    getImage(article.articleId) { imageUri ->
+                    getImage(article.postId) { imageUri ->
                         article.imageUri = imageUri
                         imageFetchDeferred.complete(Unit)
                     }

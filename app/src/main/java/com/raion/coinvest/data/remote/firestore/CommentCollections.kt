@@ -5,7 +5,6 @@ import android.net.Uri
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import com.raion.coinvest.data.remote.firestore.model.ArticleDataClass
 import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import kotlinx.coroutines.tasks.await

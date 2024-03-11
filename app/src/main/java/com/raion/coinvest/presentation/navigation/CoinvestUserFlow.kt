@@ -34,8 +34,11 @@ enum class CoinvestUserFlow{
     // NewsSection
     NewsScreen,                 // 15
     NewsPage,                   // 16
+    NewsCreate,                 // 17
+    NewsReply,                  // 18
+    NewsReplying,               // 19
 
     // UserProfileSection
-    UserProfileScreen,          // 17
-    UserFollowerScreen;         // 18
+    UserProfileScreen,          // 20
+    UserFollowerScreen;         // 21
 }

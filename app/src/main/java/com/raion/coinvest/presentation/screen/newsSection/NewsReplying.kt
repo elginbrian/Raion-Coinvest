@@ -1,5 +1,3 @@
-package com.raion.coinvest.presentation.screen.communitySection
-
 import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -41,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
@@ -51,9 +50,10 @@ import java.util.UUID
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun CommunityCreatePost(
-    onUploadPost: (PostDataClass) -> Unit
-){
+fun NewsReplying(
+    parentId: String,
+    onUploadPost: (CommentDataClass) -> Unit
+) {
     val content          = remember { mutableStateOf("") }
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
 
@@ -119,7 +119,7 @@ fun CommunityCreatePost(
                     Card(modifier = Modifier
                         .fillMaxWidth()
                         .height(180.dp)) {
-                        AsyncImage(model = selectedImageUri.value, contentDescription = "", contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+                        AsyncImage(model = selectedImageUri.value, contentDescription = "", contentScale = ContentScale.Crop)
                     }
                 }
 
@@ -127,10 +127,10 @@ fun CommunityCreatePost(
                 TransparentTextField(
                     text = content.value,
                     onValueChange = {
-                    if ((it.all { char -> char.isDefined() || char.isWhitespace() })) {
-                        content.value = it
-                    }
-                }, onFocusChange = {})
+                        if ((it.all { char -> char.isDefined() || char.isWhitespace() })) {
+                            content.value = it
+                        }
+                    }, onFocusChange = {})
             }
         },
         bottomBar = {
@@ -140,7 +140,7 @@ fun CommunityCreatePost(
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-                ) {
+            ) {
                 Card(modifier = Modifier
                     .width(30.dp)
                     .height(30.dp)
@@ -167,24 +167,24 @@ fun CommunityCreatePost(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() } // This is mandatory
                     ) {
-                           onUploadPost(
-                               PostDataClass(
-                                    postId = UUID.randomUUID().toString(),
-                                    communityId = "",
-                                    postContent = content.value,
-                                    postCreatedAt = LocalDateTime.now().toString(),
-                                    postAuthor = UserDataClass(
-                                        userId = Firebase.auth.currentUser?.uid,
-                                        userName = Firebase.auth.currentUser?.displayName,
-                                        profilePicture = Firebase.auth.currentUser?.photoUrl.toString(),
-                                        accountType = "author",
-                                        email = Firebase.auth.currentUser?.email
-                                    ),
-                                   imageUri = selectedImageUri.value ?: Uri.EMPTY
-                                   )
-                           )
-                            selectedImageUri.value = null
-                            content.value = ""
+                        onUploadPost(
+                            CommentDataClass(
+                                commentId = UUID.randomUUID().toString(),
+                                parentId  = parentId,
+                                commentContent = content.value,
+                                commentCreatedAt = LocalDateTime.now().toString(),
+                                commentAuthor = UserDataClass(
+                                    userId = Firebase.auth.currentUser?.uid,
+                                    userName = Firebase.auth.currentUser?.displayName,
+                                    profilePicture = Firebase.auth.currentUser?.photoUrl.toString(),
+                                    accountType = "author",
+                                    email = Firebase.auth.currentUser?.email
+                                ),
+                                imageUri = selectedImageUri.value ?: Uri.EMPTY
+                            )
+                        )
+                        selectedImageUri.value = null
+                        content.value = ""
                     },
                     colors = CardDefaults.cardColors(CoinvestDarkPurple),
                     shape = RoundedCornerShape(50.dp)

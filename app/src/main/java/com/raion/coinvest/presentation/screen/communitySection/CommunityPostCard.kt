@@ -1,6 +1,8 @@
 package com.raion.coinvest.presentation.screen.communitySection
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +21,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -28,19 +31,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.raion.coinvest.R
-import com.raion.coinvest.data.remote.firestore.model.ArticleDataClass
+import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 
 @Composable
 //@Preview
 fun CommunityPostCard(
-    articleDataClass: ArticleDataClass,
+    postDataClass: PostDataClass,
     onClick: () -> Unit
 ){
     Card(modifier = Modifier
         .fillMaxWidth()
-        .heightIn(max = 400.dp)
-        .clickable { onClick() },
+        .heightIn(max = 420.dp)
+        .clickable(
+            indication = null,
+            interactionSource = remember { MutableInteractionSource() } // This is mandatory
+        ) { onClick() },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(CoinvestLightGrey)
     ) {
@@ -51,26 +57,28 @@ fun CommunityPostCard(
             ) {
                 Card(modifier = Modifier.size(36.dp), shape = CircleShape) {
                     AsyncImage(
-                        model = articleDataClass.articleAuthor.profilePicture, contentDescription = "Profile Picture",
+                        model = postDataClass.postAuthor.profilePicture, contentDescription = "Profile Picture",
                         modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop
                         )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = articleDataClass.articleAuthor.userName.toString(), fontSize = 12.sp)
+                Text(text = postDataClass.postAuthor.userName.toString(), fontSize = 12.sp)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = articleDataClass.articleAuthor.accountType.toString(), fontSize = 10.sp)
+                Text(text = postDataClass.postAuthor.accountType.toString(), fontSize = 10.sp)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = articleDataClass.articleContent, fontSize = 14.sp)
+            Text(text = postDataClass.postContent, fontSize = 14.sp, maxLines = 12)
             Spacer(modifier = Modifier.height(16.dp))
 
-            Card(modifier = Modifier
-                .fillMaxWidth()
-                .height(180.dp)) {
-                AsyncImage(model = articleDataClass.imageUri, contentDescription = "", contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+            if(postDataClass.imageUri != Uri.EMPTY){
+                Card(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)) {
+                    AsyncImage(model = postDataClass.imageUri, contentDescription = "", contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
-            Spacer(modifier = Modifier.height(16.dp))
 
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly) {

@@ -1,23 +1,21 @@
 package com.raion.coinvest.presentation
 
+import NewsReplying
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.identity.Identity
 import com.raion.coinvest.data.remote.auth.GoogleAuthRepository
-import com.raion.coinvest.data.remote.firestore.model.ArticleDataClass
+import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
+import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.presentation.screen.communitySection.CommunityCreatePost
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostReply
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostReplying
@@ -40,8 +38,11 @@ import com.raion.coinvest.presentation.screen.homeSection.DashboardAwal
 import com.raion.coinvest.presentation.screen.mentorSection.MentorScreen
 import com.raion.coinvest.presentation.screen.mentorSection.MentorSearchScreen
 import com.raion.coinvest.presentation.screen.mentorSection.MentorVideoPlayer
+import com.raion.coinvest.presentation.screen.newsSection.NewsCreate
 import com.raion.coinvest.presentation.screen.newsSection.NewsPage
+import com.raion.coinvest.presentation.screen.newsSection.NewsReply
 import com.raion.coinvest.presentation.screen.newsSection.NewsScreen
+import com.raion.coinvest.presentation.screen.newsSection.NewsViewModel
 import com.raion.coinvest.presentation.screen.userProfileSection.UserFollowerScreen
 import com.raion.coinvest.presentation.screen.userProfileSection.UserProfileScreen
 import com.raion.coinvest.presentation.widget.transparentSystemBar.TransparentSystemBar
@@ -65,7 +66,10 @@ class MainActivity : ComponentActivity() {
             CoinvestTheme {
                 TransparentSystemBar()
                 var articleId: String = ""
-                var articleList: MutableList<ArticleDataClass> = mutableListOf()
+                var articleList: MutableList<PostDataClass> = mutableListOf()
+
+                var newsId: String = ""
+                var newsList: MutableList<NewsDataClass> = mutableListOf()
 
                 // NavGraph
                 val navController = rememberNavController()
@@ -207,13 +211,53 @@ class MainActivity : ComponentActivity() {
 
                     // tabIndex 4 entry point
                     composable(CoinvestUserFlow.NewsScreen.name){
+                        val viewModel: NewsViewModel by viewModels()
                         NewsScreen(
-                            onChangeTab = { navController.navigate(route = entryPointList[it]) }
+                            viewModel = viewModel,
+                            onChangeTab = { navController.navigate(route = entryPointList[it]) },
+                            onTabFloatingButton = { navController.navigate(route = CoinvestUserFlow.NewsCreate.name) },
+                            onTapNewsCard = {
+                                newsList = it.first
+                                newsId = it.second
+                                navController.navigate(CoinvestUserFlow.NewsPage.name)
+                            }
                         )
                     }
                     composable(CoinvestUserFlow.NewsPage.name){
-                        NewsPage()
+                        NewsPage(
+                            newsList = newsList,
+                            newsId = newsId,
+                            onClickComment = {
+                                newsId = it
+                                navController.navigate(route = CoinvestUserFlow.NewsReply.name)
+                            }
+                        )
                     }
+                    composable(CoinvestUserFlow.NewsCreate.name){
+                        val viewModel: NewsViewModel by viewModels()
+                        NewsCreate(onCreateNews = {
+                            viewModel.addNews(it)
+                            navController.navigate(route = entryPointList[4])
+                        } )
+                    }
+                    composable(CoinvestUserFlow.NewsReply.name){
+                        val viewModel: NewsViewModel by viewModels()
+                        NewsReply(
+                            newsId = newsId,
+                            viewModel = viewModel,
+                            onTapFloatingButton = { navController.navigate(CoinvestUserFlow.NewsReplying.name) }
+                        )
+                    }
+                    composable(CoinvestUserFlow.NewsReplying.name){
+                        val viewModel: NewsViewModel by viewModels()
+                        NewsReplying(parentId = newsId, onUploadPost = {
+                            viewModel.addNewComment(it)
+                            navController.navigate(route = CoinvestUserFlow.NewsReply.name)
+                        })
+                    }
+
+
+
                     composable(CoinvestUserFlow.UserProfileScreen.name){
                         UserProfileScreen(
                             onChangeTab = { navController.navigate(route = entryPointList[it]) }

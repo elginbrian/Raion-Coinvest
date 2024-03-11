@@ -16,9 +16,9 @@ import com.raion.coinvest.data.remote.auth.model.SignInState
 import com.raion.coinvest.data.remote.firebaseStorage.ImageRepository
 import com.raion.coinvest.data.remote.firebaseStorage.PdfRepository
 import com.raion.coinvest.data.remote.firebaseStorage.VideoRepository
-import com.raion.coinvest.data.remote.firestore.ArticleCollections
+import com.raion.coinvest.data.remote.firestore.PostCollections
 import com.raion.coinvest.data.remote.firestore.UserCollections
-import com.raion.coinvest.data.remote.firestore.model.ArticleDataClass
+import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,7 +40,7 @@ class DebugViewModel @Inject constructor(
     private val emailAuthRepository: EmailAuthRepository,
     private val twitterAuthRepository: TwitterAuthRepository,
     private val userCollections: UserCollections,
-    private val articleCollections: ArticleCollections,
+    private val postCollections: PostCollections,
     private val savedStateHandle: SavedStateHandle,
     val  player: Player,
     private val metadata: MetadataReader,
@@ -65,7 +65,7 @@ class DebugViewModel @Inject constructor(
     fun loginWithEmail()                                 = viewModelScope.launch { emailAuthRepository.loginUser(email = "elginbrian94@gmail.com", password = "220406") }
     fun createUserWithTwitter(context: Context)          = viewModelScope.launch { twitterAuthRepository.createUser(context) }
     fun addUsersToFireStore(user: UserDataClass)         = viewModelScope.launch { userCollections.addUsersToFireStore(user) }
-    fun addArticleToFireStore(article: ArticleDataClass) = viewModelScope.launch { articleCollections.addArticle(article, ) }
+    fun addArticleToFireStore(article: PostDataClass) = viewModelScope.launch { postCollections.addPost(article, ) }
 
     fun addPdfToFireStore(pdfUri: Uri)                   = viewModelScope.launch { pdfRepository.uploadPdf(pdfUri) }
 

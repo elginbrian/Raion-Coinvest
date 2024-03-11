@@ -7,6 +7,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -104,7 +105,10 @@ fun DebugScreen5(
                             modifier = Modifier
                                 .height(40.dp)
                                 .width(280.dp)
-                                .clickable {
+                                .clickable(
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() } // This is mandatory
+                                ) {
                                     singleVideoPickerLauncher.launch(
                                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly)
                                     )
@@ -120,7 +124,10 @@ fun DebugScreen5(
                             modifier = Modifier
                                 .height(40.dp)
                                 .width(280.dp)
-                                .clickable {
+                                .clickable(
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() } // This is mandatory
+                                ) {
                                     onUploadVideo(
                                         CourseDataClass(
                                             courseId = UUID

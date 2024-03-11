@@ -7,6 +7,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,7 +45,7 @@ import coil.compose.AsyncImage
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.raion.coinvest.R
-import com.raion.coinvest.data.remote.firestore.model.ArticleDataClass
+import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
@@ -58,11 +59,11 @@ import java.util.UUID
 @Composable
 fun CommunityPostReplying(
     viewModel: CommunityViewModel,
-    articleList: MutableList<ArticleDataClass>,
+    articleList: MutableList<PostDataClass>,
     articleId: String,
     onUploadReply: (CommentDataClass) -> Unit
 ){
-    val thisArticle   = articleList.filter { article -> article.articleId.equals(articleId) }
+    val thisArticle   = articleList.filter { article -> article.postId.equals(articleId) }
 
     val content          = remember { mutableStateOf("") }
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
@@ -114,12 +115,12 @@ fun CommunityPostReplying(
                 item(){
                     Spacer(modifier = Modifier.padding(40.dp))
                     CommunityPostCard(
-                        articleDataClass = ArticleDataClass(
-                            articleId        = thisArticle[0].articleId,
-                            articleTitle     = thisArticle[0].articleTitle,
-                            articleAuthor    = thisArticle[0].articleAuthor,
-                            articleCreatedAt = thisArticle[0].articleCreatedAt,
-                            articleContent   = thisArticle[0].articleContent,
+                        postDataClass = PostDataClass(
+                            postId        = thisArticle[0].postId,
+                            communityId     = thisArticle[0].communityId,
+                            postAuthor    = thisArticle[0].postAuthor,
+                            postCreatedAt = thisArticle[0].postCreatedAt,
+                            postContent   = thisArticle[0].postContent,
                             imageUri         = thisArticle[0].imageUri
                         )
                     ){}
@@ -188,7 +189,10 @@ fun CommunityPostReplying(
                 Card(modifier = Modifier
                     .width(30.dp)
                     .height(30.dp)
-                    .clickable {
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() } // This is mandatory
+                    ) {
                         singlePhotoPickerLauncher.launch(
                             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                         )
@@ -204,11 +208,14 @@ fun CommunityPostReplying(
                 Card(modifier = Modifier
                     .width(70.dp)
                     .height(30.dp)
-                    .clickable {
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() } // This is mandatory
+                    ) {
                         onUploadReply(
                             CommentDataClass(
                             commentId        = UUID.randomUUID().toString(),
-                            parentId         = thisArticle[0].articleId,
+                            parentId         = thisArticle[0].postId,
                             commentContent   = content.value,
                             commentCreatedAt = LocalDateTime.now().toString(),
                             commentAuthor    = UserDataClass(

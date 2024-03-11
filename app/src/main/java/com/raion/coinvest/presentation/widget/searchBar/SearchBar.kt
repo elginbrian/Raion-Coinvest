@@ -2,6 +2,7 @@ package com.raion.coinvest.presentation.widget.searchBar
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,7 +51,10 @@ fun SearchBar(){
         ) {
             Row(modifier = Modifier
                 .fillMaxSize(0.8f)
-                .clickable { isClicked.value = true }) {
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { isClicked.value = true }) {
                 Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxSize()) {
                     if(isClicked.value){
                         Spacer(modifier = Modifier.padding(1.dp))

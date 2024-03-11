@@ -3,6 +3,7 @@ package com.raion.coinvest.presentation.screen.loginSection
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -67,7 +68,10 @@ fun LoginAwal2() {
                         Text(text = "Lorem Ipsum", fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 32.dp))
 
                     }
-                    Image(painter = painterResource(id = R.drawable.selanjutnya), contentDescription = "", modifier = Modifier.padding(15.dp).padding(top = 10.dp).clickable { },)
+                    Image(painter = painterResource(id = R.drawable.selanjutnya), contentDescription = "", modifier = Modifier.padding(15.dp).padding(top = 10.dp).clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() } // This is mandatory
+                    ) { },)
                 }
             }
         }

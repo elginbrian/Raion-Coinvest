@@ -1,6 +1,8 @@
 package com.raion.coinvest.presentation.screen.newsSection
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +19,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,12 +33,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import com.raion.coinvest.data.remote.firebaseStorage.ImageRepository
+import com.raion.coinvest.data.remote.firestore.NewsCollections
+import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
+import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.screen.mentorSection.MentorTabRow2
 import com.raion.coinvest.presentation.widget.appsBottomBar.AppsBottomBar
 import com.raion.coinvest.presentation.widget.searchBar.SearchBar
@@ -43,11 +55,17 @@ import com.raion.coinvest.presentation.widget.searchBar.SearchBar
 @Composable
 //@Preview
 fun NewsScreen(
-    onChangeTab: (Int) -> Unit
+    viewModel: NewsViewModel,
+    onChangeTab: (Int) -> Unit,
+    onTabFloatingButton: () -> Unit,
+    onTapNewsCard: (Pair<MutableList<NewsDataClass>, String>) -> Unit
 ){
     val tabIndex = remember {
         mutableStateOf(0)
     }
+    val newsList = remember { mutableStateOf<MutableList<NewsDataClass>>(mutableListOf()) }
+    viewModel.getNews { newsList.value = it }
+
     Scaffold(
         topBar    = {
             Card(
@@ -90,14 +108,22 @@ fun NewsScreen(
                 item{
                     Card(modifier = Modifier
                         .fillMaxWidth(0.9f)
-                        .height(150.dp)) {
+                        .height(150.dp),
+                        colors = CardDefaults.cardColors(CoinvestBase)
+                    ) {
                         LazyRow(modifier = Modifier.fillMaxSize()){
-                            items(5){
+                            items(newsList.value.shuffled()){
                                 Card(modifier = Modifier
                                     .fillMaxHeight()
-                                    .width(360.dp)) {
-                                    Text(text = it.toString())
+                                    .width(360.dp).clickable(
+                                        indication = null,
+                                        interactionSource = remember { MutableInteractionSource() }
+                                    ) { onTapNewsCard(Pair(newsList.value, it.newsId)) },
+                                    colors = CardDefaults.cardColors(CoinvestBase)
+                                ) {
+                                    AsyncImage(model = it.imageUri, contentDescription = "Display", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
                                 }
+                                Spacer(modifier = Modifier.padding(4.dp))
                             }
                         }
                     }
@@ -108,9 +134,14 @@ fun NewsScreen(
                         Text(text = "Berita Terbaru", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                     }
                 }
-                items(6){
+                items(newsList.value){
                     Spacer(modifier = Modifier.padding(8.dp))
-                    NewsCard()
+                    NewsCard(newsDataClass = it, onClick = {
+                        onTapNewsCard(Pair(newsList.value, it.newsId))
+                    })
+                }
+                item {
+                    Spacer(modifier = Modifier.padding(80.dp))
                 }
             }
         },
@@ -122,12 +153,25 @@ fun NewsScreen(
                     onChangeTab(it)
                 }
             }
+        },
+        floatingActionButton = {
+            Card(
+                modifier = Modifier
+                    .width(106.dp)
+                    .height(46.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) { onTabFloatingButton() },
+                shape = RoundedCornerShape(50.dp),
+                colors = CardDefaults.cardColors(CoinvestDarkPurple)
+            ) {
+                Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add Post", tint = CoinvestBase)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(text = "Post", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Medium)
+                }
+            }
         }
     )
-}
-
-@Composable
-@Preview
-fun NSpreview(){
-    NewsScreen(onChangeTab = {})
 }

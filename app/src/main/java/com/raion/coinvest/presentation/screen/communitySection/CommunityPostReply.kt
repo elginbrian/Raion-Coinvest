@@ -31,7 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.raion.coinvest.R
-import com.raion.coinvest.data.remote.firestore.model.ArticleDataClass
+import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
 
@@ -39,11 +39,11 @@ import com.raion.coinvest.presentation.designSystem.CoinvestBase
 @Composable
 fun CommunityPostReply(
     viewModel: CommunityViewModel,
-    articleList: MutableList<ArticleDataClass>,
+    articleList: MutableList<PostDataClass>,
     articleId: String,
     onTapPost: () -> Unit
 ){
-    val thisArticle   = articleList.filter { article -> article.articleId.equals(articleId) }
+    val thisArticle   = articleList.filter { article -> article.postId.equals(articleId) }
     val replyList     = remember { mutableStateOf<MutableList<CommentDataClass>>(mutableListOf()) }
     viewModel.getComment { replyList.value = it }
     val thisReplyList = replyList.value.filter { comment -> comment.parentId.equals(articleId) }
@@ -89,12 +89,12 @@ fun CommunityPostReply(
                         item(){
                             Spacer(modifier = Modifier.padding(40.dp))
                             CommunityPostCard(
-                                articleDataClass = ArticleDataClass(
-                                    articleId        = thisArticle[0].articleId,
-                                    articleTitle     = thisArticle[0].articleTitle,
-                                    articleAuthor    = thisArticle[0].articleAuthor,
-                                    articleCreatedAt = thisArticle[0].articleCreatedAt,
-                                    articleContent   = thisArticle[0].articleContent,
+                                postDataClass = PostDataClass(
+                                    postId        = thisArticle[0].postId,
+                                    communityId     = thisArticle[0].communityId,
+                                    postAuthor    = thisArticle[0].postAuthor,
+                                    postCreatedAt = thisArticle[0].postCreatedAt,
+                                    postContent   = thisArticle[0].postContent,
                                     imageUri         = thisArticle[0].imageUri
                                 ),
                                 onClick = {
@@ -106,12 +106,12 @@ fun CommunityPostReply(
                         }
                         items(thisReplyList){
                             Spacer(modifier = Modifier.padding(8.dp))
-                            CommunityPostCard(articleDataClass = ArticleDataClass(
-                                articleId        = it.commentId,
-                                articleAuthor    = it.commentAuthor,
-                                articleContent   = it.commentContent,
-                                articleCreatedAt = it.commentCreatedAt,
-                                articleTitle     = "",
+                            CommunityPostCard(postDataClass = PostDataClass(
+                                postId        = it.commentId,
+                                postAuthor    = it.commentAuthor,
+                                postContent   = it.commentContent,
+                                postCreatedAt = it.commentCreatedAt,
+                                communityId     = "",
                                 imageUri         = it.imageUri
                             )) {}
                         }

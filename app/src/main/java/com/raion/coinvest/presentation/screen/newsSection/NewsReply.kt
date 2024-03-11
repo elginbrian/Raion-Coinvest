@@ -1,10 +1,10 @@
-package com.raion.coinvest.presentation.screen.communitySection
+package com.raion.coinvest.presentation.screen.newsSection
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,34 +32,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
-import com.raion.coinvest.presentation.widget.appsBottomBar.AppsBottomBar
+import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
-import com.raion.coinvest.presentation.widget.searchBar.SearchBar
+import com.raion.coinvest.presentation.screen.communitySection.CommunityPostCard
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-//@Preview
-fun CommunityScreen(
-    viewModel: CommunityViewModel,
-    onChangeTab: (Int) -> Unit,
-    onTapFloatingButton: () -> Unit,
-    onTapPost: (Pair<MutableList<PostDataClass>,String>) -> Unit
+fun NewsReply(
+    newsId: String,
+    viewModel: NewsViewModel,
+    onTapFloatingButton: () -> Unit
 ){
-    val articleList = remember { mutableStateOf<MutableList<PostDataClass>>(mutableListOf()) }
-    viewModel.getPost(){ articleList.value = it }
+    val commentList = remember {
+        mutableStateOf<MutableList<CommentDataClass>>(mutableListOf())
+    }
+    viewModel.getComment {
+        commentList.value = it
+    }
+
+    val thisNewsComment = commentList.value.filter { comment -> comment.parentId.equals(newsId) }
 
     Scaffold(
-        containerColor = CoinvestBase,
-        modifier = Modifier.fillMaxSize(),
         topBar = {
             Card(
                 shape = RectangleShape,
                 colors = CardDefaults.cardColors(CoinvestBase)
-            ) {
+            ){
                 Column(
                     modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -73,54 +77,42 @@ fun CommunityScreen(
                         verticalAlignment     = Alignment.CenterVertically
                     ){
                         Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button")
-                        Text(text = "Forum & Komunitas", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(text = "Komentar", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.width(20.dp))
-                    }
-                    SearchBar()
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(32.dp)
-                            .padding(end = 100.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment     = Alignment.CenterVertically
-                    ){
-                        CommunityTabRow()
                     }
                 }
             }
         },
         content = {
-             LazyColumn(modifier = Modifier
-                 .fillMaxSize()
-                 .padding(horizontal = 16.dp)){
-                item { 
-                    Spacer(modifier = Modifier.height(170.dp))
-                }
-                items(articleList.value){
-                    Spacer(modifier = Modifier.height(8.dp))
-                    CommunityPostCard(it, onClick = {
-                        onTapPost(Pair(articleList.value, it.postId))
-                    })
-                }
-                 item {
-                     Spacer(modifier = Modifier.height(170.dp))
-                 }
-             }
-        },
-        bottomBar = {
-            Box(modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 24.dp, bottom = 24.dp)){
-                AppsBottomBar(currentTab = 3){
-                    onChangeTab(it)
-                }
-            }
+                  LazyColumn(modifier = Modifier
+                      .fillMaxSize()
+                      .padding(horizontal = 16.dp)){
 
+                        item {
+                            Spacer(modifier = Modifier.padding(40.dp))
+                        }
+                        items(thisNewsComment) {
+                            Spacer(modifier = Modifier.padding(8.dp))
+                            CommunityPostCard(PostDataClass(
+                                postId = it.commentId,
+                                postContent = it.commentContent,
+                                postAuthor = it.commentAuthor,
+                                postCreatedAt = it.commentCreatedAt,
+                                imageUri = it.imageUri,
+                                communityId = "",
+                            )) {
+
+                            }
+                        }
+                      item {
+                          Spacer(modifier = Modifier.padding(60.dp))
+                      }
+                  }
         },
         floatingActionButton = {
             Card(
                 modifier = Modifier
-                    .width(106.dp)
+                    .width(130.dp)
                     .height(46.dp)
                     .clickable(
                         indication = null,
@@ -132,7 +124,7 @@ fun CommunityScreen(
                 Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = "Add Post", tint = CoinvestBase)
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "Post", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Medium)
+                    Text(text = "Komentar", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Medium)
                 }
             }
         }
