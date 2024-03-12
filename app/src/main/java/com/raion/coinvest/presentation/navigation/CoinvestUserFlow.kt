@@ -40,5 +40,8 @@ enum class CoinvestUserFlow{
 
     // UserProfileSection
     UserProfileScreen,          // 20
-    UserFollowerScreen;         // 21
+    UserFollowerScreen,         // 21
+
+    // StocksSection
+    StocksScreen;               // 22
 }

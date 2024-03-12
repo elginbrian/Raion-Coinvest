@@ -70,12 +70,6 @@ fun DebugScreen5(
             courseList.value = it
             Log.d("", courseList.value.toString())
         }
-//        viewModel2.getListWithMarketData {
-//            Log.d("Crypto", it.toString())
-//        }
-//        viewModel2.getTrendingSearchList {
-//            Log.d("Crypto", it.toString())
-//        }
     }
     Box(modifier = Modifier
         .fillMaxSize()

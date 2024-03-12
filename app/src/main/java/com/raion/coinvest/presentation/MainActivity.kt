@@ -43,6 +43,8 @@ import com.raion.coinvest.presentation.screen.newsSection.NewsPage
 import com.raion.coinvest.presentation.screen.newsSection.NewsReply
 import com.raion.coinvest.presentation.screen.newsSection.NewsScreen
 import com.raion.coinvest.presentation.screen.newsSection.NewsViewModel
+import com.raion.coinvest.presentation.screen.stocksSection.StocksScreen
+import com.raion.coinvest.presentation.screen.stocksSection.StocksViewModel
 import com.raion.coinvest.presentation.screen.userProfileSection.UserFollowerScreen
 import com.raion.coinvest.presentation.screen.userProfileSection.UserProfileScreen
 import com.raion.coinvest.presentation.widget.transparentSystemBar.TransparentSystemBar
@@ -77,7 +79,7 @@ class MainActivity : ComponentActivity() {
                 val entryPointList = listOf(
                     CoinvestUserFlow.HomeScreen.name,      // entry point 0
                     CoinvestUserFlow.MentorScreen.name,    // entry point 1
-                    "statistics",                          // entry point 2
+                    CoinvestUserFlow.StocksScreen.name,    // entry point 2
                     CoinvestUserFlow.CommunityScreen.name, // entry point 3
                     CoinvestUserFlow.NewsScreen.name,      // entry point 4
                 )
@@ -138,6 +140,17 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(CoinvestUserFlow.MentorVideoPlayer.name){
                         MentorVideoPlayer(
+                            onChangeTab = { navController.navigate(route = entryPointList[it]) }
+                        )
+                    }
+
+
+
+                    // tabIndex 2 entry point
+                    composable(CoinvestUserFlow.StocksScreen.name){
+                        val viewModel: StocksViewModel by viewModels()
+                        StocksScreen(
+                            viewModel = viewModel,
                             onChangeTab = { navController.navigate(route = entryPointList[it]) }
                         )
                     }
