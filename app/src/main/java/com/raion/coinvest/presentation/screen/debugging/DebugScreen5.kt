@@ -65,12 +65,12 @@ fun DebugScreen5(
     val content     = remember { mutableStateOf("") }
     val courseList  = remember { mutableStateOf<MutableList<CourseDataClass>>(mutableListOf()) }
 
-    LaunchedEffect(key1 = true) {
+
         viewModel2.getCourse {
             courseList.value = it
             Log.d("", courseList.value.toString())
         }
-    }
+
     Box(modifier = Modifier
         .fillMaxSize()
         .background(CoinvestBase)){
@@ -122,28 +122,28 @@ fun DebugScreen5(
                                     indication = null,
                                     interactionSource = remember { MutableInteractionSource() } // This is mandatory
                                 ) {
-                                    onUploadVideo(
-                                        CourseDataClass(
-                                            courseId = UUID
-                                                .randomUUID()
-                                                .toString(),
-                                            courseName = header.value,
-                                            courseOwner = UserDataClass(
-                                                userId = Firebase.auth.currentUser?.uid,
-                                                userName = Firebase.auth.currentUser?.displayName,
-                                                profilePicture = Firebase.auth.currentUser?.photoUrl.toString(),
-                                                accountType = "author",
-                                                email = Firebase.auth.currentUser?.email
-                                            ),
-                                            courseContent = mutableListOf(
-                                                CourseContent(
-                                                    videoTitle = header.value,
-                                                    videoDescription = content.value,
-                                                    videoUri = selectedVideoUri.value ?: Uri.EMPTY
-                                                )
-                                            )
-                                        )
-                                    )
+//                                    onUploadVideo(
+//                                        CourseDataClass(
+//                                            courseId = UUID
+//                                                .randomUUID()
+//                                                .toString(),
+//                                            courseName = header.value,
+//                                            courseOwner = UserDataClass(
+//                                                userId = Firebase.auth.currentUser?.uid,
+//                                                userName = Firebase.auth.currentUser?.displayName,
+//                                                profilePicture = Firebase.auth.currentUser?.photoUrl.toString(),
+//                                                accountType = "author",
+//                                                email = Firebase.auth.currentUser?.email
+//                                            ),
+//                                            courseContent = mutableListOf(
+//                                                CourseContent(
+//                                                    videoTitle = header.value,
+//                                                    videoDescription = content.value,
+//                                                    videoUri = selectedVideoUri.value ?: Uri.EMPTY
+//                                                )
+//                                            )
+//                                        )
+                                    //)
                                 },
                             colors = CardDefaults.cardColors(CoinvestBlue)
                         ) {
@@ -191,7 +191,7 @@ fun CourseCard(
             Text(text = content)
             Spacer(modifier = Modifier.height(8.dp))
 
-            VideoPlayerCard()
+            //VideoPlayerCard(viewModel)
         }
     }
 }

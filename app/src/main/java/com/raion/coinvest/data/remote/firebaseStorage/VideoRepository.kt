@@ -19,7 +19,7 @@ class VideoRepository {
             contentType = "video/mp4"
         }
 
-        val uploadTask = storageRef.child("videos/${course.courseId}").putFile(course.courseContent[0].videoUri, metadata)
+        val uploadTask = storageRef.child("videos/${course.courseId}/${course.courseContent[0].videoId}").putFile(course.courseContent[0].videoUri, metadata)
 
         uploadTask.addOnProgressListener {
             val progress = (100.0 * it.bytesTransferred) / it.totalByteCount
@@ -34,14 +34,22 @@ class VideoRepository {
         }.await()
     }
 
-    suspend fun getVideo(courseId: String): Uri = suspendCoroutine {continuation ->
-        Log.d("getVideo", "getVideo called")
-        val pathReference = storageRef.child("videos/$courseId")
-        pathReference.downloadUrl.addOnCompleteListener{
-            Log.d("getVideo", "getVideo Success")
-            continuation.resume(it.result)
-        }.addOnFailureListener{
-            Log.d("getVideo", "getVideo Failed: ${it.localizedMessage}")
+    suspend fun getVideo(courseId: String, videoId: String): Uri = suspendCoroutine { continuation ->
+        try {
+            val pathReference = storageRef.child("videos/${courseId}/${videoId}")
+            Log.d("getVideo", "getVideo called")
+            Log.d("getVideo", pathReference.toString())
+            pathReference.downloadUrl.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("getVideo", "getVideo Success")
+                    continuation.resume(task.result)
+                } else {
+                    Log.d("getVideo", "getVideo Failed: ${task.exception?.localizedMessage}")
+                    continuation.resume(Uri.EMPTY)
+                }
+            }
+        } catch (e: Exception) {
+            Log.d("getVideo", "getVideo Failed: ${e.localizedMessage}")
             continuation.resume(Uri.EMPTY)
         }
     }

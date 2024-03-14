@@ -30,18 +30,21 @@ enum class CoinvestUserFlow{
     MentorScreen,               // 12
     MentorSearchScreen,         // 13
     MentorVideoPlayer,          // 14
+    MentorCreate,               // 15
+    MentorNew,                  // 16
 
     // NewsSection
-    NewsScreen,                 // 15
-    NewsPage,                   // 16
-    NewsCreate,                 // 17
-    NewsReply,                  // 18
-    NewsReplying,               // 19
+    NewsScreen,                 // 17
+    NewsPage,                   // 18
+    NewsCreate,                 // 19
+    NewsReply,                  // 20
+    NewsReplying,               // 21
 
     // UserProfileSection
-    UserProfileScreen,          // 20
-    UserFollowerScreen,         // 21
+    UserProfileScreen,          // 22
+    UserFollowerScreen,         // 23
 
     // StocksSection
-    StocksScreen;               // 22
+    StocksScreen,               // 24
+    StocksPage;                 // 25
 }

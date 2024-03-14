@@ -1,6 +1,7 @@
 package com.raion.coinvest.presentation.screen.debugging
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -95,31 +96,40 @@ class DebugViewModel2 @Inject constructor(
 
     fun getCourse(
         onFinished: (MutableList<CourseDataClass>) -> Unit
-    ){
-        if(!isFetching){
+    ) {
+        if (!isFetching) {
             isFetching = true
-            viewModelScope.launch{
-                val courseList         = courseCollections.getCourse()
-                val videoFetchDeferred = mutableListOf<CompletableDeferred<Unit>>()
 
-                for(course in courseList){
-                    val videoDeferred = CompletableDeferred<Unit>()
-                    videoFetchDeferred.add(videoDeferred)
+            viewModelScope.launch {
+                try {
+                    val courseList = courseCollections.getCourse()
 
-                    getVideo(course.courseId){ videoUri ->
-                        course.courseContent.add(element = CourseContent(
-                            videoTitle       = course.courseName,
-                            videoDescription = course.courseName, // need fix
-                            videoUri         = videoUri
-                        )
-                        )
-                        videoDeferred.complete(Unit)
+                    val videoFetchDeferred = mutableListOf<CompletableDeferred<Unit>>()
+
+                    for (course in courseList) {
+                        val videoDeferred = CompletableDeferred<Unit>()
+                        videoFetchDeferred.add(videoDeferred)
+
+//                        getVideo(course.courseId) { videoUri ->
+////                            course.courseContent.add(
+////                                CourseContent(
+////                                    videoTitle = course.courseName,
+////                                    videoDescription = course.courseName,
+////                                    videoUri = videoUri
+////                                )
+////                            )
+//                            videoDeferred.complete(Unit)
+//                        }
                     }
-                }
-                videoFetchDeferred.awaitAll()
 
-                isFetching = false
-                onFinished(courseList)
+                    videoFetchDeferred.awaitAll()
+
+                    isFetching = false
+                    onFinished(courseList)
+                } catch (e: Exception) {
+                    isFetching = false
+                    onFinished(mutableListOf()) // or handle error case appropriately
+                }
             }
         }
     }
@@ -134,13 +144,13 @@ class DebugViewModel2 @Inject constructor(
         }
     }
 
-    private fun getVideo(
-        courseId: String,
-        onFinished: (Uri) -> Unit
-    ){
-        viewModelScope.launch {
-            val videoUri = videoRepository.getVideo(courseId)
-            onFinished(videoUri)
-        }
-    }
+//    private fun getVideo(
+//        courseId: String,
+//        onFinished: (Uri) -> Unit
+//    ){
+//        viewModelScope.launch {
+//            val videoUri = videoRepository.getVideo(courseId)
+//            onFinished(videoUri)
+//        }
+//    }
 }

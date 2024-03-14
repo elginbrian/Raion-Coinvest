@@ -8,14 +8,20 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.ui.layout.FirstBaseline
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.identity.Identity
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.raion.coinvest.data.remote.api.model.GetTrendingSearchList
 import com.raion.coinvest.data.remote.auth.GoogleAuthRepository
+import com.raion.coinvest.data.remote.firestore.model.CourseDataClass
 import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
+import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.screen.communitySection.CommunityCreatePost
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostReply
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostReplying
@@ -35,14 +41,18 @@ import com.raion.coinvest.presentation.screen.communityProfileSection.CommunityP
 import com.raion.coinvest.presentation.screen.communitySearchSection.CommunitySearchGrid
 import com.raion.coinvest.presentation.screen.communitySearchSection.CommunitySearchScreen
 import com.raion.coinvest.presentation.screen.homeSection.DashboardAwal
+import com.raion.coinvest.presentation.screen.mentorSection.MentorCreate
+import com.raion.coinvest.presentation.screen.mentorSection.MentorNew
 import com.raion.coinvest.presentation.screen.mentorSection.MentorScreen
 import com.raion.coinvest.presentation.screen.mentorSection.MentorSearchScreen
 import com.raion.coinvest.presentation.screen.mentorSection.MentorVideoPlayer
+import com.raion.coinvest.presentation.screen.mentorSection.MentorViewModel
 import com.raion.coinvest.presentation.screen.newsSection.NewsCreate
 import com.raion.coinvest.presentation.screen.newsSection.NewsPage
 import com.raion.coinvest.presentation.screen.newsSection.NewsReply
 import com.raion.coinvest.presentation.screen.newsSection.NewsScreen
 import com.raion.coinvest.presentation.screen.newsSection.NewsViewModel
+import com.raion.coinvest.presentation.screen.stocksSection.StocksPage
 import com.raion.coinvest.presentation.screen.stocksSection.StocksScreen
 import com.raion.coinvest.presentation.screen.stocksSection.StocksViewModel
 import com.raion.coinvest.presentation.screen.userProfileSection.UserFollowerScreen
@@ -67,12 +77,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             CoinvestTheme {
                 TransparentSystemBar()
-                var articleId: String = ""
-                var articleList: MutableList<PostDataClass> = mutableListOf()
-
-                var newsId: String = ""
-                var newsList: MutableList<NewsDataClass> = mutableListOf()
-
                 // NavGraph
                 val navController = rememberNavController()
 
@@ -84,8 +88,13 @@ class MainActivity : ComponentActivity() {
                     CoinvestUserFlow.NewsScreen.name,      // entry point 4
                 )
 
-                NavHost(navController = navController, startDestination = CoinvestUserFlow.LoginScreen.name){
-
+                NavHost(navController = navController, startDestination =
+                    if(Firebase.auth.currentUser != null) {
+                        entryPointList[3]
+                    } else {
+                        CoinvestUserFlow.LoginScreen.name
+                    }
+                ){
                     composable(CoinvestUserFlow.LoginScreen.name){
                         val viewModel: LoginViewModel by viewModels()
                         val launcher = rememberLauncherForActivityResult(
@@ -130,34 +139,85 @@ class MainActivity : ComponentActivity() {
 
 
                     // tabIndex 1 entry point
+                    var courseId: String = ""
+                    var newCourse: CourseDataClass = CourseDataClass("","","","","",
+                        UserDataClass("","","","",""), mutableListOf()
+                    )
+                    var courseList: MutableList<CourseDataClass> = mutableListOf()
                     composable(CoinvestUserFlow.MentorScreen.name){
+                        val viewModel: MentorViewModel by viewModels()
                         MentorScreen(
-                            onChangeTab = { navController.navigate(route = entryPointList[it]) }
+                            viewModel = viewModel,
+                            onChangeTab = { navController.navigate(route = entryPointList[it]) },
+                            onOpenCourse = {
+                                courseList = it.first
+                                courseId = it.second
+                                navController.navigate(route = CoinvestUserFlow.MentorVideoPlayer.name)
+                            },
+                            onTapFloatingButton = { navController.navigate(CoinvestUserFlow.MentorNew.name) }
                         )
                     }
                     composable(CoinvestUserFlow.MentorSearchScreen.name){
                         MentorSearchScreen()
                     }
                     composable(CoinvestUserFlow.MentorVideoPlayer.name){
+                        val viewModel: MentorViewModel by viewModels()
                         MentorVideoPlayer(
+                            viewModel   = viewModel,
+                            courseId    = courseId,
+                            courseList  = courseList,
                             onChangeTab = { navController.navigate(route = entryPointList[it]) }
+                        )
+                    }
+                    composable(CoinvestUserFlow.MentorNew.name){
+                        MentorNew(
+                            onTapLanjutkan = {
+                                newCourse = it
+                                navController.navigate(CoinvestUserFlow.MentorCreate.name)
+                            }
+                        )
+                    }
+                    composable(CoinvestUserFlow.MentorCreate.name){
+                        val viewModel: MentorViewModel by viewModels()
+                        MentorCreate(
+                            viewModel = viewModel,
+                            newCourse = newCourse,
+                            onTapPost = {
+                                viewModel.addCourse(it)
+                                navController.navigate(CoinvestUserFlow.MentorScreen.name)
+                            }
                         )
                     }
 
 
 
                     // tabIndex 2 entry point
+                    var stocksId: String = ""
+                    var stocksList: GetTrendingSearchList = GetTrendingSearchList(listOf())
                     composable(CoinvestUserFlow.StocksScreen.name){
                         val viewModel: StocksViewModel by viewModels()
                         StocksScreen(
                             viewModel = viewModel,
-                            onChangeTab = { navController.navigate(route = entryPointList[it]) }
+                            onChangeTab = { navController.navigate(route = entryPointList[it]) },
+                            onTabStocks = {
+                                stocksId = it.second
+                                stocksList = it.first
+                                navController.navigate(CoinvestUserFlow.StocksPage.name)
+                            }
+                        )
+                    }
+                    composable(CoinvestUserFlow.StocksPage.name){
+                        StocksPage(
+                            stocksId = stocksId,
+                            stocksList = stocksList
                         )
                     }
 
 
 
                     // tabIndex 3 entry point
+                    var articleId: String = ""
+                    var articleList: MutableList<PostDataClass> = mutableListOf()
                     composable(CoinvestUserFlow.CommunityScreen.name){
                         val viewModel: CommunityViewModel by viewModels()
                         CommunityScreen(
@@ -223,6 +283,8 @@ class MainActivity : ComponentActivity() {
 
 
                     // tabIndex 4 entry point
+                    var newsId: String = ""
+                    var newsList: MutableList<NewsDataClass> = mutableListOf()
                     composable(CoinvestUserFlow.NewsScreen.name){
                         val viewModel: NewsViewModel by viewModels()
                         NewsScreen(

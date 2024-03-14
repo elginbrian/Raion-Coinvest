@@ -2,6 +2,8 @@ package com.raion.coinvest.presentation.screen.stocksSection
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,7 +42,8 @@ import com.raion.coinvest.presentation.widget.appsBottomBar.AppsBottomBar
 //@Preview
 fun StocksScreen(
     viewModel: StocksViewModel,
-    onChangeTab: (Int) -> Unit
+    onChangeTab: (Int) -> Unit,
+    onTabStocks: (Pair<GetTrendingSearchList, String>) -> Unit
 ){
     val apiResult = remember {
         mutableStateOf(GetTrendingSearchList(coins = listOf()))
@@ -107,8 +110,13 @@ fun StocksScreen(
 
                 items(apiResult.value.coins.sortedBy { it.item.marketCapRank }){
                     Spacer(modifier = Modifier.padding(8.dp))
-                    Row(modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Row(modifier = Modifier.fillMaxWidth().clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) { onTabStocks(Pair(apiResult.value, it.item.id)) },
+
+                        horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Row(modifier = Modifier.fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
                             Card(modifier = Modifier.size(50.dp)) {
                                 AsyncImage(model = it.item.thumb, contentDescription = "thumbnail", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)

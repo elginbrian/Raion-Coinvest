@@ -19,10 +19,11 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ViewModel
 import androidx.media3.ui.PlayerView
 import com.raion.coinvest.presentation.screen.debugging.DebugViewModel
+import com.raion.coinvest.presentation.screen.mentorSection.MentorViewModel
 
 @Composable
 fun VideoPlayerCard(
-    //viewModel: DebugViewModel
+    viewModel: MentorViewModel
 ){
     val lifecycle = remember {
         mutableStateOf(Lifecycle.Event.ON_CREATE)
@@ -40,11 +41,11 @@ fun VideoPlayerCard(
     Card(shape = RectangleShape) {
         AndroidView(factory = {context ->
             PlayerView(context).also {
-                //it.player = viewModel.player
+                it.player = viewModel.player
             }
         }, modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(16 / 10f),
+            .aspectRatio(16 / 12f),
             update = {
                 when(lifecycle.value){
                     Lifecycle.Event.ON_PAUSE -> {

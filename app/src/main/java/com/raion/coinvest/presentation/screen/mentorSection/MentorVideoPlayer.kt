@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChatBubbleOutline
@@ -34,7 +35,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.raion.coinvest.data.remote.firestore.model.CourseDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.designSystem.CoinvestGrey
 import com.raion.coinvest.presentation.screen.debugging.DebugViewModel
@@ -46,10 +49,16 @@ import com.raion.coinvest.presentation.widget.videoPlayerCard.VideoPlayerCard
 @Composable
 //@Preview
 fun MentorVideoPlayer(
+    viewModel: MentorViewModel,
+    courseId: String,
+    courseList: MutableList<CourseDataClass>,
     onChangeTab: (Int) -> Unit
 ){
+    val thisCourse = courseList.filter { course -> course.courseId.equals(courseId) }
+
+
     Scaffold(
-        containerColor = CoinvestGrey,
+        containerColor = CoinvestBlack,
         topBar = {
             Row(
                 modifier = Modifier
@@ -65,52 +74,29 @@ fun MentorVideoPlayer(
         content = {
             Column(modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.30f)
+                .fillMaxHeight(0.29f)
             ) {
-                VideoPlayerCard()
+                viewModel.addVideoUri(thisCourse[0].courseContent[0].videoUri)
+                VideoPlayerCard(viewModel)
             }
         },
         bottomBar = {
             Box(modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxSize(0.80f),
+                .fillMaxSize(0.83f),
                 contentAlignment = Alignment.TopStart
             ){
                 Column(modifier = Modifier) {
-                    Spacer(modifier = Modifier.padding(32.dp))
+                    Spacer(modifier = Modifier.padding(33.dp))
                     Card(modifier = Modifier.fillMaxSize(),
-                        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+                        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                     ) {
                         Scaffold(
                             containerColor = CoinvestBase,
                             topBar = {
                                 Card(shape = RoundedCornerShape(topEnd = 20.dp, topStart = 20.dp),
                                     colors = CardDefaults.cardColors(CoinvestBase)) {
-                                    Column(modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 16.dp, end = 16.dp, start = 16.dp)) {
-                                        Spacer(modifier = Modifier.padding(4.dp))
-                                        Text(text = "Lorem Ipsum", fontSize = 32.sp, fontWeight = FontWeight.Bold)
 
-                                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ){
-                                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                                Text(text = "X Course", fontSize = 12.sp)
-                                            }
-                                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                                Text(text = "Rp. 69.000", fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
-                                            }
-                                        }
-                                        Spacer(modifier = Modifier.padding(12.dp))
-                                        Column(modifier = Modifier.fillMaxWidth(),
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                            verticalArrangement = Arrangement.Center
-                                        ){
-                                            Text(text = "About", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
-                                            Icon(imageVector = Icons.Rounded.KeyboardArrowDown, contentDescription = "Arrow")
-                                        }
-                                    }
                                 }
                             },
                             content = {
@@ -118,11 +104,39 @@ fun MentorVideoPlayer(
                                     .fillMaxSize()
                                     .padding(16.dp)){
                                     item {
-                                        Spacer(modifier = Modifier.height(140.dp))
+                                        Column(modifier = Modifier
+                                            .fillMaxWidth()) {
+                                            Spacer(modifier = Modifier.padding(4.dp))
+                                            Text(text = thisCourse[0].courseName, fontSize = 26.sp, fontWeight = FontWeight.Bold)
+
+                                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ){
+                                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                                    Text(text = thisCourse[0].courseOwner.userName.toString(), fontSize = 14.sp)
+                                                }
+                                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                                    Text(text = "Rp."+thisCourse[0].coursePrice, fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
+                                                }
+                                            }
+                                            Spacer(modifier = Modifier.padding(8.dp))
+                                            Column(modifier = Modifier.fillMaxWidth(),
+                                                horizontalAlignment = Alignment.CenterHorizontally,
+                                                verticalArrangement = Arrangement.Center
+                                            ){
+                                                Text(text = "About", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                                                Icon(imageVector = Icons.Rounded.KeyboardArrowDown, contentDescription = "Arrow")
+                                            }
+                                        }
                                     }
-                                    items(12){
+                                    items(courseList){
                                         Spacer(modifier = Modifier.padding(8.dp))
-                                        CourseCard()
+                                        CourseCard(it){
+
+                                        }
+                                    }
+                                    item {
+                                        Spacer(modifier = Modifier.height(120.dp))
                                     }
                                 }
                             },
@@ -160,10 +174,4 @@ fun MentorVideoPlayer(
             }
         }
     )
-}
-
-@Composable
-@Preview
-fun MVCpreview(){
-    MentorVideoPlayer(onChangeTab = {})
 }
