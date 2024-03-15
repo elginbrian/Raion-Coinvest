@@ -120,19 +120,19 @@ fun CommunityProfileScreen(
                                     item { 
                                         Spacer(modifier = Modifier.height(180.dp))
                                     }
-                                    items(12){
-                                        Spacer(modifier = Modifier.padding(8.dp))
-                                        CommunityPostCard(
-                                            postDataClass = PostDataClass(
-                                                "",
-                                                "",
-                                                UserDataClass("", "", "", "", ""),
-                                                "",
-                                                "",
-                                                Uri.EMPTY,
-                                            )
-                                        ){}
-                                    }
+//                                    items(12){
+//                                        Spacer(modifier = Modifier.padding(8.dp))
+//                                        CommunityPostCard(
+//                                            postDataClass = PostDataClass(
+//                                                "",
+//                                                "",
+//                                                UserDataClass("", "", "", "", ""),
+//                                                "",
+//                                                "",
+//                                                Uri.EMPTY,
+//                                            )
+//                                        ){}
+//                                    }
                                 }
                             },
                             bottomBar = {

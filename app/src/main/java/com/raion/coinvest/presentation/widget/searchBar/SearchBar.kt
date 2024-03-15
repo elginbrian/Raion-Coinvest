@@ -31,8 +31,10 @@ import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 import com.raion.coinvest.presentation.widget.transparentTextField.TransparentTextField
 
 @Composable
-@Preview
-fun SearchBar(){
+//@Preview
+fun SearchBar(
+  onClick: () -> Unit
+){
     val isClicked = remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
@@ -54,7 +56,10 @@ fun SearchBar(){
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
-                ) { isClicked.value = true }) {
+                ) {
+                    isClicked.value = true
+                    onClick()
+                }) {
                 Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxSize()) {
                     if(isClicked.value){
                         Spacer(modifier = Modifier.padding(1.dp))

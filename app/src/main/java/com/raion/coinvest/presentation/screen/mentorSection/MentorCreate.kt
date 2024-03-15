@@ -160,7 +160,7 @@ fun MentorCreate(
                             .fillMaxSize(),
                             contentAlignment = Alignment.Center,
                         ) {
-                            VideoPlayerCard(viewModel)
+                            VideoPlayerCard(viewModel = viewModel, videoUri = selectedVideoUri.value ?: Uri.EMPTY)
 
                             if(selectedVideoUri.value == null){
                                 Card(modifier = Modifier

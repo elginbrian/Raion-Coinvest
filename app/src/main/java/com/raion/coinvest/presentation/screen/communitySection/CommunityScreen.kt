@@ -1,6 +1,7 @@
 package com.raion.coinvest.presentation.screen.communitySection
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -21,10 +22,12 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -34,6 +37,9 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.presentation.widget.appsBottomBar.AppsBottomBar
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
@@ -45,12 +51,21 @@ import com.raion.coinvest.presentation.widget.searchBar.SearchBar
 //@Preview
 fun CommunityScreen(
     viewModel: CommunityViewModel,
+    onTapSearch: () -> Unit,
     onChangeTab: (Int) -> Unit,
     onTapFloatingButton: () -> Unit,
-    onTapPost: (Pair<MutableList<PostDataClass>,String>) -> Unit
+    onTapPost: (Pair<MutableList<PostDataClass>,String>) -> Unit,
 ){
     val articleList = remember { mutableStateOf<MutableList<PostDataClass>>(mutableListOf()) }
+    val likeList    = remember { mutableStateOf<MutableList<LikeDataClass>>(mutableListOf()) }
     viewModel.getPost(){ articleList.value = it }
+    LaunchedEffect(key1 = null){
+        viewModel.getLike(){
+            likeList.value = it
+            Log.d("LikeList", likeList.value.toString())
+        }
+    }
+
 
     Scaffold(
         containerColor = CoinvestBase,
@@ -76,7 +91,11 @@ fun CommunityScreen(
                         Text(text = "Forum & Komunitas", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.width(20.dp))
                     }
-                    SearchBar()
+
+                    SearchBar(){
+                        onTapSearch()
+                    }
+
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(
                         modifier = Modifier
@@ -98,11 +117,31 @@ fun CommunityScreen(
                 item { 
                     Spacer(modifier = Modifier.height(170.dp))
                 }
+                item {
+                    if(articleList.value.isEmpty()){
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                            CircularProgressIndicator(color = CoinvestDarkPurple)
+                        }
+                    }
+                }
                 items(articleList.value){
                     Spacer(modifier = Modifier.height(8.dp))
-                    CommunityPostCard(it, onClick = {
-                        onTapPost(Pair(articleList.value, it.postId))
-                    })
+                    CommunityPostCard(
+                        currentUserId = Firebase.auth.currentUser?.uid,
+                        postDataClass = it,
+                        likeList = likeList.value,
+                        onClick = {
+                            onTapPost(Pair(articleList.value, it.postId))
+                        },
+                        onTapLike = {
+                            if(it.second == true){
+                                viewModel.addLike(it.first)
+                            } else {
+                                viewModel.deleteLike(it.first)
+                            }
+                        }
+                    )
                 }
                  item {
                      Spacer(modifier = Modifier.height(170.dp))
@@ -110,7 +149,9 @@ fun CommunityScreen(
              }
         },
         bottomBar = {
-            Box(modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 24.dp, bottom = 24.dp)){
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)){
                 AppsBottomBar(currentTab = 3){
                     onChangeTab(it)
                 }

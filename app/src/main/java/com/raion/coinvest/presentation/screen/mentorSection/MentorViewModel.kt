@@ -29,7 +29,7 @@ class MentorViewModel @Inject constructor(
     private val courseCollections: CourseCollections,
     private val videoRepository: VideoRepository,
     private val savedStateHandle: SavedStateHandle,
-    val  player: Player,
+    var player: Player,
     private val metadata: MetadataReader,
 ): ViewModel() {
     private var isFetching = false

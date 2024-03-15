@@ -18,8 +18,10 @@ import androidx.compose.ui.unit.dp
 import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 
 @Composable
-@Preview
-fun UserProfileTabRow(){
+//@Preview
+fun UserProfileTabRow(
+    onTabChange: (Int) -> Unit
+){
     val tabIndex = remember {
         mutableStateOf(0)
     }
@@ -31,7 +33,10 @@ fun UserProfileTabRow(){
     ){
         Tab(
             selected = tabIndex.value == 0,
-            onClick = { tabIndex.value = 0 },
+            onClick = {
+                tabIndex.value = 0
+                onTabChange(tabIndex.value)
+                      },
         ){
             Column {
                 Text(text = "Postingan", fontWeight = FontWeight.Bold)
@@ -41,7 +46,10 @@ fun UserProfileTabRow(){
         }
         Tab(
             selected = tabIndex.value == 1,
-            onClick = { tabIndex.value = 1 },
+            onClick = {
+                tabIndex.value = 1
+                onTabChange(tabIndex.value)
+                      },
         ){
             Column {
                 Text(text = "Disukai", fontWeight = FontWeight.Bold)

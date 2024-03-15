@@ -1,7 +1,6 @@
 package com.raion.coinvest.presentation.screen.newsSection
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -32,12 +31,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
+import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
-import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostCard
@@ -55,6 +55,9 @@ fun NewsReply(
     viewModel.getComment {
         commentList.value = it
     }
+
+    val likeList    = remember { mutableStateOf<MutableList<LikeDataClass>>(mutableListOf()) }
+    viewModel.getLike(){ likeList.value = it }
 
     val thisNewsComment = commentList.value.filter { comment -> comment.parentId.equals(newsId) }
 
@@ -93,16 +96,27 @@ fun NewsReply(
                         }
                         items(thisNewsComment) {
                             Spacer(modifier = Modifier.padding(8.dp))
-                            CommunityPostCard(PostDataClass(
+                            CommunityPostCard(postDataClass = PostDataClass(
                                 postId = it.commentId,
                                 postContent = it.commentContent,
                                 postAuthor = it.commentAuthor,
                                 postCreatedAt = it.commentCreatedAt,
                                 imageUri = it.imageUri,
                                 communityId = "",
-                            )) {
+                            ),
+                                onClick = {
 
-                            }
+                                },
+                                currentUserId = Firebase.auth.currentUser?.uid,
+                                likeList = likeList.value,
+                                onTapLike = {
+                                    if(it.second == true){
+                                        viewModel.addLike(it.first)
+                                    } else {
+                                        viewModel.deleteLike(it.first)
+                                    }
+                                }
+                            )
                         }
                       item {
                           Spacer(modifier = Modifier.padding(60.dp))

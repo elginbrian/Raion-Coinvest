@@ -9,6 +9,7 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.ui.layout.FirstBaseline
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -57,6 +58,7 @@ import com.raion.coinvest.presentation.screen.stocksSection.StocksScreen
 import com.raion.coinvest.presentation.screen.stocksSection.StocksViewModel
 import com.raion.coinvest.presentation.screen.userProfileSection.UserFollowerScreen
 import com.raion.coinvest.presentation.screen.userProfileSection.UserProfileScreen
+import com.raion.coinvest.presentation.screen.userProfileSection.UserViewModel
 import com.raion.coinvest.presentation.widget.transparentSystemBar.TransparentSystemBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -71,8 +73,6 @@ class MainActivity : ComponentActivity() {
         )
     }
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
         super.onCreate(savedInstanceState)
         setContent {
             CoinvestTheme {
@@ -87,6 +87,7 @@ class MainActivity : ComponentActivity() {
                     CoinvestUserFlow.CommunityScreen.name, // entry point 3
                     CoinvestUserFlow.NewsScreen.name,      // entry point 4
                 )
+                var selectedUser = UserDataClass("","","","","")
 
                 NavHost(navController = navController, startDestination =
                     if(Firebase.auth.currentUser != null) {
@@ -154,7 +155,8 @@ class MainActivity : ComponentActivity() {
                                 courseId = it.second
                                 navController.navigate(route = CoinvestUserFlow.MentorVideoPlayer.name)
                             },
-                            onTapFloatingButton = { navController.navigate(CoinvestUserFlow.MentorNew.name) }
+                            onTapFloatingButton = { navController.navigate(CoinvestUserFlow.MentorNew.name) },
+                            onTapSearch = { navController.navigate(CoinvestUserFlow.MentorSearchScreen.name )}
                         )
                     }
                     composable(CoinvestUserFlow.MentorSearchScreen.name){
@@ -228,7 +230,8 @@ class MainActivity : ComponentActivity() {
                                 articleList = it.first
                                 articleId   = it.second
                                 navController.navigate(route = CoinvestUserFlow.CommunityPostReply.name)
-                            }
+                            },
+                            onTapSearch = { navController.navigate(CoinvestUserFlow.CommunitySearchScreen.name) }
                         )
                     }
                     composable(CoinvestUserFlow.CommunityCreatePost.name){
@@ -295,7 +298,8 @@ class MainActivity : ComponentActivity() {
                                 newsList = it.first
                                 newsId = it.second
                                 navController.navigate(CoinvestUserFlow.NewsPage.name)
-                            }
+                            },
+                            onTapSearch = { /* NEWS SEARCH*/ }
                         )
                     }
                     composable(CoinvestUserFlow.NewsPage.name){
@@ -305,6 +309,10 @@ class MainActivity : ComponentActivity() {
                             onClickComment = {
                                 newsId = it
                                 navController.navigate(route = CoinvestUserFlow.NewsReply.name)
+                            },
+                            onTapProfile = {
+                                selectedUser = it
+                                navController.navigate(CoinvestUserFlow.UserProfileScreen.name)
                             }
                         )
                     }
@@ -334,8 +342,11 @@ class MainActivity : ComponentActivity() {
 
 
                     composable(CoinvestUserFlow.UserProfileScreen.name){
+                        val viewModel: UserViewModel by viewModels()
                         UserProfileScreen(
-                            onChangeTab = { navController.navigate(route = entryPointList[it]) }
+                            viewModel = viewModel,
+                            onChangeTab = { navController.navigate(route = entryPointList[it]) },
+                            user = selectedUser
                         )
                     }
                     composable(CoinvestUserFlow.UserFollowerScreen.name){

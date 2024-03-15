@@ -1,7 +1,7 @@
 package com.raion.coinvest.presentation.screen.userProfileSection
 
 import android.annotation.SuppressLint
-import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -27,14 +28,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.widget.appsBottomBar.AppsBottomBar
@@ -45,10 +52,26 @@ import com.raion.coinvest.presentation.designSystem.CoinvestGrey
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-//@Preview
 fun UserProfileScreen(
+    viewModel: UserViewModel,
+    user: UserDataClass,
     onChangeTab: (Int) -> Unit
 ){
+    val articleList = remember { mutableStateOf<MutableList<PostDataClass>>(mutableListOf()) }
+    val likeList    = remember { mutableStateOf<MutableList<LikeDataClass>>(mutableListOf()) }
+    viewModel.getPost(){ articleList.value = it }
+    LaunchedEffect(key1 = null){
+        viewModel.getLike(){
+            likeList.value = it
+            Log.d("LikeList", likeList.value.toString())
+        }
+    }
+    val tabIndex = remember {
+        mutableStateOf(0)
+    }
+    val userLike = likeList.value.filter { like -> like.userId.equals(Firebase.auth.currentUser?.uid) }
+
+
     Scaffold(
         containerColor = CoinvestGrey,
         content = {
@@ -93,8 +116,8 @@ fun UserProfileScreen(
                                             }
                                         }
                                         Spacer(modifier = Modifier.padding(12.dp))
-                                        Text(text = "Lorem Ipsum", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                                        Text(text = "@Lorem Ipsum", fontSize = 12.sp)
+                                        Text(text = user.userName.toString(), fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                                        Text(text = user.email.toString(), fontSize = 12.sp)
 
                                         Spacer(modifier = Modifier.padding(8.dp))
                                         Row(modifier = Modifier.width(120.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
@@ -110,7 +133,9 @@ fun UserProfileScreen(
                                         Spacer(modifier = Modifier.padding(4.dp))
                                     }
 
-                                    UserProfileTabRow()
+                                    UserProfileTabRow(){
+                                        tabIndex.value = it
+                                    }
                                 }
                             },
                             content = {
@@ -120,18 +145,38 @@ fun UserProfileScreen(
                                     item {
                                         Spacer(modifier = Modifier.height(180.dp))
                                     }
-                                    items(12){
-                                        Spacer(modifier = Modifier.padding(8.dp))
-                                        CommunityPostCard(
-                                            postDataClass = PostDataClass(
-                                                "",
-                                                "",
-                                                UserDataClass("", "", "", "", ""),
-                                                "",
-                                                "",
-                                                Uri.EMPTY,
-                                            )
-                                        ){}
+                                    if(tabIndex.value == 0){
+                                        items(articleList.value){
+                                            if(it.postAuthor.userId.equals(Firebase.auth.currentUser?.uid.toString())){
+                                                Spacer(modifier = Modifier.padding(8.dp))
+                                                CommunityPostCard(
+                                                    postDataClass = it,
+                                                    currentUserId = Firebase.auth.currentUser?.toString(),
+                                                    likeList = likeList.value,
+                                                    onClick = {},
+                                                    onTapLike = {
+
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    } else {
+                                        items(articleList.value) {
+                                            for(like in userLike){
+                                                if (it.postId.equals(like.parentId)) {
+                                                    Spacer(modifier = Modifier.padding(8.dp))
+                                                    CommunityPostCard(
+                                                        postDataClass = it,
+                                                        currentUserId = Firebase.auth.currentUser?.toString(),
+                                                        likeList = likeList.value,
+                                                        onClick = {},
+                                                        onTapLike = {
+
+                                                        }
+                                                    )
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             },
@@ -170,17 +215,13 @@ fun UserProfileScreen(
                     Spacer(modifier = Modifier.padding(16.dp))
                     Card(modifier = Modifier.size(120.dp),
                         shape = CircleShape
-                    ){}
+                    ){
+                        AsyncImage(model = user.profilePicture, contentDescription = "profile picture", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+                    }
                 }
 
             }
 
         }
     )
-}
-
-@Composable
-@Preview
-fun UPSpreview(){
-    UserProfileScreen(onChangeTab = {})
 }

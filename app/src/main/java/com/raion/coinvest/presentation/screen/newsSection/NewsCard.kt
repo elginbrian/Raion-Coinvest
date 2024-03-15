@@ -52,8 +52,8 @@ fun NewsCard(
                 Row(modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = newsDataClass.newsAuthor.userName.toString(), color = CoinvestBase, fontWeight = FontWeight.Medium)
-                    Text(text = newsDataClass.newsCreatedAt.substring(0,10), color = CoinvestBase, fontWeight = FontWeight.Medium)
+                    Text(text = newsDataClass.newsAuthor.userName.toString(), color = CoinvestBase, fontWeight = FontWeight.Normal)
+                    Text(text = newsDataClass.newsCreatedAt.substring(0,10), color = CoinvestBase, fontWeight = FontWeight.Normal)
                 }
             }
         }

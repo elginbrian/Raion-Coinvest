@@ -30,9 +30,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.raion.coinvest.R
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
+import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -47,6 +50,9 @@ fun CommunityPostReply(
     val replyList     = remember { mutableStateOf<MutableList<CommentDataClass>>(mutableListOf()) }
     viewModel.getComment { replyList.value = it }
     val thisReplyList = replyList.value.filter { comment -> comment.parentId.equals(articleId) }
+
+    val likeList    = remember { mutableStateOf<MutableList<LikeDataClass>>(mutableListOf()) }
+    viewModel.getLike(){ likeList.value = it }
 
     Scaffold(
         containerColor = CoinvestBase,
@@ -99,6 +105,15 @@ fun CommunityPostReply(
                                 ),
                                 onClick = {
                                     onTapPost()
+                                },
+                                currentUserId = Firebase.auth.currentUser?.uid,
+                                likeList = likeList.value,
+                                onTapLike = {
+                                    if(it.second == true){
+                                        viewModel.addLike(it.first)
+                                    } else {
+                                        viewModel.deleteLike(it.first)
+                                    }
                                 }
                             )
                             Spacer(modifier = Modifier.padding(8.dp))
@@ -113,7 +128,20 @@ fun CommunityPostReply(
                                 postCreatedAt = it.commentCreatedAt,
                                 communityId     = "",
                                 imageUri         = it.imageUri
-                            )) {}
+                            ),
+                                onClick = {
+                                          //TODO
+                                },
+                                currentUserId = Firebase.auth.currentUser?.uid,
+                                likeList = likeList.value,
+                                onTapLike = {
+                                    if(it.second == true){
+                                        viewModel.addLike(it.first)
+                                    } else {
+                                        viewModel.deleteLike(it.first)
+                                    }
+                                }
+                            )
                         }
                   }
         },

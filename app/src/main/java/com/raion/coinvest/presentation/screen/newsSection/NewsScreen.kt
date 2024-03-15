@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -58,6 +59,7 @@ fun NewsScreen(
     viewModel: NewsViewModel,
     onChangeTab: (Int) -> Unit,
     onTabFloatingButton: () -> Unit,
+    onTapSearch: () -> Unit,
     onTapNewsCard: (Pair<MutableList<NewsDataClass>, String>) -> Unit
 ){
     val tabIndex = remember {
@@ -86,7 +88,9 @@ fun NewsScreen(
                     ){
                         Text(text = "Informasi dan Berita", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     }
-                    SearchBar()
+                    SearchBar(){
+                        onTapSearch()
+                    }
                     Spacer(modifier = Modifier.height(8.dp))
                     NewsTabRow(){
                         tabIndex.value = it
@@ -132,6 +136,14 @@ fun NewsScreen(
                     Spacer(modifier = Modifier.padding(8.dp))
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Text(text = "Berita Terbaru", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                    }
+                }
+                item {
+                    if(newsList.value.isEmpty()){
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                            CircularProgressIndicator(color = CoinvestDarkPurple)
+                        }
                     }
                 }
                 items(newsList.value){

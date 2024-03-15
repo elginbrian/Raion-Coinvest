@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.raion.coinvest.data.remote.firebaseStorage.ImageRepository
 import com.raion.coinvest.data.remote.firestore.CommentCollections
+import com.raion.coinvest.data.remote.firestore.LikeCollections
 import com.raion.coinvest.data.remote.firestore.NewsCollections
 import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
+import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CompletableDeferred
@@ -18,7 +20,8 @@ import javax.inject.Inject
 class NewsViewModel @Inject constructor(
     private val imageRepository: ImageRepository,
     private val newsRepository: NewsCollections,
-    private val commentCollections: CommentCollections
+    private val commentCollections: CommentCollections,
+    private val likeCollections: LikeCollections
 ): ViewModel() {
 
     fun addNews(news: NewsDataClass) = viewModelScope.launch {
@@ -92,5 +95,17 @@ class NewsViewModel @Inject constructor(
             val imageUri = imageRepository.getImage(articleId)
             onFinished(imageUri)
         }
+    }
+
+    fun addLike(likeDataClass: LikeDataClass) = viewModelScope.launch { likeCollections.addLike(likeDataClass) }
+    fun deleteLike(likeDataClass: LikeDataClass) = viewModelScope.launch { likeCollections.deleteLike(likeDataClass) }
+    fun getLike(
+        onFinished: (MutableList<LikeDataClass>) -> Unit
+    ){
+        var result: MutableList<LikeDataClass> = mutableListOf()
+        viewModelScope.launch {
+            result = likeCollections.getLike()
+        }
+        onFinished(result)
     }
 }

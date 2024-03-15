@@ -85,7 +85,7 @@ fun NewsReplying(
                             contentDescription = "Back button"
                         )
                         Text(
-                            text = "Forum & Komunitas",
+                            text = "Komentar",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )

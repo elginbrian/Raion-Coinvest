@@ -106,7 +106,9 @@ fun CommunityFollowerScreen(
                       .padding(16.dp)){
                       item {
                           Spacer(modifier = Modifier.padding(50.dp))
-                          SearchBar()
+                          SearchBar(){
+                              //TODO
+                          }
                           Spacer(modifier = Modifier.padding(4.dp))
                           Divider()
                       }

@@ -1,15 +1,15 @@
-package com.raion.coinvest.presentation.screen.communitySection
+package com.raion.coinvest.presentation.screen.userProfileSection
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.raion.coinvest.data.remote.firebaseStorage.ImageRepository
-import com.raion.coinvest.data.remote.firestore.PostCollections
 import com.raion.coinvest.data.remote.firestore.CommentCollections
 import com.raion.coinvest.data.remote.firestore.LikeCollections
-import com.raion.coinvest.data.remote.firestore.model.PostDataClass
+import com.raion.coinvest.data.remote.firestore.PostCollections
 import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
 import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
+import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.awaitAll
@@ -17,22 +17,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CommunityViewModel @Inject constructor(
+class UserViewModel @Inject constructor(
     private val postCollections: PostCollections,
     private val commentCollections: CommentCollections,
     private val imageRepository: ImageRepository,
     private val likeCollections: LikeCollections
 ): ViewModel() {
-    fun addNewPost(post: PostDataClass) = viewModelScope.launch{
-        postCollections.addPost(post)
-        imageRepository.uploadPostImage(post)
-    }
-
-    fun addNewComment(comment: CommentDataClass) = viewModelScope.launch {
-        commentCollections.addComment(comment)
-        imageRepository.uploadCommentImage(comment)
-    }
-
     private var isFetching = false
     private var isFetching2 = false
     fun getPost(

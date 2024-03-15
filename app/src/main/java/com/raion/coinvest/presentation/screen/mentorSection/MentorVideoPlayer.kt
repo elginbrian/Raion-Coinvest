@@ -68,22 +68,21 @@ fun MentorVideoPlayer(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment     = Alignment.CenterVertically
             ){
-                Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button")
+                Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint = Color.White)
             }
         },
         content = {
             Column(modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.29f)
+                .fillMaxHeight(0.34f)
             ) {
-                viewModel.addVideoUri(thisCourse[0].courseContent[0].videoUri)
-                VideoPlayerCard(viewModel)
+                VideoPlayerCard(viewModel = viewModel, videoUri =  thisCourse[0].courseContent[0].videoUri)
             }
         },
         bottomBar = {
             Box(modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxSize(0.83f),
+                .fillMaxSize(0.82f),
                 contentAlignment = Alignment.TopStart
             ){
                 Column(modifier = Modifier) {
@@ -108,7 +107,7 @@ fun MentorVideoPlayer(
                                             .fillMaxWidth()) {
                                             Spacer(modifier = Modifier.padding(4.dp))
                                             Text(text = thisCourse[0].courseName, fontSize = 26.sp, fontWeight = FontWeight.Bold)
-
+                                            Spacer(modifier = Modifier.padding(4.dp))
                                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
                                                 verticalAlignment = Alignment.CenterVertically
                                             ){
@@ -136,7 +135,7 @@ fun MentorVideoPlayer(
                                         }
                                     }
                                     item {
-                                        Spacer(modifier = Modifier.height(120.dp))
+                                        Spacer(modifier = Modifier.height(180.dp))
                                     }
                                 }
                             },

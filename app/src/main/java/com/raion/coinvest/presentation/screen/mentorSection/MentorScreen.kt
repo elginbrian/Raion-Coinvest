@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -48,6 +49,7 @@ import com.raion.coinvest.presentation.widget.searchBar.SearchBar
 fun MentorScreen(
     viewModel: MentorViewModel,
     onChangeTab: (Int) -> Unit,
+    onTapSearch: () -> Unit,
     onTapFloatingButton: () -> Unit,
     onOpenCourse: (Pair<MutableList<CourseDataClass>, String>) -> Unit
 ){
@@ -82,7 +84,9 @@ fun MentorScreen(
                         Text(text = "Mentor Untukmu", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.width(20.dp))
                     }
-                    SearchBar()
+                    SearchBar(){
+                        onTapSearch()
+                    }
                     Spacer(modifier = Modifier.height(8.dp))
                     MentorTabRow2(){
                         tabIndex.value = it
@@ -110,7 +114,14 @@ fun MentorScreen(
                               MentorTabRow()
                           }
                       }
-
+                      item {
+                          if(courseList.value.isEmpty()){
+                              Spacer(modifier = Modifier.height(8.dp))
+                              Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                                  CircularProgressIndicator(color = CoinvestDarkPurple)
+                              }
+                          }
+                      }
                       if(tabIndex.value == 0){
                           items(courseList.value){
                               Spacer(modifier = Modifier.padding(8.dp))

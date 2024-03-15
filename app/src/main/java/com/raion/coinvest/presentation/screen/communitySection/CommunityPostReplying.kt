@@ -47,6 +47,7 @@ import com.google.firebase.auth.auth
 import com.raion.coinvest.R
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
+import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
@@ -72,6 +73,9 @@ fun CommunityPostReplying(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri -> selectedImageUri.value = uri }
     )
+
+    val likeList    = remember { mutableStateOf<MutableList<LikeDataClass>>(mutableListOf()) }
+    viewModel.getLike(){ likeList.value = it }
 
     Scaffold(
         containerColor = CoinvestBase,
@@ -122,8 +126,20 @@ fun CommunityPostReplying(
                             postCreatedAt = thisArticle[0].postCreatedAt,
                             postContent   = thisArticle[0].postContent,
                             imageUri         = thisArticle[0].imageUri
-                        )
-                    ){}
+                        ),
+                        onClick = {
+
+                        },
+                        currentUserId = Firebase.auth.currentUser?.uid,
+                        likeList = likeList.value,
+                        onTapLike = {
+                            if(it.second == true){
+                                viewModel.addLike(it.first)
+                            } else {
+                                viewModel.deleteLike(it.first)
+                            }
+                        }
+                    )
                     Spacer(modifier = Modifier.padding(8.dp))
                     Image(painter = painterResource(id = R.drawable.membalas_divider), contentDescription = "membalas", modifier = Modifier.fillMaxWidth())
                 }

@@ -63,7 +63,9 @@ fun CommunitySearchScreen(
                         Text(text = "Forum & Komunitas", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.width(20.dp))
                     }
-                    SearchBar()
+                    SearchBar(){
+
+                    }
                     Spacer(modifier = Modifier.height(8.dp))
                     Divider()
                 }

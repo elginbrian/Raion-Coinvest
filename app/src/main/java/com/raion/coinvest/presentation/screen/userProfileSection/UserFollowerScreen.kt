@@ -107,7 +107,9 @@ fun UserFollowerScreen(
                 .padding(16.dp)){
                 item {
                     Spacer(modifier = Modifier.padding(50.dp))
-                    SearchBar()
+                    SearchBar(){
+
+                    }
                     Spacer(modifier = Modifier.padding(4.dp))
                     Divider()
                 }

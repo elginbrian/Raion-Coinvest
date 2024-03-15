@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,22 +34,22 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.raion.coinvest.R
 import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
-import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBorder
-import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
+import com.raion.coinvest.presentation.widget.shareButton.ShareButton
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NewsPage(
     newsList: MutableList<NewsDataClass>,
     newsId: String,
-    onClickComment: (String) -> Unit
+    onClickComment: (String) -> Unit,
+    onTapProfile: (UserDataClass) -> Unit
 ){
     val thisNews = newsList.filter { news -> news.newsId.equals(newsId) }
 
@@ -119,7 +118,9 @@ fun NewsPage(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Card(modifier = Modifier.size(32.dp), shape = CircleShape) {
+                            Card(modifier = Modifier.size(32.dp).clickable {
+                                                                           onTapProfile(thisNews[0].newsAuthor)
+                            }, shape = CircleShape) {
                                 AsyncImage(model = thisNews[0].newsAuthor.profilePicture, contentDescription = "profile picture")
                             }
                         Spacer(modifier = Modifier.padding(4.dp))
@@ -132,11 +133,13 @@ fun NewsPage(
                     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly) {
                         Icon(painter = painterResource(id = R.drawable.like_icon), contentDescription = "Like", modifier = Modifier.scale(0.7f))
-                        Icon(painter = painterResource(id = R.drawable.comment_icon), contentDescription = "Comment", modifier = Modifier.scale(0.7f).clickable {
-                            onClickComment(thisNews[0].newsId)
-                        })
+                        Icon(painter = painterResource(id = R.drawable.comment_icon), contentDescription = "Comment", modifier = Modifier
+                            .scale(0.7f)
+                            .clickable {
+                                onClickComment(thisNews[0].newsId)
+                            })
                         Icon(painter = painterResource(id = R.drawable.bookmark_icon), contentDescription = "Bookmark", modifier = Modifier.scale(0.7f))
-                        Icon(painter = painterResource(id = R.drawable.share_icon), contentDescription = "Share", modifier = Modifier.scale(0.7f))
+                        ShareButton(header = thisNews[0].newsTitle, content = thisNews[0].newsContent, owner = thisNews[0].newsAuthor.userName.toString(), date = thisNews[0].newsCreatedAt)
                     }
                 }
 

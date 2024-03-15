@@ -31,14 +31,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.raion.coinvest.R
+import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
+import com.raion.coinvest.presentation.widget.likeButton.LikeButton
+import com.raion.coinvest.presentation.widget.shareButton.ShareButton
 
 @Composable
 //@Preview
 fun CommunityPostCard(
+    currentUserId: String?,
     postDataClass: PostDataClass,
-    onClick: () -> Unit
+    likeList: MutableList<LikeDataClass>,
+    onClick: () -> Unit,
+    onTapLike: (Pair<LikeDataClass, Boolean>) -> Unit
 ){
     Card(modifier = Modifier
         .fillMaxWidth()
@@ -64,7 +70,7 @@ fun CommunityPostCard(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = postDataClass.postAuthor.userName.toString(), fontSize = 12.sp)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = postDataClass.postAuthor.accountType.toString(), fontSize = 10.sp)
+                Text(text = postDataClass.postCreatedAt.substring(0,10).toString(), fontSize = 10.sp)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -82,10 +88,12 @@ fun CommunityPostCard(
 
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly) {
-                Icon(painter = painterResource(id = R.drawable.like_icon), contentDescription = "Like", modifier = Modifier.scale(0.7f))
+                LikeButton(userId = currentUserId, parentId = postDataClass.postId, likeList = likeList) {
+                    onTapLike(it)
+                }
                 Icon(painter = painterResource(id = R.drawable.comment_icon), contentDescription = "Comment", modifier = Modifier.scale(0.7f))
                 Icon(painter = painterResource(id = R.drawable.bookmark_icon), contentDescription = "Bookmark", modifier = Modifier.scale(0.7f))
-                Icon(painter = painterResource(id = R.drawable.share_icon), contentDescription = "Share", modifier = Modifier.scale(0.7f))
+                ShareButton(content = postDataClass.postContent, owner = postDataClass.postAuthor.userName.toString(), date = postDataClass.postCreatedAt)
             }
         }
     }
