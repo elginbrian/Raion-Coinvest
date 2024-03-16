@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.raion.coinvest.presentation.designSystem.CoinvestBlack
+import com.raion.coinvest.presentation.widget.appsBottomBar.DisabledInteractionSource
 
 @Composable
 fun MentorTabRow2(
@@ -37,6 +38,7 @@ fun MentorTabRow2(
             onClick = {
                 tabIndex.value = 0
                       },
+            interactionSource = DisabledInteractionSource()
         ){
             Column {
                 Text(text = "Mentor", fontWeight = FontWeight.Bold)
@@ -47,6 +49,7 @@ fun MentorTabRow2(
         Tab(
             selected = tabIndex.value == 1,
             onClick = { tabIndex.value = 1 },
+            interactionSource = DisabledInteractionSource()
         ){
             Column {
                 Text(text = "Course", fontWeight = FontWeight.Bold)

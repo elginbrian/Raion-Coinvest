@@ -38,6 +38,7 @@ import com.google.firebase.auth.auth
 import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
 import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
+import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostCard
@@ -47,7 +48,8 @@ import com.raion.coinvest.presentation.screen.communitySection.CommunityPostCard
 fun NewsReply(
     newsId: String,
     viewModel: NewsViewModel,
-    onTapFloatingButton: () -> Unit
+    onTapFloatingButton: () -> Unit,
+    onTapProfile: (UserDataClass) -> Unit
 ){
     val commentList = remember {
         mutableStateOf<MutableList<CommentDataClass>>(mutableListOf())
@@ -115,6 +117,9 @@ fun NewsReply(
                                     } else {
                                         viewModel.deleteLike(it.first)
                                     }
+                                },
+                                onTapProfile = {user ->
+                                    onTapProfile(user)
                                 }
                             )
                         }

@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Apartment
-import androidx.compose.material.icons.rounded.Work
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -32,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -51,7 +51,7 @@ import com.raion.coinvest.presentation.widget.appsBottomBar.AppsBottomBar
 fun StocksScreen(
     viewModel: StocksViewModel,
     onChangeTab: (Int) -> Unit,
-    onTabStocks: (Pair<GetTrendingSearchList, String>) -> Unit
+    onTapStocks: (Pair<GetTrendingSearchList, String>) -> Unit
 ){
     val currentTab   = remember { mutableStateOf(0) }
     val cryptoResult = remember { mutableStateOf(GetTrendingSearchList(coins = listOf())) }
@@ -104,7 +104,9 @@ fun StocksScreen(
                             elevation = CardDefaults.cardElevation(8.dp)
                         ) {
                             LazyRow(modifier = Modifier.fillMaxSize()){
-                                items(cryptoResult.value.coins.sortedBy { it.item.name }){
+                                items(items = cryptoResult.value.coins.sortedBy { it.item.name }, key = {
+                                    it.item.id
+                                }){
                                     StocksChartCard(it.item)
                                 }
                             }
@@ -118,39 +120,45 @@ fun StocksScreen(
                         }
                     }
 
-                    items(cryptoResult.value.coins.sortedBy { it.item.marketCapRank }){
-                        Spacer(modifier = Modifier.padding(8.dp))
-                        Row(modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ) { onTabStocks(Pair(cryptoResult.value, it.item.id)) },
+                    items(items = cryptoResult.value.coins.sortedBy { it.item.marketCapRank }, key = {
+                        it.item.id
+                    }){
+                        if(it.item.name != "Pepe"){
+                            Spacer(modifier = Modifier.padding(8.dp))
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable(
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() }
+                                ) { onTapStocks(Pair(cryptoResult.value, it.item.id)) },
 
-                            horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(modifier = Modifier.fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
-                                Card(modifier = Modifier.size(50.dp)) {
-                                    AsyncImage(model = it.item.thumb, contentDescription = "thumbnail", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+                                horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row(modifier = Modifier.fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
+                                    Card(modifier = Modifier.size(50.dp)) {
+                                        AsyncImage(model = it.item.thumb, contentDescription = "thumbnail", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+                                    }
+                                    Spacer(modifier = Modifier.padding(8.dp))
+                                    Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
+                                        Text(text = it.item.name, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                                        Text(text = "rank: " + it.item.marketCapRank)
+                                    }
                                 }
-                                Spacer(modifier = Modifier.padding(8.dp))
-                                Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
-                                    Text(text = it.item.name, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
-                                    Text(text = "rank: " + it.item.marketCapRank)
-                                }
-                            }
-                            Row(modifier = Modifier.fillMaxHeight()) {
-                                Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.End) {
-                                    Text(text = it.item.data.price, fontSize = 16.sp)
-                                    Text(text = "1 " + it.item.symbol)
+                                Row(modifier = Modifier.fillMaxHeight()) {
+                                    Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center,
+                                        horizontalAlignment = Alignment.End) {
+                                        Text(text = it.item.data.price, fontSize = 16.sp)
+                                        Text(text = "1 " + it.item.symbol)
+                                    }
                                 }
                             }
                         }
                     }
                 } else {
                     item { Spacer(modifier = Modifier.padding(50.dp)) }
-                    items(stockResult.value.data.results){
+                    items(items = stockResult.value.data.results.sortedByDescending { stock -> stock.percent }, key = {
+                        it.symbol
+                    }){
                         Spacer(modifier = Modifier.padding(8.dp))
                         Row(modifier = Modifier
                             .fillMaxWidth()
@@ -174,13 +182,17 @@ fun StocksScreen(
                                     .fillMaxHeight()
                                     .width(210.dp), verticalArrangement = Arrangement.Center) {
                                     Text(text = it.company.name, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
-                                    Text(text = it.change.toString()+"%")
+                                    Text(text = it.percent.toString()+"%", color = if(it.percent >= 0){
+                                        Color(0xFF056927)
+                                    } else {
+                                        Color(0xFFF00500)
+                                    })
                                 }
                             }
                             Row(modifier = Modifier.fillMaxHeight()) {
                                 Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center,
                                     horizontalAlignment = Alignment.End) {
-                                    Text(text = "close: "+it.close.toString(), fontSize = 14.sp)
+                                    Text(text = it.close.toString(), fontSize = 14.sp)
                                     Text(text = it.company.symbol)
                                 }
                             }

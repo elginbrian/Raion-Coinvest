@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.raion.coinvest.presentation.designSystem.CoinvestBlack
+import com.raion.coinvest.presentation.widget.appsBottomBar.DisabledInteractionSource
 
 @Composable
 //@Preview
@@ -37,6 +38,7 @@ fun UserProfileTabRow(
                 tabIndex.value = 0
                 onTabChange(tabIndex.value)
                       },
+            interactionSource = DisabledInteractionSource()
         ){
             Column {
                 Text(text = "Postingan", fontWeight = FontWeight.Bold)
@@ -49,12 +51,40 @@ fun UserProfileTabRow(
             onClick = {
                 tabIndex.value = 1
                 onTabChange(tabIndex.value)
+            },
+            interactionSource = DisabledInteractionSource()
+        ){
+            Column {
+                Text(text = "Balasan", fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.padding(4.dp))
+            }
+
+        }
+        Tab(
+            selected = tabIndex.value == 2,
+            onClick = {
+                tabIndex.value = 2
+                onTabChange(tabIndex.value)
                       },
+            interactionSource = DisabledInteractionSource()
         ){
             Column {
                 Text(text = "Disukai", fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.padding(4.dp))
             }
         }
+//        Tab(
+//            selected = tabIndex.value == 3,
+//            onClick = {
+//                tabIndex.value = 3
+//                onTabChange(tabIndex.value)
+//            },
+//        ){
+//            Column {
+//                Text(text = "Disimpan", fontWeight = FontWeight.Bold)
+//                Spacer(modifier = Modifier.padding(4.dp))
+//            }
+//
+//        }
     }
 }

@@ -36,6 +36,7 @@ import com.raion.coinvest.R
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
 import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
+import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -44,7 +45,8 @@ fun CommunityPostReply(
     viewModel: CommunityViewModel,
     articleList: MutableList<PostDataClass>,
     articleId: String,
-    onTapPost: () -> Unit
+    onTapPost: () -> Unit,
+    onTapProfile: (UserDataClass) -> Unit
 ){
     val thisArticle   = articleList.filter { article -> article.postId.equals(articleId) }
     val replyList     = remember { mutableStateOf<MutableList<CommentDataClass>>(mutableListOf()) }
@@ -114,6 +116,9 @@ fun CommunityPostReply(
                                     } else {
                                         viewModel.deleteLike(it.first)
                                     }
+                                },
+                                onTapProfile = {user ->
+                                    onTapProfile(user)
                                 }
                             )
                             Spacer(modifier = Modifier.padding(8.dp))
@@ -140,6 +145,9 @@ fun CommunityPostReply(
                                     } else {
                                         viewModel.deleteLike(it.first)
                                     }
+                                },
+                                onTapProfile = {user ->
+                                    onTapProfile(user)
                                 }
                             )
                         }

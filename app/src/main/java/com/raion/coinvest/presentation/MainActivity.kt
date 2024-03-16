@@ -8,8 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.ui.layout.FirstBaseline
-import androidx.lifecycle.ViewModel
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -87,7 +87,9 @@ class MainActivity : ComponentActivity() {
                     CoinvestUserFlow.CommunityScreen.name, // entry point 3
                     CoinvestUserFlow.NewsScreen.name,      // entry point 4
                 )
-                var selectedUser = UserDataClass("","","","","")
+                var selectedUser = remember {
+                    mutableStateOf(UserDataClass("","","","",""))
+                }
 
                 NavHost(navController = navController, startDestination =
                     if(Firebase.auth.currentUser != null) {
@@ -201,7 +203,7 @@ class MainActivity : ComponentActivity() {
                         StocksScreen(
                             viewModel = viewModel,
                             onChangeTab = { navController.navigate(route = entryPointList[it]) },
-                            onTabStocks = {
+                            onTapStocks = {
                                 stocksId = it.second
                                 stocksList = it.first
                                 navController.navigate(CoinvestUserFlow.StocksPage.name)
@@ -231,7 +233,11 @@ class MainActivity : ComponentActivity() {
                                 articleId   = it.second
                                 navController.navigate(route = CoinvestUserFlow.CommunityPostReply.name)
                             },
-                            onTapSearch = { navController.navigate(CoinvestUserFlow.CommunitySearchScreen.name) }
+                            onTapSearch = { navController.navigate(CoinvestUserFlow.CommunitySearchScreen.name) },
+                            onTapProfile = {
+                                selectedUser.value = it
+                                navController.navigate(CoinvestUserFlow.UserProfileScreen.name)
+                            }
                         )
                     }
                     composable(CoinvestUserFlow.CommunityCreatePost.name){
@@ -247,7 +253,11 @@ class MainActivity : ComponentActivity() {
                             articleList = articleList,
                             articleId = articleId,
                             viewModel = viewModel,
-                            onTapPost = { navController.navigate(route = CoinvestUserFlow.CommunityPostReplying.name) }
+                            onTapPost = { navController.navigate(route = CoinvestUserFlow.CommunityPostReplying.name) },
+                            onTapProfile = {
+                                selectedUser.value = it
+                                navController.navigate(CoinvestUserFlow.UserProfileScreen.name)
+                            }
                         )
                     }
                     composable(CoinvestUserFlow.CommunityPostReplying.name){
@@ -259,6 +269,10 @@ class MainActivity : ComponentActivity() {
                             onUploadReply = {
                                 viewModel.addNewComment(it)
                                 navController.navigate(route = CoinvestUserFlow.CommunityPostReply.name)
+                            },
+                            onTapProfile = {
+                                selectedUser.value = it
+                                navController.navigate(CoinvestUserFlow.UserProfileScreen.name)
                             }
                         )
                     }
@@ -303,7 +317,9 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable(CoinvestUserFlow.NewsPage.name){
+                        val viewModel: NewsViewModel by viewModels()
                         NewsPage(
+                            viewModel = viewModel,
                             newsList = newsList,
                             newsId = newsId,
                             onClickComment = {
@@ -311,7 +327,7 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate(route = CoinvestUserFlow.NewsReply.name)
                             },
                             onTapProfile = {
-                                selectedUser = it
+                                selectedUser.value = it
                                 navController.navigate(CoinvestUserFlow.UserProfileScreen.name)
                             }
                         )
@@ -328,7 +344,11 @@ class MainActivity : ComponentActivity() {
                         NewsReply(
                             newsId = newsId,
                             viewModel = viewModel,
-                            onTapFloatingButton = { navController.navigate(CoinvestUserFlow.NewsReplying.name) }
+                            onTapFloatingButton = { navController.navigate(CoinvestUserFlow.NewsReplying.name) },
+                            onTapProfile = {
+                                selectedUser.value = it
+                                navController.navigate(CoinvestUserFlow.UserProfileScreen.name)
+                            }
                         )
                     }
                     composable(CoinvestUserFlow.NewsReplying.name){
@@ -346,7 +366,7 @@ class MainActivity : ComponentActivity() {
                         UserProfileScreen(
                             viewModel = viewModel,
                             onChangeTab = { navController.navigate(route = entryPointList[it]) },
-                            user = selectedUser
+                            user = selectedUser.value
                         )
                     }
                     composable(CoinvestUserFlow.UserFollowerScreen.name){

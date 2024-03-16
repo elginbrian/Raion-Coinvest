@@ -1,6 +1,7 @@
 package com.raion.coinvest.presentation.screen.newsSection
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -26,6 +27,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -37,21 +41,33 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.raion.coinvest.R
+import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBorder
+import com.raion.coinvest.presentation.widget.likeButton.LikeButton
 import com.raion.coinvest.presentation.widget.shareButton.ShareButton
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NewsPage(
+    viewModel: NewsViewModel,
     newsList: MutableList<NewsDataClass>,
     newsId: String,
     onClickComment: (String) -> Unit,
     onTapProfile: (UserDataClass) -> Unit
 ){
     val thisNews = newsList.filter { news -> news.newsId.equals(newsId) }
+    val likeList    = remember { mutableStateOf<MutableList<LikeDataClass>>(mutableListOf()) }
+    LaunchedEffect(key1 = null){
+        viewModel.getLike(){
+            likeList.value = it
+            Log.d("LikeList", likeList.value.toString())
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -118,9 +134,11 @@ fun NewsPage(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Card(modifier = Modifier.size(32.dp).clickable {
-                                                                           onTapProfile(thisNews[0].newsAuthor)
-                            }, shape = CircleShape) {
+                            Card(modifier = Modifier
+                                .size(32.dp)
+                                .clickable {
+                                    onTapProfile(thisNews[0].newsAuthor)
+                                }, shape = CircleShape) {
                                 AsyncImage(model = thisNews[0].newsAuthor.profilePicture, contentDescription = "profile picture")
                             }
                         Spacer(modifier = Modifier.padding(4.dp))
@@ -132,7 +150,16 @@ fun NewsPage(
                     Spacer(modifier = Modifier.padding(8.dp))
                     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly) {
-                        Icon(painter = painterResource(id = R.drawable.like_icon), contentDescription = "Like", modifier = Modifier.scale(0.7f))
+                        LikeButton(userId = Firebase.auth.currentUser?.uid, parentId = thisNews[0].newsId,
+                            likeList = likeList.value,
+                            onTapLike ={
+                                if(it.second == true){
+                                    viewModel.addLike(it.first)
+                                } else {
+                                    viewModel.deleteLike(it.first)
+                                }
+                            }
+                        )
                         Icon(painter = painterResource(id = R.drawable.comment_icon), contentDescription = "Comment", modifier = Modifier
                             .scale(0.7f)
                             .clickable {

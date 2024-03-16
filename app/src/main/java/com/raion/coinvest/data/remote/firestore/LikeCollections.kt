@@ -17,13 +17,15 @@ class LikeCollections {
                 "userId" to likeDataClass.userId
             )
 
-            db.collection("likes").document(likeDataClass.parentId+"-"+likeDataClass.userId)
-                .set(likeHashMap).addOnSuccessListener { documentReference ->
-                Log.d(ContentValues.TAG, "DocumentSnapshot written with ID: $documentReference")
+            if(!likeDataClass.userId.isNullOrEmpty()){
+                db.collection("likes").document(likeDataClass.parentId+"-"+likeDataClass.userId)
+                    .set(likeHashMap).addOnSuccessListener { documentReference ->
+                        Log.d(ContentValues.TAG, "DocumentSnapshot written with ID: $documentReference")
 
-            }.addOnFailureListener { e ->
-                Log.w(ContentValues.TAG, "Error adding document", e)
-            }.await()
+                    }.addOnFailureListener { e ->
+                        Log.w(ContentValues.TAG, "Error adding document", e)
+                    }.await()
+            }
         } catch (e: Exception){
 
         }

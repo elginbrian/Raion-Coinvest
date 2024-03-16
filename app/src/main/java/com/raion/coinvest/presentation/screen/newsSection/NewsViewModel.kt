@@ -108,4 +108,5 @@ class NewsViewModel @Inject constructor(
         }
         onFinished(result)
     }
+
 }

@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
 import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
@@ -49,6 +51,9 @@ import com.raion.coinvest.presentation.screen.communitySection.CommunityPostCard
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.designSystem.CoinvestGrey
+import com.raion.coinvest.presentation.designSystem.CoinvestLightBlue
+import com.raion.coinvest.presentation.designSystem.CoinvestLightPurple
+import com.raion.coinvest.presentation.designSystem.CoinvestPurple
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -59,13 +64,17 @@ fun UserProfileScreen(
 ){
     val articleList = remember { mutableStateOf<MutableList<PostDataClass>>(mutableListOf()) }
     val likeList    = remember { mutableStateOf<MutableList<LikeDataClass>>(mutableListOf()) }
+    val commentList = remember { mutableStateOf<MutableList<CommentDataClass>>(mutableListOf()) }
     viewModel.getPost(){ articleList.value = it }
-    LaunchedEffect(key1 = null){
-        viewModel.getLike(){
-            likeList.value = it
-            Log.d("LikeList", likeList.value.toString())
-        }
+    viewModel.getLike(){
+        likeList.value = it
+        Log.d("LikeList", likeList.value.toString())
     }
+    viewModel.getComment {
+        commentList.value = it
+    }
+
+
     val tabIndex = remember {
         mutableStateOf(0)
     }
@@ -73,17 +82,17 @@ fun UserProfileScreen(
 
 
     Scaffold(
-        containerColor = CoinvestGrey,
+        containerColor = CoinvestLightPurple,
         content = {
             Column(modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.3f)) {
+                .fillMaxHeight(0.25f)) {
             }
         },
         bottomBar = {
             Box(modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxSize(0.85f),
+                .fillMaxSize(0.90f),
                 contentAlignment = Alignment.TopStart
             ){
                 Column(modifier = Modifier) {
@@ -141,13 +150,21 @@ fun UserProfileScreen(
                             content = {
                                 LazyColumn(modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(16.dp)){
+                                    .padding(horizontal = 16.dp)){
                                     item {
-                                        Spacer(modifier = Modifier.height(180.dp))
+                                        Spacer(modifier = Modifier.height(230.dp))
                                     }
-                                    if(tabIndex.value == 0){
-                                        items(articleList.value){
-                                            if(it.postAuthor.userId.equals(Firebase.auth.currentUser?.uid.toString())){
+                                    item {
+                                        if(articleList.value.isEmpty()){
+                                            Spacer(modifier = Modifier.height(8.dp))
+                                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                                                CircularProgressIndicator(color = CoinvestDarkPurple)
+                                            }
+                                        }
+                                    }
+                                    if(tabIndex.value == 0) {
+                                        items(articleList.value) {
+                                            if (it.postAuthor.userId == user.userId) {
                                                 Spacer(modifier = Modifier.padding(8.dp))
                                                 CommunityPostCard(
                                                     postDataClass = it,
@@ -156,27 +173,62 @@ fun UserProfileScreen(
                                                     onClick = {},
                                                     onTapLike = {
 
+                                                    },
+                                                    onTapProfile = {
+
                                                     }
                                                 )
                                             }
                                         }
-                                    } else {
+                                    } else if(tabIndex.value == 1){
+                                        items(commentList.value){
+                                            if(it.commentAuthor.userId.equals(user.userId)){
+                                                Spacer(modifier = Modifier.padding(8.dp))
+                                                CommunityPostCard(
+                                                    postDataClass = PostDataClass(
+                                                        postId = it.commentId,
+                                                        postAuthor = it.commentAuthor,
+                                                        postCreatedAt = it.commentCreatedAt,
+                                                        postContent = it.commentContent,
+                                                        communityId = "",
+                                                        imageUri = it.imageUri
+                                                    ),
+                                                    currentUserId = user.userId,
+                                                    likeList = likeList.value,
+                                                    onClick = {},
+                                                    onTapLike = {
+
+                                                    },
+                                                    onTapProfile = {
+
+                                                    }
+                                                )
+                                            }
+                                        }
+
+                                    } else if(tabIndex.value == 2) {
                                         items(articleList.value) {
                                             for(like in userLike){
-                                                if (it.postId.equals(like.parentId)) {
+                                                if (it.postId.equals(like.parentId) && like.userId.equals(user.userId)) {
                                                     Spacer(modifier = Modifier.padding(8.dp))
                                                     CommunityPostCard(
                                                         postDataClass = it,
-                                                        currentUserId = Firebase.auth.currentUser?.toString(),
+                                                        currentUserId = user.userId,
                                                         likeList = likeList.value,
                                                         onClick = {},
                                                         onTapLike = {
 
+                                                        },
+                                                        onTapProfile = {
+
                                                         }
-                                                    )
+                                                        )
                                                 }
                                             }
                                         }
+                                    }
+                                    item {
+                                        Spacer(modifier = Modifier.height(160.dp))
                                     }
                                 }
                             },

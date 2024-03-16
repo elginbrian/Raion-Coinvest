@@ -42,7 +42,7 @@ fun NewsCard(
         ) { onClick() }
     ) {
         Box(modifier = Modifier.fillMaxSize()){
-            AsyncImage(model = newsDataClass.imageUri, contentDescription = "NewsPhoto", modifier = Modifier.fillMaxSize().blur(radiusX = 2.dp, radiusY = 2.dp), contentScale = ContentScale.Crop)
+            AsyncImage(model = newsDataClass.imageUri, contentDescription = "NewsPhoto", modifier = Modifier.fillMaxSize().blur(radiusX = 6.dp, radiusY = 2.dp), contentScale = ContentScale.Crop)
             Column(modifier = Modifier
                 .fillMaxSize()
                 .padding(12.dp),
@@ -52,8 +52,8 @@ fun NewsCard(
                 Row(modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = newsDataClass.newsAuthor.userName.toString(), color = CoinvestBase, fontWeight = FontWeight.Normal)
-                    Text(text = newsDataClass.newsCreatedAt.substring(0,10), color = CoinvestBase, fontWeight = FontWeight.Normal)
+                    Text(text = newsDataClass.newsAuthor.userName.toString(), color = CoinvestBase, fontWeight = FontWeight.Medium, fontSize = 12.sp)
+                    Text(text = newsDataClass.newsCreatedAt.substring(0,10), color = CoinvestBase, fontWeight = FontWeight.Normal, fontSize = 12.sp)
                 }
             }
         }
