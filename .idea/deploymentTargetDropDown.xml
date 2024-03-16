@@ -2,6 +2,15 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="CommunityProfileScreen">
+        <State />
+      </entry>
+      <entry key="DashboardAwal">
+        <State />
+      </entry>
+      <entry key="MemberVerivRole">
+        <State />
+      </entry>
       <entry key="app">
         <State />
       </entry>
