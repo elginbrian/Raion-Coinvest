@@ -116,7 +116,9 @@ fun NewsScreen(
                         colors = CardDefaults.cardColors(CoinvestBase)
                     ) {
                         LazyRow(modifier = Modifier.fillMaxSize()){
-                            items(newsList.value.shuffled()){
+                            items(items = newsList.value.shuffled(), key = {
+                                it.newsId
+                            }){
                                 Card(modifier = Modifier
                                     .fillMaxHeight()
                                     .width(360.dp).clickable(
@@ -146,7 +148,9 @@ fun NewsScreen(
                         }
                     }
                 }
-                items(newsList.value){
+                items(items = newsList.value, key = {
+                    it.newsId
+                }){
                     Spacer(modifier = Modifier.padding(8.dp))
                     NewsCard(newsDataClass = it, onClick = {
                         onTapNewsCard(Pair(newsList.value, it.newsId))

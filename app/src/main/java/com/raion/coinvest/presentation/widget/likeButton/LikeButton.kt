@@ -59,9 +59,9 @@ fun LikeButton(
                 )
             }
             , tint = if(likeState.value){
-                CoinvestBlack
-            } else {
                 CoinvestDarkPurple
+            } else {
+                CoinvestBlack
             }
         )
     }

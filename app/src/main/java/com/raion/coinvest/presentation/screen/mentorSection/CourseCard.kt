@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,19 +38,18 @@ fun CourseCard(
 ){
     Card(modifier = Modifier
         .fillMaxWidth()
-        .height(160.dp),
+        .heightIn(max = 180.dp),
         colors = CardDefaults.cardColors(CoinvestLightGrey)
     ){
-        Column(modifier = Modifier
-            .fillMaxSize()
+        Column(modifier = Modifier.heightIn(min = 160.dp)
             .padding(16.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ){
             Column {
                 Text(text = course.courseName, fontSize = 18.sp, fontWeight = FontWeight.Medium)
-                Spacer(modifier = Modifier.padding(4.dp))
+                Spacer(modifier = Modifier.padding(1.dp))
                 Text(text = "By " + course.courseOwner.userName, fontSize = 10.sp)
-                Spacer(modifier = Modifier.padding(4.dp))
+                Spacer(modifier = Modifier.padding(1.dp))
                 Text(text = course.courseDescription, fontSize = 12.sp, lineHeight = 13.sp)
             }
 

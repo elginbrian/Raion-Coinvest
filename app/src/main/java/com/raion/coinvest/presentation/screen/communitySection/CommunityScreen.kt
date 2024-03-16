@@ -41,6 +41,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
+import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.widget.appsBottomBar.AppsBottomBar
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
@@ -55,6 +56,7 @@ fun CommunityScreen(
     onChangeTab: (Int) -> Unit,
     onTapFloatingButton: () -> Unit,
     onTapPost: (Pair<MutableList<PostDataClass>,String>) -> Unit,
+    onTapProfile: (UserDataClass) -> Unit
 ){
     val articleList = remember { mutableStateOf<MutableList<PostDataClass>>(mutableListOf()) }
     val likeList    = remember { mutableStateOf<MutableList<LikeDataClass>>(mutableListOf()) }
@@ -125,7 +127,9 @@ fun CommunityScreen(
                         }
                     }
                 }
-                items(articleList.value){
+                items(items = articleList.value, key = {
+                    it.postId
+                }){
                     Spacer(modifier = Modifier.height(8.dp))
                     CommunityPostCard(
                         currentUserId = Firebase.auth.currentUser?.uid,
@@ -140,6 +144,9 @@ fun CommunityScreen(
                             } else {
                                 viewModel.deleteLike(it.first)
                             }
+                        },
+                        onTapProfile = {user ->
+                            onTapProfile(user)
                         }
                     )
                 }

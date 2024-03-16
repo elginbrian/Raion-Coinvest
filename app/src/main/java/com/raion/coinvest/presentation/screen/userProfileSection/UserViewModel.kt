@@ -25,6 +25,7 @@ class UserViewModel @Inject constructor(
 ): ViewModel() {
     private var isFetching = false
     private var isFetching2 = false
+    private var isFetching3 = false
     fun getPost(
         onFinished: (MutableList<PostDataClass>) -> Unit
     ){
@@ -54,8 +55,8 @@ class UserViewModel @Inject constructor(
     fun getComment(
         onFinished: (MutableList<CommentDataClass>) -> Unit
     ){
-        if (!isFetching) {
-            isFetching = true
+        if (!isFetching3) {
+            isFetching3 = true
             viewModelScope.launch {
                 val commentList = commentCollections.getComment()
                 val imageFetchDeferreds = mutableListOf<CompletableDeferred<Unit>>()
@@ -71,7 +72,7 @@ class UserViewModel @Inject constructor(
                 }
                 imageFetchDeferreds.awaitAll()
 
-                isFetching = false
+                isFetching3 = false
                 onFinished(commentList)
             }
         }

@@ -33,6 +33,7 @@ import coil.compose.AsyncImage
 import com.raion.coinvest.R
 import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
+import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 import com.raion.coinvest.presentation.widget.likeButton.LikeButton
 import com.raion.coinvest.presentation.widget.shareButton.ShareButton
@@ -44,7 +45,8 @@ fun CommunityPostCard(
     postDataClass: PostDataClass,
     likeList: MutableList<LikeDataClass>,
     onClick: () -> Unit,
-    onTapLike: (Pair<LikeDataClass, Boolean>) -> Unit
+    onTapLike: (Pair<LikeDataClass, Boolean>) -> Unit,
+    onTapProfile: (UserDataClass) -> Unit
 ){
     Card(modifier = Modifier
         .fillMaxWidth()
@@ -64,7 +66,9 @@ fun CommunityPostCard(
                 Card(modifier = Modifier.size(36.dp), shape = CircleShape) {
                     AsyncImage(
                         model = postDataClass.postAuthor.profilePicture, contentDescription = "Profile Picture",
-                        modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop
+                        modifier = Modifier.fillMaxSize().clickable {
+                                                         onTapProfile(postDataClass.postAuthor)
+                        }, contentScale = ContentScale.Crop
                         )
                 }
                 Spacer(modifier = Modifier.width(8.dp))

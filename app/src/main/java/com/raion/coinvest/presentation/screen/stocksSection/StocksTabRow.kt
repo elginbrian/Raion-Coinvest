@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.raion.coinvest.presentation.designSystem.CoinvestBlack
+import com.raion.coinvest.presentation.widget.appsBottomBar.DisabledInteractionSource
 
 @Composable
 fun StocksTabRow(
@@ -36,6 +37,7 @@ fun StocksTabRow(
             onClick = {
                 tabIndex.value = 0
             },
+            interactionSource = DisabledInteractionSource()
         ){
             Column {
                 Text(text = "Crypto", fontWeight = FontWeight.Bold)
@@ -46,6 +48,7 @@ fun StocksTabRow(
         Tab(
             selected = tabIndex.value == 1,
             onClick = { tabIndex.value = 1 },
+            interactionSource = DisabledInteractionSource()
         ){
             Column {
                 Text(text = "Saham", fontWeight = FontWeight.Bold)
@@ -55,6 +58,7 @@ fun StocksTabRow(
         Tab(
             selected = tabIndex.value == 2,
             onClick = { tabIndex.value = 2 },
+            interactionSource = DisabledInteractionSource()
         ){
             Column {
                 Text(text = "Reksadana", fontWeight = FontWeight.Bold)

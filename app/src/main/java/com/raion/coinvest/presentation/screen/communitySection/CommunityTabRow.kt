@@ -26,6 +26,7 @@ import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 import com.raion.coinvest.presentation.designSystem.CoinvestPurple
+import com.raion.coinvest.presentation.widget.appsBottomBar.DisabledInteractionSource
 
 @Composable
 @Preview
@@ -44,6 +45,7 @@ fun CommunityTabRow(){
         Tab(
             selected = tabIndex.value == 0,
             onClick = { tabIndex.value = 0 },
+            interactionSource = DisabledInteractionSource()
         ) {
             Card(modifier = Modifier
                 .width(54.dp)
@@ -71,7 +73,7 @@ fun CommunityTabRow(){
         Tab(
             selected = tabIndex.value == 1,
             onClick = { tabIndex.value = 1 },
-
+            interactionSource = DisabledInteractionSource()
         ) {
             Card(modifier = Modifier
                 .width(54.dp)
@@ -98,6 +100,7 @@ fun CommunityTabRow(){
         Tab(
             selected = tabIndex.value == 2,
             onClick = { tabIndex.value = 2 },
+            interactionSource = DisabledInteractionSource()
         ) {
             Card(modifier = Modifier
                 .width(54.dp)
@@ -124,6 +127,7 @@ fun CommunityTabRow(){
         Tab(
             selected = tabIndex.value == 3,
             onClick = { tabIndex.value = 3 },
+            interactionSource = DisabledInteractionSource()
         ) {
             Card(modifier = Modifier
                 .width(54.dp)

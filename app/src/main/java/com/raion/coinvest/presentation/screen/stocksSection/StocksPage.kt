@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
@@ -53,8 +55,8 @@ fun StocksPage(
     stocksList: GetTrendingSearchList
 ){
     val thisStocks = stocksList.coins.filter { coin -> coin.item.id.equals(stocksId) }
-//    val amount = remember { mutableStateOf(1) }
-//    val thisStockPrice = remember { mutableStateOf(thisStocks[0].item.data.price.substring(1).toInt() * amount.value) }
+    val amount = remember { mutableDoubleStateOf(1.0) }
+    val thisStockPrice = remember { mutableStateOf(thisStocks[0].item.data.price.replace("$", "").replace(",","").toDouble() * amount.value) }
 
     Scaffold(
         containerColor = CoinvestBase,
@@ -137,7 +139,16 @@ fun StocksPage(
                                 Column(modifier = Modifier
                                     .fillMaxSize()
                                     .padding(8.dp)) {
-                                    TransparentTextField(onValueChange = {}, onFocusChange = {})
+                                    TransparentTextField(text = amount.value.toString(), onValueChange = {
+                                        if(it.isNotEmpty()){
+                                            amount.value = 0.0
+                                            amount.value = it.toDouble()
+                                            thisStockPrice.value = thisStocks[0].item.data.price.replace("$", "").replace(",","").toDouble() * it.toDouble()
+                                        } else {
+                                            amount.value = 0.0
+                                            thisStockPrice.value = thisStocks[0].item.data.price.replace("$", "").replace(",","").toDouble() * 0.0
+                                        }
+                                    }, onFocusChange = {})
                                 }
                             }
                         }
@@ -154,7 +165,7 @@ fun StocksPage(
                                 Column(modifier = Modifier
                                     .fillMaxSize()
                                     .padding(8.dp)) {
-                                    TransparentTextField(onValueChange = {}, onFocusChange = {})
+                                    TransparentTextField(text = thisStockPrice.value.toString(), onValueChange = {}, onFocusChange = {})
                                 }
                             }
                         }
@@ -165,7 +176,7 @@ fun StocksPage(
                     Spacer(modifier = Modifier.padding(8.dp))
                     Card(modifier = Modifier
                         .fillMaxWidth()
-                        .height(220.dp),
+                        .height(240.dp),
                         colors = CardDefaults.cardColors(CoinvestBase),
                         border = BorderStroke(1.dp, CoinvestBorder)){
                         Column(modifier = Modifier
@@ -206,11 +217,11 @@ fun StocksPage(
                                 , horizontalArrangement = Arrangement.SpaceBetween) {
                                 Column(modifier = Modifier) {
                                     Text(text = "Market Cap BTC", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                                    Text(text = thisStocks[0].item.data.marketCapBTC, fontSize = 14.sp, fontWeight = FontWeight.Normal)
+                                    Text(text = thisStocks[0].item.data.marketCapBTC+"                 ", fontSize = 14.sp, fontWeight = FontWeight.Normal)
                                 }
                                 Column(modifier = Modifier, horizontalAlignment = Alignment.End) {
                                     Text(text = "Price BTC", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                                    Text(text = thisStocks[0].item.data.priceBTC.substring(0,10), fontSize = 14.sp, fontWeight = FontWeight.Normal)
+                                    Text(text = thisStocks[0].item.data.priceBTC, fontSize = 14.sp, fontWeight = FontWeight.Normal, maxLines = 1)
                                 }
                             }
                         }

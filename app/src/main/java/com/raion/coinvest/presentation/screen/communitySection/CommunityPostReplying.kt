@@ -62,7 +62,8 @@ fun CommunityPostReplying(
     viewModel: CommunityViewModel,
     articleList: MutableList<PostDataClass>,
     articleId: String,
-    onUploadReply: (CommentDataClass) -> Unit
+    onUploadReply: (CommentDataClass) -> Unit,
+    onTapProfile: (UserDataClass) -> Unit
 ){
     val thisArticle   = articleList.filter { article -> article.postId.equals(articleId) }
 
@@ -138,6 +139,9 @@ fun CommunityPostReplying(
                             } else {
                                 viewModel.deleteLike(it.first)
                             }
+                        },
+                        onTapProfile = {user ->
+                            onTapProfile(user)
                         }
                     )
                     Spacer(modifier = Modifier.padding(8.dp))
@@ -177,7 +181,7 @@ fun CommunityPostReplying(
                                 Card(modifier = Modifier
                                     .fillMaxWidth()
                                     .height(180.dp)) {
-                                    AsyncImage(model = selectedImageUri.value, contentDescription = "", contentScale = ContentScale.Crop)
+                                    AsyncImage(model = selectedImageUri.value, contentDescription = "", contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
                                 }
                             }
 

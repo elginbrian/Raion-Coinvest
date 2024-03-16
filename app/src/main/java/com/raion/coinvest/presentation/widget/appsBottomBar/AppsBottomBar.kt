@@ -1,6 +1,8 @@
 package com.raion.coinvest.presentation.widget.appsBottomBar
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.interaction.Interaction
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,6 +32,8 @@ import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.designSystem.CoinvestPurple
 import com.raion.coinvest.R
 import com.raion.coinvest.presentation.designSystem.CoinvestBlack
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun AppsBottomBar(
@@ -56,7 +60,9 @@ fun AppsBottomBar(
             divider = {},
             indicator = {}
         ){
-            Tab(selected = tabIndex.value == 0, onClick = {
+            Tab(selected = tabIndex.value == 0,
+                interactionSource = DisabledInteractionSource()
+                , onClick = {
                 tabIndex.value = 0
                 onChangeTab(tabIndex.value)
             }) {
@@ -71,7 +77,9 @@ fun AppsBottomBar(
                 }
             }
 
-            Tab(selected = tabIndex.value == 1, onClick = {
+            Tab(selected = tabIndex.value == 1,
+                interactionSource = DisabledInteractionSource()
+                , onClick = {
                 tabIndex.value = 1
                 onChangeTab(tabIndex.value)
             }) {
@@ -87,7 +95,9 @@ fun AppsBottomBar(
 
             }
 
-            Tab(selected = tabIndex.value == 2, onClick = {
+            Tab(selected = tabIndex.value == 2,
+                interactionSource = DisabledInteractionSource()
+                , onClick = {
                 tabIndex.value = 2
                 onChangeTab(tabIndex.value)
             }) {
@@ -102,7 +112,9 @@ fun AppsBottomBar(
                 }
             }
 
-            Tab(selected = tabIndex.value == 3, onClick = {
+            Tab(selected = tabIndex.value == 3,
+                interactionSource = DisabledInteractionSource()
+                , onClick = {
                 tabIndex.value = 3
                 onChangeTab(tabIndex.value)
             }) {
@@ -117,7 +129,9 @@ fun AppsBottomBar(
                 }
             }
 
-            Tab(selected = tabIndex.value == 4, onClick = {
+            Tab(selected = tabIndex.value == 4,
+                interactionSource = DisabledInteractionSource(),
+                onClick = {
                 tabIndex.value = 4
                 onChangeTab(tabIndex.value)
             }) {
@@ -133,4 +147,10 @@ fun AppsBottomBar(
             }
         }
     }
+}
+
+class DisabledInteractionSource : MutableInteractionSource {
+    override val interactions: Flow<Interaction> = emptyFlow()
+    override suspend fun emit(interaction: Interaction) {}
+    override fun tryEmit(interaction: Interaction) = true
 }
