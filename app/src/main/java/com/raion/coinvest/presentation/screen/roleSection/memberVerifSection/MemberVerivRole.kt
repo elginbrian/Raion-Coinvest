@@ -1,8 +1,10 @@
-package com.raion.coinvest.presentation.screen.verivicationMember
+package com.raion.coinvest.presentation.screen.roleSection.memberVerifSection
 
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -19,47 +21,105 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.raion.coinvest.R
-import com.raion.coinvest.data.remote.firestore.model.PostDataClass
+import com.raion.coinvest.data.remote.firebaseStorage.model.VerifDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
-import com.raion.coinvest.presentation.widget.appsBottomBar.AppsBottomBar
-import com.raion.coinvest.presentation.screen.communitySection.CommunityPostCard
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestBorder
-import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.designSystem.CoinvestGrey
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
-import com.raion.coinvest.presentation.screen.communityProfileSection.CommunityProfileTabRow
+import com.raion.coinvest.presentation.designSystem.CoinvestPurple
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-@Preview
+//@Preview
 fun MemberVerivRole(
-//    onChangeTab: (Int) -> Unit
+    onFinished: (Pair<VerifDataClass, UserDataClass>) -> Unit
 ){
+    val username = remember { mutableStateOf("") }
+    val userId   = remember { mutableStateOf("") }
+
+    val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
+    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri -> selectedImageUri.value = uri }
+    )
+
     Scaffold(
         containerColor = CoinvestGrey,
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment     = Alignment.CenterVertically
+            ){
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button")
+                    
+                }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Card(modifier = Modifier
+                        .width(66.dp)
+                        .height(26.dp)
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            val verif = VerifDataClass(
+                                userId = userId.value,
+                                accountType = "member",
+                                document1 = Uri.EMPTY,
+                                document2 = Uri.EMPTY
+                            )
+                            val user = UserDataClass(
+                                userId      = userId.value,
+                                userName    = username.value,
+                                accountType = "member",
+                                email       = Firebase.auth.currentUser?.email,
+                                profilePicture = selectedImageUri.value.toString()
+                            )
+                            onFinished(Pair(verif, user))
+                        },
+                        colors = CardDefaults.cardColors(CoinvestPurple),
+                        shape = RoundedCornerShape(50.dp)
+                    ){
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+                            Text(
+                                text = "Simpan", fontSize = 12.sp,
+                                color = CoinvestBase
+                            )
+                        }
+
+                    }
+                }
+            }
+        },
         content = {
 
             Column(modifier = Modifier
@@ -69,22 +129,9 @@ fun MemberVerivRole(
                     .fillMaxWidth()
                     .height(30.dp)
                     ,contentAlignment = Alignment.CenterStart){
-                    Row {
-                        Image(painter = painterResource(id = R.drawable.tombolbalik), contentDescription = "", modifier = Modifier.padding(start = 15.dp))
-                        Spacer(modifier = Modifier.width(280.dp))
-                        Card(modifier = Modifier
-                            .width(65.dp)
-                            .height(24.dp),colors = CardDefaults.cardColors(CoinvestDarkPurple)) {
-                            Text(
-                                text = "Simpan",
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxSize(), color = Color.White
-                            )
-                        }
-                    }
 
                 }
-                Image(painter = painterResource(id = R.drawable.tandatambahrole), contentDescription = "")
+                Image(painter = painterResource(id = R.drawable.tandatambahrole), contentDescription = "", modifier = Modifier.size(36.dp))
                 Spacer(modifier = Modifier.height(125.dp))
             }
         },
@@ -103,7 +150,7 @@ fun MemberVerivRole(
                         Column(modifier = Modifier
                             .fillMaxSize()
                             .padding(start = 30.dp, end = 30.dp, top = 60.dp)) {
-                            Text(text = "Ussername", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 15.dp, bottom = 4.dp))
+                            Text(text = "Username", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 15.dp, bottom = 4.dp))
                             Card(
                                 modifier = Modifier
                                     .width(320.dp)
@@ -156,10 +203,12 @@ fun MemberVerivRole(
                     ) {
                         Box(modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 25.dp), contentAlignment = Alignment.Center) {
+                            .padding(32.dp)
+                            , contentAlignment = Alignment.Center) {
                             Image(
                                 painter = painterResource(id = R.drawable.ditambahtambah),
-                                contentDescription = ""
+                                contentDescription = "",
+                                modifier = Modifier.fillMaxSize()
                             )
                         }
                     }

@@ -9,42 +9,52 @@ enum class CoinvestUserFlow{
     LoginScreen,                // 1
     RoleSectionScreen,          // 2
 
+    AuthorRegisterScreen,       // 3
+    AuthorRegisterScreen2,      // 4
+    AuthorRegisterScreen3,      // 5
+
+    MemberRegisterScreen,       // 6
+
+    MentorRegisterScreen,       // 7
+    MentorRegisterScreen2,      // 8
+    MentorRegisterScreen3,      // 9
+
     // HomeSection
-    HomeScreen,                 // 3
+    HomeScreen,                 // 10
 
     // CommunitySection
-    CommunityScreen,            // 4
-    CommunityCreatePost,        // 5
-    CommunityPostReply,         // 6
-    CommunityPostReplying,      // 7
+    CommunityScreen,            // 11
+    CommunityCreatePost,        // 12
+    CommunityPostReply,         // 13
+    CommunityPostReplying,      // 14
 
     // CommunitySearchSection
-    CommunitySearchScreen,      // 8
-    CommunitySearchGrid,        // 9
+    CommunitySearchScreen,      // 15
+    CommunitySearchGrid,        // 16
 
     // CommunityProfileSection
-    CommunityProfileScreen,     // 10
-    CommunityFollowerScreen,    // 11
+    CommunityProfileScreen,     // 17
+    CommunityFollowerScreen,    // 18
 
     // MentorSection
-    MentorScreen,               // 12
-    MentorSearchScreen,         // 13
-    MentorVideoPlayer,          // 14
-    MentorCreate,               // 15
-    MentorNew,                  // 16
+    MentorScreen,               // 19
+    MentorSearchScreen,         // 20
+    MentorVideoPlayer,          // 21
+    MentorCreate,               // 22
+    MentorNew,                  // 23
 
     // NewsSection
-    NewsScreen,                 // 17
-    NewsPage,                   // 18
-    NewsCreate,                 // 19
-    NewsReply,                  // 20
-    NewsReplying,               // 21
+    NewsScreen,                 // 24
+    NewsPage,                   // 25
+    NewsCreate,                 // 26
+    NewsReply,                  // 27
+    NewsReplying,               // 28
 
     // UserProfileSection
-    UserProfileScreen,          // 22
-    UserFollowerScreen,         // 23
+    UserProfileScreen,          // 29
+    UserFollowerScreen,         // 30
 
     // StocksSection
-    StocksScreen,               // 24
-    StocksPage;                 // 25
+    StocksScreen,               // 31
+    StocksPage;                 // 32
 }

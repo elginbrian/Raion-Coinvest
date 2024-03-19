@@ -1,6 +1,7 @@
 package com.raion.coinvest.presentation
 
 import NewsReplying
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -8,8 +9,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,10 +25,12 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.raion.coinvest.data.remote.api.model.GetTrendingSearchList
 import com.raion.coinvest.data.remote.auth.GoogleAuthRepository
+import com.raion.coinvest.data.remote.firebaseStorage.model.VerifDataClass
 import com.raion.coinvest.data.remote.firestore.model.CourseDataClass
 import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
+import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.screen.communitySection.CommunityCreatePost
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostReply
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostReplying
@@ -35,13 +43,13 @@ import com.raion.coinvest.presentation.screen.debugging.DebugViewModel2
 import com.raion.coinvest.presentation.designSystem.CoinvestTheme
 import com.raion.coinvest.presentation.screen.loginSection.LoginHome
 import com.raion.coinvest.presentation.screen.loginSection.LoginViewModel
-import com.raion.coinvest.presentation.screen.loginSection.MenuDaftar
 import com.raion.coinvest.presentation.navigation.CoinvestUserFlow
 import com.raion.coinvest.presentation.screen.communityProfileSection.CommunityFollowerScreen
 import com.raion.coinvest.presentation.screen.communityProfileSection.CommunityProfileScreen
 import com.raion.coinvest.presentation.screen.communitySearchSection.CommunitySearchGrid
 import com.raion.coinvest.presentation.screen.communitySearchSection.CommunitySearchScreen
 import com.raion.coinvest.presentation.screen.homeSection.DashboardAwal
+import com.raion.coinvest.presentation.screen.homeSection.HomeViewModel
 import com.raion.coinvest.presentation.screen.mentorSection.MentorCreate
 import com.raion.coinvest.presentation.screen.mentorSection.MentorNew
 import com.raion.coinvest.presentation.screen.mentorSection.MentorScreen
@@ -53,12 +61,21 @@ import com.raion.coinvest.presentation.screen.newsSection.NewsPage
 import com.raion.coinvest.presentation.screen.newsSection.NewsReply
 import com.raion.coinvest.presentation.screen.newsSection.NewsScreen
 import com.raion.coinvest.presentation.screen.newsSection.NewsViewModel
+import com.raion.coinvest.presentation.screen.roleSection.RoleScreen
+import com.raion.coinvest.presentation.screen.roleSection.RoleViewModel
 import com.raion.coinvest.presentation.screen.stocksSection.StocksPage
 import com.raion.coinvest.presentation.screen.stocksSection.StocksScreen
 import com.raion.coinvest.presentation.screen.stocksSection.StocksViewModel
 import com.raion.coinvest.presentation.screen.userProfileSection.UserFollowerScreen
 import com.raion.coinvest.presentation.screen.userProfileSection.UserProfileScreen
 import com.raion.coinvest.presentation.screen.userProfileSection.UserViewModel
+import com.raion.coinvest.presentation.screen.roleSection.authorVerifSection.BerkasPengalaman
+import com.raion.coinvest.presentation.screen.roleSection.authorVerifSection.BerkasPortofolio
+import com.raion.coinvest.presentation.screen.roleSection.authorVerifSection.DokumenTerunggah
+import com.raion.coinvest.presentation.screen.roleSection.memberVerifSection.MemberVerivRole
+import com.raion.coinvest.presentation.screen.roleSection.mentorVerifSection.MentorDokumenTerunggah
+import com.raion.coinvest.presentation.screen.roleSection.mentorVerifSection.SertifikatMentor
+import com.raion.coinvest.presentation.screen.roleSection.mentorVerifSection.SertifikatOJK
 import com.raion.coinvest.presentation.widget.transparentSystemBar.TransparentSystemBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -74,6 +91,8 @@ class MainActivity : ComponentActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             CoinvestTheme {
                 TransparentSystemBar()
@@ -87,13 +106,13 @@ class MainActivity : ComponentActivity() {
                     CoinvestUserFlow.CommunityScreen.name, // entry point 3
                     CoinvestUserFlow.NewsScreen.name,      // entry point 4
                 )
-                var selectedUser = remember {
+                val selectedUser = remember {
                     mutableStateOf(UserDataClass("","","","",""))
                 }
 
                 NavHost(navController = navController, startDestination =
                     if(Firebase.auth.currentUser != null) {
-                        entryPointList[3]
+                        entryPointList[0]
                     } else {
                         CoinvestUserFlow.LoginScreen.name
                     }
@@ -124,19 +143,94 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             },
-                            onChangeScreen = { navController.navigate(route = CoinvestUserFlow.CommunityScreen.name) }
+                            onChangeScreen = { navController.navigate(route = CoinvestUserFlow.RoleSectionScreen.name) }
 
                         )
                     }
+                    val roleViewModel: RoleViewModel by viewModels()
                     composable(CoinvestUserFlow.RoleSectionScreen.name){
-                        MenuDaftar()
+                        RoleScreen(
+                            onClick = { when(it){
+                                -1 -> { navController.navigate(CoinvestUserFlow.RoleSectionScreen.name) }
+                                0 -> { navController.navigate(CoinvestUserFlow.AuthorRegisterScreen.name) }
+                                1 -> { navController.navigate(CoinvestUserFlow.MemberRegisterScreen.name) }
+                                2 -> { navController.navigate(CoinvestUserFlow.MentorRegisterScreen.name) }
+                            } }
+                        )
+                    }
+                    var prevData: VerifDataClass = VerifDataClass("","", Uri.EMPTY, Uri.EMPTY)
+                    composable(CoinvestUserFlow.AuthorRegisterScreen.name){
+
+                        BerkasPengalaman{
+                            prevData = it
+                            navController.navigate(CoinvestUserFlow.AuthorRegisterScreen2.name)
+                        }
+                    }
+                    composable(CoinvestUserFlow.AuthorRegisterScreen2.name){
+
+                        BerkasPortofolio(
+                            onNextPage = {
+                                prevData = it
+                                navController.navigate(CoinvestUserFlow.AuthorRegisterScreen3.name)
+                            },
+                            prevData = prevData
+                        )
+
+
+                    }
+                    composable(CoinvestUserFlow.AuthorRegisterScreen3.name){
+                        DokumenTerunggah(
+                            onFinished = {
+                                navController.navigate(CoinvestUserFlow.HomeScreen.name)
+                                roleViewModel.verifUser(it.first, it.second)
+                            },
+                            prevData = prevData
+                        )
+
                     }
 
+                    composable(CoinvestUserFlow.MemberRegisterScreen.name){
+                        MemberVerivRole(
+                            onFinished = {
+                                navController.navigate(CoinvestUserFlow.HomeScreen.name)
+                                roleViewModel.verifUser(it.first, it.second)
+                            }
+                        )
+                    }
+
+                    composable(CoinvestUserFlow.MentorRegisterScreen.name){
+                        SertifikatOJK {
+                            navController.navigate(CoinvestUserFlow.MentorRegisterScreen2.name)
+                            prevData = it
+                        }
+                    }
+                    composable(CoinvestUserFlow.MentorRegisterScreen2.name){
+                        SertifikatMentor(
+                            onNextPage = {
+                                prevData = it
+                                navController.navigate(CoinvestUserFlow.AuthorRegisterScreen3.name)
+                            },
+                            prevData = prevData
+                        )
+                    }
+                    composable(CoinvestUserFlow.MentorRegisterScreen3.name){
+                        MentorDokumenTerunggah(
+                            prevData = prevData,
+                            onFinished = {
+                                navController.navigate(CoinvestUserFlow.HomeScreen.name)
+                                roleViewModel.verifUser(it.first, it.second)
+                            }
+                        )
+                    }
 
 
                     // tabIndex 0 entry point
                     composable(CoinvestUserFlow.HomeScreen.name){
-                        DashboardAwal()
+                        val viewModel: HomeViewModel by viewModels()
+                        DashboardAwal(
+                            viewModel = viewModel,
+                            onChangeTab = { navController.navigate(entryPointList[it]) }
+                        )
                     }
 
 

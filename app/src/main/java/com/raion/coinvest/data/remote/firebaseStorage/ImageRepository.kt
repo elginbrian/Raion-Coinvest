@@ -6,6 +6,7 @@ import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.storage.storage
 import com.google.firebase.storage.storageMetadata
+import com.raion.coinvest.data.remote.firebaseStorage.model.VerifDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
 import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
@@ -37,6 +38,41 @@ class ImageRepository {
             }.await()
         }
     }
+
+    suspend fun uploadVerifImage(verif: VerifDataClass){
+        val metadata = storageMetadata {
+            contentType = "image/jpeg"
+        }
+
+        if(verif.document1 != Uri.EMPTY){
+            val uploadTask = storageRef.child("verif/${verif.accountType}/${verif.userId}/${verif.document1}").putFile(verif.document1, metadata)
+            uploadTask.addOnProgressListener {
+                val progress = (100.0 * it.bytesTransferred) / it.totalByteCount
+                Log.d(TAG, "Upload is $progress% done")
+            }.addOnPausedListener {
+                Log.d(TAG, "Upload is paused")
+            }.addOnFailureListener {
+
+            }.addOnSuccessListener {
+
+            }.await()
+        }
+
+        if(verif.document2 != Uri.EMPTY){
+            val uploadTask = storageRef.child("verif/${verif.accountType}/${verif.userId}/${verif.document2}").putFile(verif.document2, metadata)
+            uploadTask.addOnProgressListener {
+                val progress = (100.0 * it.bytesTransferred) / it.totalByteCount
+                Log.d(TAG, "Upload is $progress% done")
+            }.addOnPausedListener {
+                Log.d(TAG, "Upload is paused")
+            }.addOnFailureListener {
+
+            }.addOnSuccessListener {
+
+            }.await()
+        }
+    }
+
 
     suspend fun uploadNewsImage(news: NewsDataClass) {
         val metadata = storageMetadata {
