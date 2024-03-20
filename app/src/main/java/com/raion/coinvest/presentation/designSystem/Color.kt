@@ -33,3 +33,4 @@ val CoinvestOrange      = Color(0xFFF89C35)
 
 val CoinvestBorder = Color(0xFFD9D9D9)
 val CoinvestBorderDepan = Color (0xFFAD68A9)
+val CoinvestCardNotif = Color (0xFFEED5E7)
