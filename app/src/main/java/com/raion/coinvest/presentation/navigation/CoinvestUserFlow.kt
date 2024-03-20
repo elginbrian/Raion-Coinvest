@@ -6,6 +6,7 @@ enum class CoinvestUserFlow{
     DebugScreen5,
 
     // Login Section
+    IntroScreen,
     LoginScreen,                // 1
     RoleSectionScreen,          // 2
 

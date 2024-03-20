@@ -1,6 +1,7 @@
 package com.raion.coinvest.presentation.screen.mentorSection
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.widget.searchBar.SearchBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -36,11 +39,14 @@ import com.raion.coinvest.presentation.widget.searchBar.SearchBar
 @Preview
 fun MentorSearchScreen(){
     Scaffold(
-        containerColor = CoinvestBase,
         topBar = {
             Card(
                 shape = RectangleShape,
-                colors = CardDefaults.cardColors(CoinvestBase)
+                colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                    MaterialTheme.colorScheme.background
+                } else {
+                    CoinvestBase
+                })
             ){
                 Column(
                     modifier = Modifier.padding(16.dp),
@@ -54,8 +60,16 @@ fun MentorSearchScreen(){
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment     = Alignment.CenterVertically
                     ){
-                        Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button")
-                        Text(text = "Course & Mentor", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint = if(isSystemInDarkTheme()){
+                            CoinvestBase
+                        } else {
+                            CoinvestBlack
+                        })
+                        Text(text = "Course & Mentor", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if(isSystemInDarkTheme()){
+                            CoinvestBase
+                        } else {
+                            CoinvestBlack
+                        })
                         Spacer(modifier = Modifier.width(20.dp))
                     }
                     SearchBar(){

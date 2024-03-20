@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,6 +48,8 @@ import com.raion.coinvest.R
 import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
+import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestBorder
 import com.raion.coinvest.presentation.widget.likeButton.LikeButton
 import com.raion.coinvest.presentation.widget.shareButton.ShareButton
@@ -104,24 +107,43 @@ fun NewsPage(
                                 AsyncImage(model = thisNews[0].imageUri, contentDescription = "Banner", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
                             }
                         }
-                        Card(modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .height(160.dp),
-                            colors = CardDefaults.cardColors(Color.Transparent),
-                            shape  = RoundedCornerShape(20.dp),
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth(0.8f)
+                                .height(160.dp),
+                            colors = CardDefaults.cardColors(if (isSystemInDarkTheme()){
+                                CoinvestBlack
+                            } else {
+                                Color.Transparent
+                            }),
+                            shape = RoundedCornerShape(20.dp),
                             border = BorderStroke(1.dp, CoinvestBorder),
                             //elevation = CardDefaults.cardElevation(1.dp)
                         ){
                             Box(modifier = Modifier.fillMaxSize()){
-                                Image(painter = painterResource(id = R.drawable.blur_background), contentDescription = "blur", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+                                if(!isSystemInDarkTheme()){
+                                    Image(painter = painterResource(id = R.drawable.blur_background), contentDescription = "blur", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop,)
+                                }
                                 Column(modifier = Modifier
                                     .fillMaxSize()
                                     .padding(16.dp),
                                     verticalArrangement = Arrangement.SpaceBetween
                                 ){
-                                    Text(text = thisNews[0].newsCreatedAt.substring(0,10), fontSize = 12.sp, fontWeight = FontWeight.Medium)
-                                    Text(text = thisNews[0].newsTitle, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-                                    Text(text = "Diunggah pada xx menit yang lalu", fontSize = 12.sp, fontWeight = FontWeight.Normal)
+                                    Text(text = thisNews[0].newsCreatedAt.substring(0,10), fontSize = 12.sp, fontWeight = FontWeight.Medium, color =  if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
+                                    Text(text = thisNews[0].newsTitle, fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color =  if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
+                                    Text(text = "Diunggah pada xx menit yang lalu", fontSize = 12.sp, fontWeight = FontWeight.Normal, color =  if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
                                 }
                             }
                         }

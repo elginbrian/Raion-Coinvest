@@ -3,6 +3,7 @@ package com.raion.coinvest.presentation.widget.searchBar
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestBorder
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 import com.raion.coinvest.presentation.widget.transparentTextField.TransparentTextField
@@ -41,7 +44,11 @@ fun SearchBar(
             .fillMaxWidth()
             .height(40.dp),
         shape = RoundedCornerShape(50.dp),
-        colors = CardDefaults.cardColors(CoinvestLightGrey),
+        colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+            CoinvestBlack
+        } else {
+            CoinvestLightGrey
+        }),
         border = BorderStroke(1.dp, CoinvestBorder)
     ) {
         Row(
@@ -65,12 +72,21 @@ fun SearchBar(
                         Spacer(modifier = Modifier.padding(1.dp))
                         TransparentTextField(onValueChange = {}, onFocusChange = {})
                     } else {
-                        Text(text = "Cari")
+                        Text(text = "Cari", color =  if(isSystemInDarkTheme()){
+                            CoinvestBase
+                        } else {
+                            CoinvestBlack
+                        })
                     }
                 }
             }
             Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search",
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
+                tint =  if(isSystemInDarkTheme()){
+                    CoinvestBase
+                } else {
+                    CoinvestBlack
+                }
             )
         }
     }

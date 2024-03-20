@@ -2,6 +2,7 @@ package com.raion.coinvest.presentation.screen.communitySection
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +40,7 @@ import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
 import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -57,11 +60,14 @@ fun CommunityPostReply(
     viewModel.getLike(){ likeList.value = it }
 
     Scaffold(
-        containerColor = CoinvestBase,
         topBar = {
             Card(
                 shape = RectangleShape,
-                colors = CardDefaults.cardColors(CoinvestBase)
+                colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                    MaterialTheme.colorScheme.background
+                } else {
+                    CoinvestBase
+                })
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
@@ -77,12 +83,20 @@ fun CommunityPostReply(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.ArrowBackIosNew,
-                            contentDescription = "Back button"
+                            contentDescription = "Back button", tint =  if(isSystemInDarkTheme()){
+                                CoinvestBase
+                            } else {
+                                CoinvestBlack
+                            }
                         )
                         Text(
                             text = "Forum & Komunitas",
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold, color =  if(isSystemInDarkTheme()){
+                                CoinvestBase
+                            } else {
+                                CoinvestBlack
+                            }
                         )
                         Spacer(modifier = Modifier.width(20.dp))
 

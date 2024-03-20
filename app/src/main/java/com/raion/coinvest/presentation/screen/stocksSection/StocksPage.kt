@@ -3,6 +3,7 @@ package com.raion.coinvest.presentation.screen.stocksSection
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,6 +46,7 @@ import coil.request.ImageRequest
 import com.raion.coinvest.R
 import com.raion.coinvest.data.remote.api.model.GetTrendingSearchList
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestBorder
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.widget.transparentTextField.TransparentTextField
@@ -59,11 +62,14 @@ fun StocksPage(
     val thisStockPrice = remember { mutableStateOf(thisStocks[0].item.data.price.replace("$", "").replace(",","").toDouble() * amount.value) }
 
     Scaffold(
-        containerColor = CoinvestBase,
         topBar = {
             Card(
                 shape = RectangleShape,
-                colors = CardDefaults.cardColors(CoinvestBase)
+                colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                    MaterialTheme.colorScheme.background
+                } else {
+                    CoinvestBase
+                })
             ){
                 Column(
                     modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
@@ -77,9 +83,21 @@ fun StocksPage(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment     = Alignment.CenterVertically
                     ){
-                        Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button")
-                        Text(text = thisStocks[0].item.symbol, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                        Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search")
+                        Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint = if(isSystemInDarkTheme()){
+                            CoinvestBase
+                        } else {
+                            CoinvestBlack
+                        })
+                        Text(text = thisStocks[0].item.symbol, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if(isSystemInDarkTheme()){
+                            CoinvestBase
+                        } else {
+                            CoinvestBlack
+                        })
+                        Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search", tint = if(isSystemInDarkTheme()){
+                            CoinvestBase
+                        } else {
+                            CoinvestBlack
+                        })
                     }
                 }
             }
@@ -102,7 +120,11 @@ fun StocksPage(
                         .fillMaxWidth()
                         .height(220.dp),
                         shape = RectangleShape,
-                        colors = CardDefaults.cardColors(CoinvestBase),
+                        colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                            MaterialTheme.colorScheme.background
+                        } else {
+                            CoinvestBase
+                        }),
                         border = BorderStroke(1.dp, CoinvestBorder)
                     ) {
                         Box(modifier = Modifier.fillMaxSize()){
@@ -133,7 +155,11 @@ fun StocksPage(
                             Card(modifier = Modifier
                                 .width(160.dp)
                                 .height(48.dp),
-                                colors = CardDefaults.cardColors(CoinvestBase),
+                                colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                                    MaterialTheme.colorScheme.background
+                                } else {
+                                    CoinvestBase
+                                }),
                                 border = BorderStroke(1.dp, CoinvestBorder)
                             ){
                                 Column(modifier = Modifier
@@ -159,7 +185,11 @@ fun StocksPage(
                             Card(modifier = Modifier
                                 .width(160.dp)
                                 .height(48.dp),
-                                colors = CardDefaults.cardColors(CoinvestBase),
+                                colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                                    MaterialTheme.colorScheme.background
+                                } else {
+                                    CoinvestBase
+                                }),
                                 border = BorderStroke(1.dp, CoinvestBorder)
                             ){
                                 Column(modifier = Modifier
@@ -177,23 +207,47 @@ fun StocksPage(
                     Card(modifier = Modifier
                         .fillMaxWidth()
                         .height(240.dp),
-                        colors = CardDefaults.cardColors(CoinvestBase),
+                        colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                            MaterialTheme.colorScheme.background
+                        } else {
+                            CoinvestBase
+                        }),
                         border = BorderStroke(1.dp, CoinvestBorder)){
                         Column(modifier = Modifier
                             .fillMaxSize()
                             .padding(vertical = 16.dp, horizontal = 24.dp)) {
-                            Text(text = "Statistik", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                            Text(text = "Statistik", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = if(isSystemInDarkTheme()){
+                                CoinvestBase
+                            } else {
+                                CoinvestBlack
+                            })
                             Spacer(modifier = Modifier.padding(8.dp))
                             Row(modifier = Modifier
                                 .fillMaxWidth()
                                 , horizontalArrangement = Arrangement.SpaceBetween) {
                                 Column(modifier = Modifier) {
-                                    Text(text = "Market Cap", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                                    Text(text = thisStocks[0].item.data.marketCap, fontSize = 14.sp, fontWeight = FontWeight.Normal)
+                                    Text(text = "Market Cap", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
+                                    Text(text = thisStocks[0].item.data.marketCap, fontSize = 14.sp, fontWeight = FontWeight.Normal, color = if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
                                 }
                                 Column(modifier = Modifier, horizontalAlignment = Alignment.End) {
-                                    Text(text = "Total Volume", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                                    Text(text = thisStocks[0].item.data.totalVolume, fontSize = 14.sp, fontWeight = FontWeight.Normal)
+                                    Text(text = "Total Volume", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
+                                    Text(text = thisStocks[0].item.data.totalVolume, fontSize = 14.sp, fontWeight = FontWeight.Normal, color = if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
                                 }
                             }
 
@@ -202,12 +256,28 @@ fun StocksPage(
                                 .fillMaxWidth()
                                 , horizontalArrangement = Arrangement.SpaceBetween) {
                                 Column(modifier = Modifier) {
-                                    Text(text = "Market Cap Rank", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                                    Text(text = thisStocks[0].item.marketCapRank.toString(), fontSize = 14.sp, fontWeight = FontWeight.Normal)
+                                    Text(text = "Market Cap Rank", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
+                                    Text(text = thisStocks[0].item.marketCapRank.toString(), fontSize = 14.sp, fontWeight = FontWeight.Normal, color = if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
                                 }
                                 Column(modifier = Modifier, horizontalAlignment = Alignment.End) {
-                                    Text(text = "Score", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                                    Text(text = thisStocks[0].item.score.toString(), fontSize = 14.sp, fontWeight = FontWeight.Normal)
+                                    Text(text = "Score", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
+                                    Text(text = thisStocks[0].item.score.toString(), fontSize = 14.sp, fontWeight = FontWeight.Normal, color = if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
                                 }
                             }
 
@@ -216,12 +286,28 @@ fun StocksPage(
                                 .fillMaxWidth()
                                 , horizontalArrangement = Arrangement.SpaceBetween) {
                                 Column(modifier = Modifier) {
-                                    Text(text = "Market Cap BTC", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                                    Text(text = thisStocks[0].item.data.marketCapBTC+"                 ", fontSize = 14.sp, fontWeight = FontWeight.Normal)
+                                    Text(text = "Market Cap BTC", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
+                                    Text(text = thisStocks[0].item.data.marketCapBTC+"                 ", fontSize = 14.sp, fontWeight = FontWeight.Normal, color = if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
                                 }
                                 Column(modifier = Modifier, horizontalAlignment = Alignment.End) {
-                                    Text(text = "Price BTC", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                                    Text(text = thisStocks[0].item.data.priceBTC, fontSize = 14.sp, fontWeight = FontWeight.Normal, maxLines = 1)
+                                    Text(text = "Price BTC", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
+                                    Text(text = thisStocks[0].item.data.priceBTC, fontSize = 14.sp, fontWeight = FontWeight.Normal, maxLines = 1, color = if(isSystemInDarkTheme()){
+                                        CoinvestBase
+                                    } else {
+                                        CoinvestBlack
+                                    })
                                 }
                             }
                         }

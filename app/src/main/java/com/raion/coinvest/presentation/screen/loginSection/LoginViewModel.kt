@@ -31,7 +31,7 @@ class LoginViewModel @Inject constructor(
     }
     fun createUserWithEmail(email: String, password: String): SignInResult {
         viewModelScope.launch {
-            val result = emailAuthRepository.createUser(email, password)
+            val result = emailAuthRepository.loginViaEmail(email, password)
 
             _signInResult.value = _signInResult.value.copy(
                 isSuccess = result.isSuccess,
@@ -39,7 +39,6 @@ class LoginViewModel @Inject constructor(
                 errorMessage = result.errorMessage
             )
         }
-
         return _signInResult.value
     }
 }

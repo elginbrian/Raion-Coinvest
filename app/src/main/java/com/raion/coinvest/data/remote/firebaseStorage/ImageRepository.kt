@@ -10,6 +10,7 @@ import com.raion.coinvest.data.remote.firebaseStorage.model.VerifDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.CommentDataClass
 import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
+import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -126,6 +127,39 @@ class ImageRepository {
         }.addOnFailureListener {
             // Handle failure, you might want to provide a default image or log an error
             Log.d(TAG, "getImage Failed: ${it.localizedMessage}")
+            continuation.resume(Uri.EMPTY)
+        }
+    }
+
+    suspend fun uploadProfilePict(userDataClass: UserDataClass){
+        val metadata = storageMetadata {
+            contentType = "image/jpeg"
+        }
+
+        if(Uri.parse(userDataClass.profilePicture) != Uri.EMPTY){
+            val uploadTask = storageRef.child("profile_picture/${userDataClass.userId}").putFile(Uri.parse(userDataClass.profilePicture), metadata)
+
+            uploadTask.addOnProgressListener {
+                val progress = (100.0 * it.bytesTransferred) / it.totalByteCount
+                Log.d(TAG, "Upload is $progress% done")
+            }.addOnPausedListener {
+                Log.d(TAG, "Upload is paused")
+            }.addOnFailureListener {
+
+            }.addOnSuccessListener {
+
+            }.await()
+        }
+    }
+
+    suspend fun getUserProfile(userId: String): Uri = suspendCoroutine { continuation ->
+        val pathReference = storageRef.child("profile_picture/$userId")
+        pathReference.downloadUrl.addOnSuccessListener {
+            Log.d(TAG, "getUserProfile Success")
+            continuation.resume(it)
+        }.addOnFailureListener {
+            // Handle failure, you might want to provide a default image or log an error
+            Log.d(TAG, "getUserProfile Failed: ${it.localizedMessage}")
             continuation.resume(Uri.EMPTY)
         }
     }

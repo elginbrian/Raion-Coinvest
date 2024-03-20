@@ -3,6 +3,7 @@ package com.raion.coinvest.presentation.screen.communitySection
 import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,8 @@ import com.raion.coinvest.R
 import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
+import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 import com.raion.coinvest.presentation.widget.likeButton.LikeButton
 import com.raion.coinvest.presentation.widget.shareButton.ShareButton
@@ -56,7 +59,11 @@ fun CommunityPostCard(
             interactionSource = remember { MutableInteractionSource() } // This is mandatory
         ) { onClick() },
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(CoinvestLightGrey)
+        colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+            CoinvestBlack
+        } else {
+            CoinvestLightGrey
+        })
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -72,13 +79,25 @@ fun CommunityPostCard(
                         )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = postDataClass.postAuthor.userName.toString(), fontSize = 12.sp)
+                Text(text = postDataClass.postAuthor.userName.toString(), fontSize = 12.sp, color =  if(isSystemInDarkTheme()){
+                    CoinvestBase
+                } else {
+                    CoinvestBlack
+                })
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = postDataClass.postCreatedAt.substring(0,10).toString(), fontSize = 10.sp)
+                Text(text = postDataClass.postCreatedAt.substring(0,10).toString(), fontSize = 10.sp, color =  if(isSystemInDarkTheme()){
+                    CoinvestBase
+                } else {
+                    CoinvestBlack
+                })
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = postDataClass.postContent, fontSize = 14.sp, maxLines = 12)
+            Text(text = postDataClass.postContent, fontSize = 14.sp, maxLines = 12, color =  if(isSystemInDarkTheme()){
+                CoinvestBase
+            } else {
+                CoinvestBlack
+            })
             Spacer(modifier = Modifier.height(16.dp))
 
             if(postDataClass.imageUri != Uri.EMPTY){
@@ -95,8 +114,16 @@ fun CommunityPostCard(
                 LikeButton(userId = currentUserId, parentId = postDataClass.postId, likeList = likeList) {
                     onTapLike(it)
                 }
-                Icon(painter = painterResource(id = R.drawable.comment_icon), contentDescription = "Comment", modifier = Modifier.scale(0.7f))
-                Icon(painter = painterResource(id = R.drawable.bookmark_icon), contentDescription = "Bookmark", modifier = Modifier.scale(0.7f))
+                Icon(painter = painterResource(id = R.drawable.comment_icon), contentDescription = "Comment", modifier = Modifier.scale(0.7f), tint =  if(isSystemInDarkTheme()){
+                    CoinvestBase
+                } else {
+                    CoinvestBlack
+                })
+                Icon(painter = painterResource(id = R.drawable.bookmark_icon), contentDescription = "Bookmark", modifier = Modifier.scale(0.7f), tint =  if(isSystemInDarkTheme()){
+                    CoinvestBase
+                } else {
+                    CoinvestBlack
+                })
                 ShareButton(content = postDataClass.postContent, owner = postDataClass.postAuthor.userName.toString(), date = postDataClass.postCreatedAt)
             }
         }

@@ -5,12 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.raion.coinvest.data.remote.api.ApiRepository
 import com.raion.coinvest.data.remote.api.model.GetTrendingSearchList
+import com.raion.coinvest.data.remote.auth.EmailAuthRepository
 import com.raion.coinvest.data.remote.firebaseStorage.ImageRepository
 import com.raion.coinvest.data.remote.firebaseStorage.VideoRepository
 import com.raion.coinvest.data.remote.firestore.CourseCollections
 import com.raion.coinvest.data.remote.firestore.NewsCollections
 import com.raion.coinvest.data.remote.firestore.model.CourseDataClass
 import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
+import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
@@ -117,5 +119,4 @@ class HomeViewModel @Inject constructor(
             onFinished(imageUri)
         }
     }
-
 }

@@ -1,5 +1,6 @@
 package com.raion.coinvest.presentation.screen.userProfileSection
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.heightIn
@@ -15,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.widget.appsBottomBar.DisabledInteractionSource
 
@@ -30,7 +32,11 @@ fun UserProfileTabRow(
         modifier = Modifier.heightIn(32.dp),
         selectedTabIndex = tabIndex.value,
         containerColor = Color.Transparent,
-        contentColor = CoinvestBlack
+        contentColor = if(isSystemInDarkTheme()){
+            CoinvestBase
+        } else {
+            CoinvestBlack
+        }
     ){
         Tab(
             selected = tabIndex.value == 0,

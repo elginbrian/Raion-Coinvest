@@ -3,6 +3,7 @@ package com.raion.coinvest.presentation.screen.newsSection
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,6 +49,7 @@ import com.raion.coinvest.data.remote.firestore.NewsCollections
 import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.screen.mentorSection.MentorTabRow2
 import com.raion.coinvest.presentation.widget.appsBottomBar.AppsBottomBar
@@ -72,7 +75,11 @@ fun NewsScreen(
         topBar    = {
             Card(
                 shape = RectangleShape,
-                colors = CardDefaults.cardColors(CoinvestBase)
+                colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                    MaterialTheme.colorScheme.background
+                } else {
+                    CoinvestBase
+                })
             ) {
                 Column(
                     modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
@@ -86,7 +93,11 @@ fun NewsScreen(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment     = Alignment.CenterVertically
                     ){
-                        Text(text = "Informasi dan Berita", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(text = "Informasi dan Berita", fontSize = 16.sp, fontWeight = FontWeight.Bold, color =  if(isSystemInDarkTheme()){
+                            CoinvestBase
+                        } else {
+                            CoinvestBlack
+                        })
                     }
                     SearchBar(){
                         onTapSearch()

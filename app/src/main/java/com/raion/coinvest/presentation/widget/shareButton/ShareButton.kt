@@ -3,6 +3,7 @@ package com.raion.coinvest.presentation.widget.shareButton
 import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -12,6 +13,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat.startActivity
 import com.raion.coinvest.R
+import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 
 @Composable
 fun ShareButton(
@@ -33,5 +36,9 @@ fun ShareButton(
         interactionSource = remember { MutableInteractionSource() }
     ) {
         startActivity(context, shareIntent, null)
+    }, tint =  if(isSystemInDarkTheme()){
+        CoinvestBase
+    } else {
+        CoinvestBlack
     })
 }

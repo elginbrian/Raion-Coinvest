@@ -2,6 +2,7 @@ package com.raion.coinvest.presentation.screen.mentorSection
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.raion.coinvest.data.remote.firestore.model.CourseDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 
@@ -41,7 +43,11 @@ fun MentorCard(
     Card(modifier = Modifier
         .fillMaxWidth()
         .height(160.dp),
-        colors = CardDefaults.cardColors(CoinvestLightGrey)
+        colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+            CoinvestBlack
+        } else {
+            CoinvestLightGrey
+        })
     ) {
         Row(modifier = Modifier
             .fillMaxSize()
@@ -61,9 +67,17 @@ fun MentorCard(
                 verticalArrangement = Arrangement.SpaceBetween
             ){
                 Column {
-                    Text(text = course.courseOwner.userName.toString(), fontSize = 18.sp, fontWeight = FontWeight.Medium)
+                    Text(text = course.courseOwner.userName.toString(), fontSize = 18.sp, fontWeight = FontWeight.Medium, color =  if(isSystemInDarkTheme()){
+                        CoinvestBase
+                    } else {
+                        CoinvestBlack
+                    })
                     Spacer(modifier = Modifier.padding(4.dp))
-                    Text(text = course.courseName, fontSize = 12.sp, lineHeight = 14.sp)
+                    Text(text = course.courseName, fontSize = 12.sp, lineHeight = 14.sp, color =  if(isSystemInDarkTheme()){
+                        CoinvestBase
+                    } else {
+                        CoinvestBlack
+                    })
                 }
 
                 Row(modifier = Modifier.fillMaxWidth(),

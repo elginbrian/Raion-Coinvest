@@ -29,8 +29,10 @@ import com.raion.coinvest.R
 import com.raion.coinvest.presentation.designSystem.CoinvestBorder
 
 @Composable
-@Preview
-fun LoginAwal3() {
+//@Preview
+fun LoginAwal3(
+    onClick: () -> Unit
+) {
     Box(modifier = Modifier
         .fillMaxSize()
         .background(color = CoinvestBorder),
@@ -52,10 +54,10 @@ fun LoginAwal3() {
                 Text(text = "Halo! Selamat Datang", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.White)
                 Text(text = "Mari Kita Mulai!", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
                 Spacer(modifier = Modifier.height(32.dp))
-                Image(painter = painterResource(id = R.drawable.dot1), contentDescription = "Dot")
+                //Image(painter = painterResource(id = R.drawable.dot1), contentDescription = "Dot")
                 Spacer(modifier = Modifier.height(8.dp))
                 Image(painter = painterResource(id = R.drawable.logintengah3), contentDescription ="", modifier = Modifier.padding(start = 40.dp, end = 40.dp, bottom = 40.dp).clickable {
-
+                    onClick()
                 } )
             }
         }
