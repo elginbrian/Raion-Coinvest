@@ -3,6 +3,7 @@ package com.raion.coinvest.presentation.widget.appsBottomBar
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,6 +33,7 @@ import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.designSystem.CoinvestPurple
 import com.raion.coinvest.R
 import com.raion.coinvest.presentation.designSystem.CoinvestBlack
+import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -45,7 +47,11 @@ fun AppsBottomBar(
         .height(62.dp)
         .padding(vertical = 4.dp),
         shape = RoundedCornerShape(50.dp),
-        colors = CardDefaults.cardColors(CoinvestBase),
+        colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+            CoinvestBlack
+        } else {
+            CoinvestLightGrey
+        }),
         elevation = CardDefaults.cardElevation(12.dp)
         ) {
         val tabIndex = remember {
@@ -73,7 +79,11 @@ fun AppsBottomBar(
                         }
                     }
                 } else {
-                    Icon(painter = painterResource(id = R.drawable.home_icon), contentDescription = "Home", modifier = Modifier.scale(0.65f))
+                    Icon(painter = painterResource(id = R.drawable.home_icon), contentDescription = "Home", modifier = Modifier.scale(0.65f), tint =  if(isSystemInDarkTheme()){
+                        CoinvestBase
+                    } else {
+                        CoinvestBlack
+                    })
                 }
             }
 
@@ -90,7 +100,11 @@ fun AppsBottomBar(
                         }
                     }
                 } else {
-                    Icon(painter = painterResource(id = R.drawable.course_icon), contentDescription = "Course", modifier = Modifier.scale(0.65f))
+                    Icon(painter = painterResource(id = R.drawable.course_icon), contentDescription = "Course", modifier = Modifier.scale(0.65f), if(isSystemInDarkTheme()){
+                        CoinvestBase
+                    } else {
+                        CoinvestBlack
+                    })
                 }
 
             }
@@ -108,7 +122,11 @@ fun AppsBottomBar(
                         }
                     }
                 } else {
-                    Icon(painter = painterResource(id = R.drawable.stats_icon), contentDescription = "Stats", modifier = Modifier.scale(0.65f))
+                    Icon(painter = painterResource(id = R.drawable.stats_icon), contentDescription = "Stats", modifier = Modifier.scale(0.65f), if(isSystemInDarkTheme()){
+                        CoinvestBase
+                    } else {
+                        CoinvestBlack
+                    })
                 }
             }
 
@@ -125,7 +143,11 @@ fun AppsBottomBar(
                         }
                     }
                 } else {
-                    Icon(painter = painterResource(id = R.drawable.forum_icon), contentDescription = "Forum", modifier = Modifier.scale(0.65f))
+                    Icon(painter = painterResource(id = R.drawable.forum_icon), contentDescription = "Forum", modifier = Modifier.scale(0.65f), if(isSystemInDarkTheme()){
+                        CoinvestBase
+                    } else {
+                        CoinvestBlack
+                    })
                 }
             }
 
@@ -142,7 +164,11 @@ fun AppsBottomBar(
                         }
                     }
                 } else {
-                    Icon(painter = painterResource(id = R.drawable.article_icon), contentDescription = "Article",modifier = Modifier.scale(0.65f))
+                    Icon(painter = painterResource(id = R.drawable.article_icon), contentDescription = "Article",modifier = Modifier.scale(0.65f), if(isSystemInDarkTheme()){
+                        CoinvestBase
+                    } else {
+                        CoinvestBlack
+                    })
                 }
             }
         }

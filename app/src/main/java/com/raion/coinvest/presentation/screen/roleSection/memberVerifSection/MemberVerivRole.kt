@@ -4,6 +4,7 @@ package com.raion.coinvest.presentation.screen.roleSection.memberVerifSection
 import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -36,11 +37,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.raion.coinvest.R
@@ -51,6 +54,7 @@ import com.raion.coinvest.presentation.designSystem.CoinvestBorder
 import com.raion.coinvest.presentation.designSystem.CoinvestGrey
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 import com.raion.coinvest.presentation.designSystem.CoinvestPurple
+import com.raion.coinvest.presentation.widget.transparentTextField.TransparentTextField
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -65,6 +69,12 @@ fun MemberVerivRole(
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri -> selectedImageUri.value = uri }
+    )
+
+    val selectedImageUri2 = remember { mutableStateOf<Uri?>(null) }
+    val singlePhotoPickerLauncher2 = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri -> selectedImageUri2.value = uri }
     )
 
     Scaffold(
@@ -98,10 +108,10 @@ fun MemberVerivRole(
                                 document2 = Uri.EMPTY
                             )
                             val user = UserDataClass(
-                                userId      = userId.value,
-                                userName    = username.value,
+                                userId = userId.value,
+                                userName = username.value,
                                 accountType = "member",
-                                email       = Firebase.auth.currentUser?.email,
+                                email = Firebase.auth.currentUser?.email,
                                 profilePicture = selectedImageUri.value.toString()
                             )
                             onFinished(Pair(verif, user))
@@ -124,15 +134,21 @@ fun MemberVerivRole(
 
             Column(modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.3f), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                .fillMaxHeight(0.3f)
+                .clickable {
+                    singlePhotoPickerLauncher2.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }, horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                 Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(30.dp)
-                    ,contentAlignment = Alignment.CenterStart){
-
+                    .fillMaxSize()
+                    ,contentAlignment = Alignment.Center){
+                    AsyncImage(model = selectedImageUri2.value, contentDescription = "profile picture", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+                    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                        Image(painter = painterResource(id = R.drawable.tandatambahrole), contentDescription = "", modifier = Modifier.size(36.dp))
+                        Spacer(modifier = Modifier.padding(40.dp))
+                    }
                 }
-                Image(painter = painterResource(id = R.drawable.tandatambahrole), contentDescription = "", modifier = Modifier.size(36.dp))
-                Spacer(modifier = Modifier.height(125.dp))
             }
         },
         bottomBar = {
@@ -160,7 +176,21 @@ fun MemberVerivRole(
                                 border = BorderStroke(1.dp, CoinvestBorder),
                                 colors = CardDefaults.cardColors(Color.White)
                             ) {
-
+                                Column(modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(8.dp), verticalArrangement = Arrangement.Center) {
+                                    Spacer(modifier = Modifier.padding(1.dp))
+                                    TransparentTextField(
+                                        text = username.value,
+                                        onValueChange = {
+                                            if ((it.all { char -> char.isDefined() || char.isWhitespace() })) {
+                                                username.value = it
+                                            }
+                                        }, onFocusChange = {},
+                                        fontSize = 28.sp,
+                                        singleLine = true
+                                    )
+                                }
                             }
                             Spacer(modifier = Modifier.height(20.dp))
                             Text(text = "UserID", fontWeight = FontWeight.Bold,modifier = Modifier.padding(start = 15.dp, bottom = 4.dp))
@@ -173,25 +203,40 @@ fun MemberVerivRole(
                                 border = BorderStroke(1.dp, CoinvestBorder),
                                 colors = CardDefaults.cardColors(Color.White)
                             ) {
+                                Column(modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(8.dp), verticalArrangement = Arrangement.Center) {
+                                    Spacer(modifier = Modifier.padding(1.dp))
+                                    TransparentTextField(
+                                        text = userId.value,
+                                        onValueChange = {
+                                            if ((it.all { char -> char.isDefined() || char.isWhitespace() })) {
+                                                userId.value = it
+                                            }
+                                        }, onFocusChange = {},
+                                        fontSize = 28.sp,
+                                        singleLine = true
+                                    )
+                                }
                             }
-                            Spacer(modifier = Modifier.height(40.dp))
-                            Card(
-                                modifier = Modifier
-                                    .width(320.dp)
-                                    .height(50.dp),
-
-                                shape = RoundedCornerShape(8.dp),
-                                border = BorderStroke(1.dp, CoinvestBorder),
-                                colors = CardDefaults.cardColors(Color.White)
-                            ) {
-
-                            }
-                            Box(modifier = Modifier
-                                .fillMaxWidth()
-                                .height(30.dp)
-                                .padding(end = 15.dp), contentAlignment = Alignment.CenterEnd){
-                                Text(text = "200", fontSize = 11.sp)
-                            }
+//                            Spacer(modifier = Modifier.height(40.dp))
+//                            Card(
+//                                modifier = Modifier
+//                                    .width(320.dp)
+//                                    .height(50.dp),
+//
+//                                shape = RoundedCornerShape(8.dp),
+//                                border = BorderStroke(1.dp, CoinvestBorder),
+//                                colors = CardDefaults.cardColors(Color.White)
+//                            ) {
+//
+//                            }
+//                            Box(modifier = Modifier
+//                                .fillMaxWidth()
+//                                .height(30.dp)
+//                                .padding(end = 15.dp), contentAlignment = Alignment.CenterEnd){
+//                                Text(text = "200", fontSize = 11.sp)
+//                            }
                         }
                     }
                 }
@@ -203,12 +248,17 @@ fun MemberVerivRole(
                     ) {
                         Box(modifier = Modifier
                             .fillMaxWidth()
-                            .padding(32.dp)
+                            .clickable {
+                                singlePhotoPickerLauncher.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            }
                             , contentAlignment = Alignment.Center) {
+                            AsyncImage(model = selectedImageUri.value, contentDescription = "profile picture", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
                             Image(
                                 painter = painterResource(id = R.drawable.ditambahtambah),
                                 contentDescription = "",
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier.fillMaxSize(0.5f)
                             )
                         }
                     }

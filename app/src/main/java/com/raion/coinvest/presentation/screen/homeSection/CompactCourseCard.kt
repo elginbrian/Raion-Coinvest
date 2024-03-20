@@ -2,6 +2,8 @@ package com.raion.coinvest.presentation.screen.homeSection
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -28,23 +31,36 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.raion.coinvest.R
 import com.raion.coinvest.data.remote.firestore.model.CourseDataClass
+import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
+import com.raion.coinvest.presentation.designSystem.CoinvestDarkGrey
+import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
+import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 
 @Composable
-fun CompactCourseCard(course: CourseDataClass){
+fun CompactCourseCard(
+    course: CourseDataClass,
+    onClick: (String) -> Unit
+){
     Card(
         modifier = Modifier
             .width(200.dp)
             .height(260.dp)
-            .padding(10.dp)
-            .background(color = Color.White),
+            .padding(10.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(Color.White),
+        colors = CardDefaults.cardColors(
+            if(isSystemInDarkTheme()){
+                CoinvestBlack
+            } else {
+                CoinvestLightGrey
+            }
+        ),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
         AsyncImage(model = course.courseOwner.profilePicture, contentDescription = "course banner",
             modifier = Modifier
                 .fillMaxWidth()
-                .height(84.dp))
+                .height(84.dp).clip(RoundedCornerShape(16.dp)))
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceBetween) {
@@ -52,11 +68,22 @@ fun CompactCourseCard(course: CourseDataClass){
                 Text(
                     text = course.courseName,
                     fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    color =  if(isSystemInDarkTheme()){
+                        CoinvestBase
+                    } else {
+                        CoinvestBlack
+                    }
                 )
                 Text(
                     text = "Oleh " + course.courseOwner.userName.toString(),
-                    fontSize = 10.sp
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color =  if(isSystemInDarkTheme()){
+                        CoinvestBase
+                    } else {
+                        CoinvestBlack
+                    }
                 )
             }
 
@@ -65,10 +92,12 @@ fun CompactCourseCard(course: CourseDataClass){
                 modifier = Modifier
                     .width(80.dp)
                     .height(32.dp),
-                colors = CardDefaults.cardColors(Color(0xFF61008D)),
+                colors = CardDefaults.cardColors(CoinvestDarkPurple),
                 shape = RoundedCornerShape(120.dp)
             ) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+                Box(modifier = Modifier.fillMaxSize().clickable {
+                                                                onClick(course.courseId)
+                }, contentAlignment = Alignment.Center){
                     Text(
                         text = "Tonton",
                         color = Color.White,

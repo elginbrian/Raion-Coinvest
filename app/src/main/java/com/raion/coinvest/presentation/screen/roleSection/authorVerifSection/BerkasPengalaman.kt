@@ -86,9 +86,9 @@ fun BerkasPengalaman(
                         Text(text = "Verifikasi Berkas", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
                         Spacer(modifier = Modifier.width(20.dp))
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
                     Image(painter = painterResource(id = R.drawable.num123), contentDescription = "", modifier = Modifier.fillMaxWidth(0.5f))
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
                     Text(text = "Pengalaman", color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(15.dp))
                     Column(modifier = Modifier.fillMaxWidth()) {

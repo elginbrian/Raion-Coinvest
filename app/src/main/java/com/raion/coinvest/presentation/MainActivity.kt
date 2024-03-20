@@ -9,6 +9,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.mutableStateOf
@@ -50,6 +53,7 @@ import com.raion.coinvest.presentation.screen.communitySearchSection.CommunitySe
 import com.raion.coinvest.presentation.screen.communitySearchSection.CommunitySearchScreen
 import com.raion.coinvest.presentation.screen.homeSection.DashboardAwal
 import com.raion.coinvest.presentation.screen.homeSection.HomeViewModel
+import com.raion.coinvest.presentation.screen.loginSection.LoginAwal3
 import com.raion.coinvest.presentation.screen.mentorSection.MentorCreate
 import com.raion.coinvest.presentation.screen.mentorSection.MentorNew
 import com.raion.coinvest.presentation.screen.mentorSection.MentorScreen
@@ -91,7 +95,7 @@ class MainActivity : ComponentActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
             CoinvestTheme {
@@ -110,13 +114,28 @@ class MainActivity : ComponentActivity() {
                     mutableStateOf(UserDataClass("","","","",""))
                 }
 
+                var courseId: String = ""
+                var newCourse: CourseDataClass = CourseDataClass("","","","","",
+                    UserDataClass("","","","",""), mutableListOf()
+                )
+                var courseList: MutableList<CourseDataClass> = mutableListOf()
+
+                var newsId: String = ""
+                var newsList: MutableList<NewsDataClass> = mutableListOf()
+
                 NavHost(navController = navController, startDestination =
                     if(Firebase.auth.currentUser != null) {
                         entryPointList[0]
                     } else {
-                        CoinvestUserFlow.LoginScreen.name
+                        CoinvestUserFlow.IntroScreen.name
                     }
                 ){
+                    composable(CoinvestUserFlow.IntroScreen.name){
+                        LoginAwal3 {
+                            navController.navigate(CoinvestUserFlow.LoginScreen.name)
+                        }
+                    }
+
                     composable(CoinvestUserFlow.LoginScreen.name){
                         val viewModel: LoginViewModel by viewModels()
                         val launcher = rememberLauncherForActivityResult(
@@ -228,19 +247,29 @@ class MainActivity : ComponentActivity() {
                     composable(CoinvestUserFlow.HomeScreen.name){
                         val viewModel: HomeViewModel by viewModels()
                         DashboardAwal(
-                            viewModel = viewModel,
-                            onChangeTab = { navController.navigate(entryPointList[it]) }
+                            viewModel      = viewModel,
+                            onChangeTab    = { navController.navigate(entryPointList[it]) },
+                            onChangeScreen = { navController.navigate(it) },
+                            onClickCourse  = {
+                                courseList = it.first
+                                courseId = it.second
+                                navController.navigate(route = CoinvestUserFlow.MentorVideoPlayer.name)
+                            },
+                            onClickNews = {
+                                newsList = it.first
+                                newsId = it.second
+                                navController.navigate(CoinvestUserFlow.NewsPage.name)
+                            },
+                            onClickProfile = {
+                                selectedUser.value = it
+                                navController.navigate(CoinvestUserFlow.UserProfileScreen.name)
+                            }
                         )
                     }
 
 
 
                     // tabIndex 1 entry point
-                    var courseId: String = ""
-                    var newCourse: CourseDataClass = CourseDataClass("","","","","",
-                        UserDataClass("","","","",""), mutableListOf()
-                    )
-                    var courseList: MutableList<CourseDataClass> = mutableListOf()
                     composable(CoinvestUserFlow.MentorScreen.name){
                         val viewModel: MentorViewModel by viewModels()
                         MentorScreen(
@@ -394,8 +423,6 @@ class MainActivity : ComponentActivity() {
 
 
                     // tabIndex 4 entry point
-                    var newsId: String = ""
-                    var newsList: MutableList<NewsDataClass> = mutableListOf()
                     composable(CoinvestUserFlow.NewsScreen.name){
                         val viewModel: NewsViewModel by viewModels()
                         NewsScreen(
@@ -460,7 +487,8 @@ class MainActivity : ComponentActivity() {
                         UserProfileScreen(
                             viewModel = viewModel,
                             onChangeTab = { navController.navigate(route = entryPointList[it]) },
-                            user = selectedUser.value
+                            user = selectedUser.value,
+                            onCreatePost = { navController.navigate(CoinvestUserFlow.CommunityCreatePost.name)}
                         )
                     }
                     composable(CoinvestUserFlow.UserFollowerScreen.name){

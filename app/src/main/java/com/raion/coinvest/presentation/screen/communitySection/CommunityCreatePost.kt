@@ -7,6 +7,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,6 +46,7 @@ import com.google.firebase.auth.auth
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.widget.transparentTextField.TransparentTextField
 import java.time.LocalDateTime
@@ -62,11 +65,14 @@ fun CommunityCreatePost(
         onResult = { uri -> selectedImageUri.value = uri }
     )
     Scaffold(
-        containerColor = CoinvestBase,
         topBar = {
             Card(
                 shape = RectangleShape,
-                colors = CardDefaults.cardColors(CoinvestBase)
+                colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                    MaterialTheme.colorScheme.background
+                } else {
+                    CoinvestBase
+                })
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
@@ -82,12 +88,20 @@ fun CommunityCreatePost(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.ArrowBackIosNew,
-                            contentDescription = "Back button"
+                            contentDescription = "Back button", tint =  if(isSystemInDarkTheme()){
+                                CoinvestBase
+                            } else {
+                                CoinvestBlack
+                            }
                         )
                         Text(
                             text = "Forum & Komunitas",
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold, color =  if(isSystemInDarkTheme()){
+                                CoinvestBase
+                            } else {
+                                CoinvestBlack
+                            }
                         )
                         Spacer(modifier = Modifier.width(20.dp))
                     }
@@ -110,7 +124,11 @@ fun CommunityCreatePost(
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = Firebase.auth.currentUser?.displayName.toString(), fontSize = 12.sp)
+                    Text(text = Firebase.auth.currentUser?.displayName.toString(), fontSize = 12.sp, color =  if(isSystemInDarkTheme()){
+                        CoinvestBase
+                    } else {
+                        CoinvestBlack
+                    })
                     Spacer(modifier = Modifier.width(8.dp))
                 }
 

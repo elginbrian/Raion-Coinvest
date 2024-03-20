@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -62,11 +64,14 @@ fun MentorNew(
     val category    = remember { mutableStateOf("") }
 
     Scaffold(
-        containerColor = CoinvestBase,
         topBar = {
             Card(
                 shape = RectangleShape,
-                colors = CardDefaults.cardColors(CoinvestBase)
+                colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                    MaterialTheme.colorScheme.background
+                } else {
+                    CoinvestBase
+                })
             ){
                 Row(
                     modifier = Modifier
@@ -77,9 +82,17 @@ fun MentorNew(
                     verticalAlignment     = Alignment.CenterVertically
                 ){
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button")
+                        Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint =  if(isSystemInDarkTheme()){
+                            CoinvestBase
+                        } else {
+                            CoinvestBlack
+                        })
                         Spacer(modifier = Modifier.padding(8.dp))
-                        Text(text = "Upload Mentorship", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                        Text(text = "Upload Mentorship", fontWeight = FontWeight.SemiBold, fontSize = 15.sp, color =  if(isSystemInDarkTheme()){
+                            CoinvestBase
+                        } else {
+                            CoinvestBlack
+                        })
                     }
 
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -122,7 +135,11 @@ fun MentorNew(
 
                         }
                         Spacer(modifier = Modifier.padding(8.dp))
-                        Icon(imageVector = Icons.Rounded.Menu, contentDescription = "Menu")
+                        Icon(imageVector = Icons.Rounded.Menu, contentDescription = "Menu", tint =  if(isSystemInDarkTheme()){
+                            CoinvestBase
+                        } else {
+                            CoinvestBlack
+                        })
                     }
                 }
             }
@@ -139,7 +156,11 @@ fun MentorNew(
                     Card(modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
-                        colors = CardDefaults.cardColors(CoinvestBase),
+                        colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                            MaterialTheme.colorScheme.background
+                        } else {
+                            CoinvestBase
+                        }),
                         border = BorderStroke(1.dp, CoinvestBorder)
                     ){
                         Column(modifier = Modifier
@@ -167,7 +188,11 @@ fun MentorNew(
                     Card(modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
-                        colors = CardDefaults.cardColors(CoinvestBase),
+                        colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                            MaterialTheme.colorScheme.background
+                        } else {
+                            CoinvestBase
+                        }),
                         border = BorderStroke(1.dp, CoinvestBorder)
                     ){
                         Column(modifier = Modifier
@@ -195,7 +220,11 @@ fun MentorNew(
                     Card(modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
-                        colors = CardDefaults.cardColors(CoinvestBase),
+                        colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                            MaterialTheme.colorScheme.background
+                        } else {
+                            CoinvestBase
+                        }),
                         border = BorderStroke(1.dp, CoinvestBorder)
                     ){
                         Column(modifier = Modifier
@@ -223,7 +252,11 @@ fun MentorNew(
                     Card(modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
-                        colors = CardDefaults.cardColors(CoinvestBase),
+                        colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                            MaterialTheme.colorScheme.background
+                        } else {
+                            CoinvestBase
+                        }),
                         border = BorderStroke(1.dp, CoinvestBorder)
                     ){
                         Column(modifier = Modifier

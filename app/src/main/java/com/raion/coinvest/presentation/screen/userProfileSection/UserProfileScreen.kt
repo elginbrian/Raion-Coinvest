@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,6 +51,7 @@ import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.widget.appsBottomBar.AppsBottomBar
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostCard
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.designSystem.CoinvestGrey
 import com.raion.coinvest.presentation.designSystem.CoinvestLightBlue
@@ -60,7 +63,8 @@ import com.raion.coinvest.presentation.designSystem.CoinvestPurple
 fun UserProfileScreen(
     viewModel: UserViewModel,
     user: UserDataClass,
-    onChangeTab: (Int) -> Unit
+    onChangeTab: (Int) -> Unit,
+    onCreatePost: () -> Unit
 ){
     val articleList = remember { mutableStateOf<MutableList<PostDataClass>>(mutableListOf()) }
     val likeList    = remember { mutableStateOf<MutableList<LikeDataClass>>(mutableListOf()) }
@@ -101,10 +105,13 @@ fun UserProfileScreen(
                         shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
                     ) {
                         Scaffold(
-                            containerColor = CoinvestBase,
                             topBar = {
                                 Card(shape = RoundedCornerShape(topEnd = 20.dp, topStart = 20.dp),
-                                    colors = CardDefaults.cardColors(CoinvestBase)) {
+                                    colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                                        MaterialTheme.colorScheme.background
+                                    } else {
+                                        CoinvestBase
+                                    })) {
                                     Column(modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(top = 16.dp, end = 16.dp, start = 16.dp)) {
@@ -125,18 +132,42 @@ fun UserProfileScreen(
                                             }
                                         }
                                         Spacer(modifier = Modifier.padding(12.dp))
-                                        Text(text = user.userName.toString(), fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                                        Text(text = user.email.toString(), fontSize = 12.sp)
+                                        Text(text = user.userName.toString(), fontSize = 18.sp, fontWeight = FontWeight.Bold, color =  if(isSystemInDarkTheme()){
+                                            CoinvestBase
+                                        } else {
+                                            CoinvestBlack
+                                        })
+                                        Text(text = user.email.toString(), fontSize = 12.sp, color =  if(isSystemInDarkTheme()){
+                                            CoinvestBase
+                                        } else {
+                                            CoinvestBlack
+                                        })
 
                                         Spacer(modifier = Modifier.padding(8.dp))
                                         Row(modifier = Modifier.width(120.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
                                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                                Text(text = "Diikuti", fontSize = 12.sp)
-                                                Text(text = "XX", fontSize = 10.sp)
+                                                Text(text = "Diikuti", fontSize = 12.sp, color =  if(isSystemInDarkTheme()){
+                                                    CoinvestBase
+                                                } else {
+                                                    CoinvestBlack
+                                                })
+                                                Text(text = "XX", fontSize = 10.sp, color =  if(isSystemInDarkTheme()){
+                                                    CoinvestBase
+                                                } else {
+                                                    CoinvestBlack
+                                                })
                                             }
                                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                                Text(text = "Pengikut", fontSize = 12.sp)
-                                                Text(text = "XX", fontSize = 10.sp)
+                                                Text(text = "Pengikut", fontSize = 12.sp, color =  if(isSystemInDarkTheme()){
+                                                    CoinvestBase
+                                                } else {
+                                                    CoinvestBlack
+                                                })
+                                                Text(text = "XX", fontSize = 10.sp, color =  if(isSystemInDarkTheme()){
+                                                    CoinvestBase
+                                                } else {
+                                                    CoinvestBlack
+                                                })
                                             }
                                         }
                                         Spacer(modifier = Modifier.padding(4.dp))
@@ -249,7 +280,7 @@ fun UserProfileScreen(
                                         .clickable(
                                             indication = null,
                                             interactionSource = remember { MutableInteractionSource() } // This is mandatory
-                                        ) { },
+                                        ) { onCreatePost() },
                                     shape = RoundedCornerShape(50.dp),
                                     colors = CardDefaults.cardColors(CoinvestDarkPurple)
                                 ) {

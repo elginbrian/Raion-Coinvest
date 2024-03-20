@@ -91,7 +91,6 @@ fun MentorVideoPlayer(
                         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                     ) {
                         Scaffold(
-                            containerColor = CoinvestBase,
                             topBar = {
                                 Card(shape = RoundedCornerShape(topEnd = 20.dp, topStart = 20.dp),
                                     colors = CardDefaults.cardColors(CoinvestBase)) {

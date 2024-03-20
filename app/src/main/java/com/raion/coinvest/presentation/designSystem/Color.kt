@@ -21,7 +21,7 @@ val CoinvestLightPurple = Color(0xFFDB97BE)
 val CoinvestLightGrey   = Color(0xFFF5F5F5)
 val CoinvestGrey        = Color(0xFFA3B1C2)
 val CoinvestDarkGrey    = Color(0xFF676F89)
-val CoinvestBlack       = Color(0xFF000000)
+val CoinvestBlack       = Color(0xFF0D0D0D)
 
 val CoinvestDarkBlue    = Color(0xFF3E3C91)
 val CoinvestBlue        = Color(0xFF414CA8)

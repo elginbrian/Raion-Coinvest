@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.rounded.Apartment
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,7 +44,9 @@ import com.raion.coinvest.data.remote.api.model.Data
 import com.raion.coinvest.data.remote.api.model.GetTrendingSearchList
 import com.raion.coinvest.data.remote.api.model.GetTrendingStocks
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
+import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 import com.raion.coinvest.presentation.widget.appsBottomBar.AppsBottomBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -65,7 +69,11 @@ fun StocksScreen(
         topBar = {
             Card(
                 shape = RectangleShape,
-                colors = CardDefaults.cardColors(CoinvestBase)
+                colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                    MaterialTheme.colorScheme.background
+                } else {
+                   CoinvestBase
+                })
             ) {
                 Column(
                     modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
@@ -79,7 +87,11 @@ fun StocksScreen(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment     = Alignment.CenterVertically
                     ){
-                        Text(text = "Stocks Update", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(text = "Stocks Update", fontSize = 16.sp, fontWeight = FontWeight.Bold, color =  if(isSystemInDarkTheme()){
+                            CoinvestBase
+                        } else {
+                            CoinvestBlack
+                        })
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     StocksTabRow(){

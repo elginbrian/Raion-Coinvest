@@ -61,8 +61,8 @@ class DebugViewModel @Inject constructor(
     fun resetState() {
         _state.update { SignInState() }
     }
-    fun createUserWithEmail()                            = viewModelScope.launch { emailAuthRepository.createUser(email = "elginbrian94@gmail.com", password = "220406") }
-    fun loginWithEmail()                                 = viewModelScope.launch { emailAuthRepository.loginUser(email = "elginbrian94@gmail.com", password = "220406") }
+    fun createUserWithEmail()                            = viewModelScope.launch { emailAuthRepository.loginViaEmail(email = "elginbrian94@gmail.com", password = "220406") }
+    fun loginWithEmail()                                 = viewModelScope.launch { }
     fun createUserWithTwitter(context: Context)          = viewModelScope.launch { twitterAuthRepository.createUser(context) }
     fun addUsersToFireStore(user: UserDataClass)         = viewModelScope.launch { userCollections.addUsersToFireStore(user) }
     fun addArticleToFireStore(article: PostDataClass) = viewModelScope.launch { postCollections.addPost(article, ) }

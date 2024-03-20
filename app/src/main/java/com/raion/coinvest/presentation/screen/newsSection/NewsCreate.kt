@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -53,6 +55,7 @@ import com.google.firebase.auth.auth
 import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestBorder
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.designSystem.CoinvestGrey
@@ -174,21 +177,32 @@ fun NewsCreate(
                         shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
                     ) {
                         Scaffold(
-                            containerColor = CoinvestBase,
                             topBar = {
                                 Card(shape = RoundedCornerShape(topEnd = 20.dp, topStart = 20.dp),
-                                    colors = CardDefaults.cardColors(CoinvestBase)) {
+                                    colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                                        MaterialTheme.colorScheme.background
+                                    } else {
+                                        CoinvestBase
+                                    })) {
                                     Column(modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(top = 16.dp, end = 16.dp, start = 16.dp)) {
                                         Spacer(modifier = Modifier.padding(4.dp))
-                                        Text(text = "Judul Berita", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                                        Text(text = "Judul Berita", fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = if(isSystemInDarkTheme()){
+                                            CoinvestBase
+                                        } else {
+                                            CoinvestBlack
+                                        })
 
                                         Spacer(modifier = Modifier.padding(4.dp))
                                         Card(modifier = Modifier
                                             .fillMaxWidth()
                                             .height(50.dp),
-                                            colors = CardDefaults.cardColors(CoinvestBase),
+                                            colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                                                MaterialTheme.colorScheme.background
+                                            } else {
+                                                CoinvestBase
+                                            }),
                                             border = BorderStroke(1.dp, CoinvestBorder)
                                         ){
                                             Column(modifier = Modifier

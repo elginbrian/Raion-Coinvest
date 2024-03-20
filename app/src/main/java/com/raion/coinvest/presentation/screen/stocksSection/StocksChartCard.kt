@@ -1,5 +1,6 @@
 package com.raion.coinvest.presentation.screen.stocksSection
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.raion.coinvest.data.remote.api.model.CoinDetails
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 
@@ -37,7 +39,13 @@ fun StocksChartCard(
     Card(modifier = Modifier
         .width(330.dp)
         .height(150.dp),
-        colors = CardDefaults.cardColors(CoinvestLightGrey),
+        colors = CardDefaults.cardColors(
+            if(isSystemInDarkTheme()){
+                CoinvestBlack
+            } else {
+                CoinvestLightGrey
+            }
+        ),
         shape = RectangleShape
     ){
         Box(modifier = Modifier
@@ -57,7 +65,8 @@ fun StocksChartCard(
                         Text(
                             text = "Chart", fontSize = 16.sp,
                             color = CoinvestBase,
-                            fontWeight = FontWeight.SemiBold
+                            fontWeight = FontWeight.SemiBold,
+
                         )
                     }
                 }
@@ -67,15 +76,31 @@ fun StocksChartCard(
                     horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
                         Column(modifier = Modifier, verticalArrangement = Arrangement.Center) {
-                            Text(text = coins.name, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-                            Text(text = "rank: " + coins.marketCapRank)
+                            Text(text = coins.name, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color =  if(isSystemInDarkTheme()){
+                                CoinvestBase
+                            } else {
+                                CoinvestBlack
+                            })
+                            Text(text = "rank: " + coins.marketCapRank, color =  if(isSystemInDarkTheme()){
+                                CoinvestBase
+                            } else {
+                                CoinvestBlack
+                            })
                         }
                     }
                     Row(modifier = Modifier) {
                         Column(modifier = Modifier, verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.End) {
-                            Text(text = coins.data.price, fontSize = 14.sp)
-                            Text(text = "1 " + coins.symbol)
+                            Text(text = coins.data.price, fontSize = 14.sp, color =  if(isSystemInDarkTheme()){
+                                CoinvestBase
+                            } else {
+                                CoinvestBlack
+                            })
+                            Text(text = "1 " + coins.symbol, color =  if(isSystemInDarkTheme()){
+                                CoinvestBase
+                            } else {
+                                CoinvestBlack
+                            })
                         }
                     }
                 }

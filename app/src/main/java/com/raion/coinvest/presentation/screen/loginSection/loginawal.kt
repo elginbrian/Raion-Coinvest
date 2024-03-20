@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -79,9 +80,12 @@ fun LoginHome(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ){
-            Spacer(modifier = Modifier.height(50.dp))
-            Image(painter = painterResource(id = R.drawable.logocoinvest), contentDescription = "")
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(24.dp))
+            Image(painter = painterResource(id = R.drawable.coinvest_new), contentDescription ="", modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(end = 48.dp))
+            //Image(painter = painterResource(id = R.drawable.logocoinvest), contentDescription = "")
+            //Spacer(modifier = Modifier.height(36.dp))
             Text(text = "Hi There!", fontSize = 14.sp, color = CoinvestBase)
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Let’s Get Started", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = CoinvestBase)
@@ -226,16 +230,11 @@ fun LoginHome(
                     }
                 )
             }
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(120.dp))
 
         }
     }
 
-@Preview
-@Composable
-fun LoginScreenPreview(){
-    LoginHome(viewModel = LoginViewModel(emailAuthRepository = EmailAuthRepository()),
-        onSignInWithEmail = { SignInResult(data = null, errorMessage = null) }, onSignInWithGoogle = {}, onChangeScreen = {})
-}
+
 
 

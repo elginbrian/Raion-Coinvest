@@ -32,8 +32,8 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideEmailAuthRepository(): EmailAuthRepository {
-        return EmailAuthRepository()
+    fun provideEmailAuthRepository(imageRepository: ImageRepository): EmailAuthRepository {
+        return EmailAuthRepository(imageRepository)
     }
 
     @Provides

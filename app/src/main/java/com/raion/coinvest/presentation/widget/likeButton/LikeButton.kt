@@ -1,6 +1,7 @@
 package com.raion.coinvest.presentation.widget.likeButton
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.raion.coinvest.R
 import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
+import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 
@@ -39,7 +41,11 @@ fun LikeButton(
 
 
     Row(verticalAlignment = Alignment.CenterVertically) {
-       Text(text = thisPostLike.size.toString())
+       Text(text = thisPostLike.size.toString(), color = if(isSystemInDarkTheme()){
+           CoinvestBase
+       } else {
+           CoinvestBlack
+       })
         Spacer(modifier = Modifier.padding(4.dp))
         Icon(painter = painterResource(id = if(likeState.value){
             R.drawable.likefull_icon
@@ -61,7 +67,11 @@ fun LikeButton(
             , tint = if(likeState.value){
                 CoinvestDarkPurple
             } else {
-                CoinvestBlack
+                if(isSystemInDarkTheme()){
+                    CoinvestBase
+                } else {
+                    CoinvestBlack
+                }
             }
         )
     }
