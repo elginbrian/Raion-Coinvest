@@ -124,7 +124,11 @@ fun NewsScreen(
                     Card(modifier = Modifier
                         .fillMaxWidth(0.9f)
                         .height(150.dp),
-                        colors = CardDefaults.cardColors(CoinvestBase)
+                        colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                            MaterialTheme.colorScheme.background
+                        } else {
+                            CoinvestBase
+                        })
                     ) {
                         LazyRow(modifier = Modifier.fillMaxSize()){
                             items(items = newsList.value.shuffled(), key = {
@@ -136,7 +140,11 @@ fun NewsScreen(
                                         indication = null,
                                         interactionSource = remember { MutableInteractionSource() }
                                     ) { onTapNewsCard(Pair(newsList.value, it.newsId)) },
-                                    colors = CardDefaults.cardColors(CoinvestBase)
+                                    colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                                        MaterialTheme.colorScheme.background
+                                    } else {
+                                        CoinvestBase
+                                    })
                                 ) {
                                     AsyncImage(model = it.imageUri, contentDescription = "Display", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
                                 }

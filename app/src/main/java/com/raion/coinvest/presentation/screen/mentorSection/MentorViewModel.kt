@@ -93,8 +93,14 @@ class MentorViewModel @Inject constructor(
         player.prepare()
     }
 
+//    fun addVideoUri(uri: Uri){
+//        savedStateHandle["videoUris"] = videoUris.value + uri
+//        player.addMediaItem(MediaItem.fromUri(uri))
+//    }
+
     fun addVideoUri(uri: Uri){
-        savedStateHandle["videoUris"] = videoUris.value + uri
+        savedStateHandle["videoUris"] = listOf(uri)
+        player.clearMediaItems()
         player.addMediaItem(MediaItem.fromUri(uri))
     }
 

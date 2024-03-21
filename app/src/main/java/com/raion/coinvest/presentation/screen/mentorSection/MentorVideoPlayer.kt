@@ -21,27 +21,26 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.raion.coinvest.data.remote.firestore.model.CourseDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
-import com.raion.coinvest.presentation.designSystem.CoinvestGrey
-import com.raion.coinvest.presentation.screen.debugging.DebugViewModel
-import com.raion.coinvest.presentation.screen.userProfileSection.UserProfileTabRow
 import com.raion.coinvest.presentation.widget.appsBottomBar.AppsBottomBar
 import com.raion.coinvest.presentation.widget.videoPlayerCard.VideoPlayerCard
 
@@ -53,10 +52,11 @@ fun MentorVideoPlayer(
     courseId: String,
     courseList: MutableList<CourseDataClass>,
     onChangeTab: (Int) -> Unit,
-    onTapBack: () -> Unit
+    onTapBack: () -> Unit,
+    onOpenCourse: (Pair<MutableList<CourseDataClass>, String>) -> Unit
 ){
     val thisCourse = courseList.filter { course -> course.courseId.equals(courseId) }
-
+    val extend = remember { mutableStateOf(false) }
 
     Scaffold(
         containerColor = CoinvestBlack,
@@ -69,7 +69,10 @@ fun MentorVideoPlayer(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment     = Alignment.CenterVertically
             ){
-                Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint = Color.White, modifier = Modifier.clickable { onTapBack() })
+                Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint = Color.White, modifier = Modifier.clickable {
+                    onTapBack()
+                    viewModel.player.clearMediaItems()
+                })
             }
         },
         content = {
@@ -77,7 +80,7 @@ fun MentorVideoPlayer(
                 .fillMaxWidth()
                 .fillMaxHeight(0.34f)
             ) {
-                VideoPlayerCard(viewModel = viewModel, videoUri =  thisCourse[0].courseContent[0].videoUri)
+                VideoPlayerCard(viewModel = viewModel, videoUri = thisCourse[0].courseContent[0].videoUri)
             }
         },
         bottomBar = {
@@ -124,14 +127,22 @@ fun MentorVideoPlayer(
                                                 verticalArrangement = Arrangement.Center
                                             ){
                                                 Text(text = "About", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
-                                                Icon(imageVector = Icons.Rounded.KeyboardArrowDown, contentDescription = "Arrow")
+                                                if(extend.value){
+                                                    Spacer(modifier = Modifier.padding(2.dp))
+                                                    Text(text = thisCourse[0].courseDescription, textAlign = TextAlign.Justify)
+                                                    Spacer(modifier = Modifier.padding(2.dp))
+                                                }
+                                                Icon(imageVector = if(extend.value){
+                                                    Icons.Rounded.KeyboardArrowUp
+                                                } else {
+                                                    Icons.Rounded.KeyboardArrowDown }, contentDescription = "Arrow", modifier = Modifier.clickable { extend.value = !extend.value })
                                             }
                                         }
                                     }
                                     items(courseList){
                                         Spacer(modifier = Modifier.padding(8.dp))
-                                        CourseCard(it){
-
+                                        CourseCard(it){id ->
+                                            onOpenCourse(Pair(courseList, id))
                                         }
                                     }
                                     item {

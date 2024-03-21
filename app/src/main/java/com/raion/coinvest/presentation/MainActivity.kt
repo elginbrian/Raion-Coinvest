@@ -37,10 +37,6 @@ import com.raion.coinvest.presentation.screen.communitySection.CommunityPostRepl
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostReplying
 import com.raion.coinvest.presentation.screen.communitySection.CommunityScreen
 import com.raion.coinvest.presentation.screen.communitySection.CommunityViewModel
-import com.raion.coinvest.presentation.screen.debugging.DebugScreen3
-import com.raion.coinvest.presentation.screen.debugging.DebugScreen5
-import com.raion.coinvest.presentation.screen.debugging.DebugViewModel
-import com.raion.coinvest.presentation.screen.debugging.DebugViewModel2
 import com.raion.coinvest.presentation.designSystem.CoinvestTheme
 import com.raion.coinvest.presentation.screen.loginSection.LoginScreen
 import com.raion.coinvest.presentation.screen.loginSection.LoginViewModel
@@ -467,7 +463,12 @@ class MainActivity : ComponentActivity() {
                             courseId    = courseId,
                             courseList  = courseList,
                             onChangeTab = { navController.navigate(route = entryPointList[it]) },
-                            onTapBack   = { navController.navigate(CoinvestUserFlow.MentorScreen.name) }
+                            onTapBack   = { navController.navigate(CoinvestUserFlow.MentorScreen.name) },
+                            onOpenCourse = {
+                                courseList = it.first
+                                courseId = it.second
+                                navController.navigate(route = CoinvestUserFlow.MentorVideoPlayer.name)
+                            },
                         )
                     }
                     composable(CoinvestUserFlow.MentorNew.name){
@@ -675,25 +676,6 @@ class MainActivity : ComponentActivity() {
                     composable(CoinvestUserFlow.UserFollowerScreen.name){
                         UserFollowerScreen(
                             onChangeTab = { navController.navigate(route = entryPointList[it]) }
-                        )
-                    }
-
-
-
-                    composable(CoinvestUserFlow.DebugScreen3.name){
-                        val viewModel: DebugViewModel by viewModels()
-                        DebugScreen3(
-                            viewModel = viewModel
-                        )
-                    }
-
-                    composable(CoinvestUserFlow.DebugScreen5.name){
-                        val viewModel: DebugViewModel by viewModels()
-                        val viewModel2: DebugViewModel2 by viewModels()
-                        DebugScreen5(
-                            onUploadVideo = { viewModel2.addNewCourse(it) },
-                            viewModel     = viewModel,
-                            viewModel2    = viewModel2
                         )
                     }
                 }
