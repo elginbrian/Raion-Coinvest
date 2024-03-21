@@ -1,58 +1,54 @@
 package com.raion.coinvest.presentation.navigation
 
 enum class CoinvestUserFlow{
-    // Debugging
-    DebugScreen3,
-    DebugScreen5,
-
     // Login Section
-    IntroScreen,
-    IntroScreen2,
-    IntroScreen3,
-    IntroScreen4,
-    LoginScreen,                // 1
-    RoleSectionScreen,          // 2
+    IntroScreen,                // 1
+    IntroScreen2,               // 2
+    IntroScreen3,               // 3
+    IntroScreen4,               // 4
+    LoginScreen,                // 5
+    RoleSectionScreen,          // 6
 
-    AuthorRegisterScreen,       // 3
-    AuthorRegisterScreen2,      // 4
-    AuthorRegisterScreen3,      // 5
+    AuthorRegisterScreen,       // 7
+    AuthorRegisterScreen2,      // 8
+    AuthorRegisterScreen3,      // 9
 
-    MemberRegisterScreen,       // 6
+    MemberRegisterScreen,       // 10
 
-    MentorRegisterScreen,       // 7
-    MentorRegisterScreen2,      // 8
-    MentorRegisterScreen3,      // 9
+    MentorRegisterScreen,       // 11
+    MentorRegisterScreen2,      // 12
+    MentorRegisterScreen3,      // 13
 
     // HomeSection
-    HomeScreen,                 // 10
+    HomeScreen,                 // 14
 
     // CommunitySection
-    CommunityScreen,            // 11
-    CommunityCreatePost,        // 12
-    CommunityPostReply,         // 13
-    CommunityPostReplying,      // 14
+    CommunityScreen,            // 15
+    CommunityCreatePost,        // 16
+    CommunityPostReply,         // 17
+    CommunityPostReplying,      // 18
 
     // CommunitySearchSection
-    CommunitySearchScreen,      // 15
-    CommunitySearchGrid,        // 16
+    CommunitySearchScreen,      // 19
+    CommunitySearchGrid,        // 20
 
     // CommunityProfileSection
-    CommunityProfileScreen,     // 17
-    CommunityFollowerScreen,    // 18
+    CommunityProfileScreen,     // 21
+    CommunityFollowerScreen,    // 22
 
     // MentorSection
-    MentorScreen,               // 19
-    MentorSearchScreen,         // 20
-    MentorVideoPlayer,          // 21
-    MentorCreate,               // 22
-    MentorNew,                  // 23
+    MentorScreen,               // 23
+    MentorSearchScreen,         // 24
+    MentorVideoPlayer,          // 25
+    MentorCreate,               // 26
+    MentorNew,                  // 27
 
     // NewsSection
-    NewsScreen,                 // 24
-    NewsPage,                   // 25
-    NewsCreate,                 // 26
-    NewsReply,                  // 27
-    NewsReplying,               // 28
+    NewsScreen,                 // 28
+    NewsPage,                   // 29
+    NewsCreate,                 // 30
+    NewsReply,                  // 31
+    NewsReplying,               // 32
 
     // UserProfileSection
     UserProfileScreen,          // 29
