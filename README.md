@@ -11,8 +11,8 @@ Coinvest adalah aplikasi diskusi dan komunitas di bidang investasi digital yang 
         - Putra Cakrawala Aulia Syafiq 235150200111040
     
     UI/UX
-        -  Diaz Bintang Ilyasha Suryawan 225150300111036
-        -  Muhammad Ridwan Novriansyah 235150201111041
+        - Diaz Bintang Ilyasha Suryawan 225150300111036
+        - Muhammad Ridwan Novriansyah 235150201111041
 
     Programer Apps
         - Elgin Brian Wahyu Bramadhika 235150701111031
