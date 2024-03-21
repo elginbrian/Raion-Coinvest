@@ -82,7 +82,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class pMainActivity : ComponentActivity() {
 
     private val googleAuthClient by lazy {
         GoogleAuthRepository(
