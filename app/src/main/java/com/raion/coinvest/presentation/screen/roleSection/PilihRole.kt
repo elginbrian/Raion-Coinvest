@@ -68,12 +68,10 @@ fun RoleScreen(
                         .fillMaxWidth()
                         .height(60.dp)
                         .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment     = Alignment.CenterVertically
                 ){
-                    Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint = Color.White)
                     Text(text = "Pilih role kamu", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                    Spacer(modifier = Modifier.width(20.dp))
                 }
                 Column {
                     Card (modifier = Modifier
@@ -239,10 +237,14 @@ fun RoleScreen(
                     .padding(24.dp), contentAlignment = Alignment.Center){
                     Card (modifier = Modifier
                         .width(266.dp)
-                        .height(62.dp)) {
-                        Box(modifier = Modifier.fillMaxSize().clickable {
-                                                                        onClick(clicked.value)
-                        }, contentAlignment = Alignment.Center){
+                        .height(62.dp),
+                        colors = CardDefaults.cardColors(CoinvestBase)
+                    ) {
+                        Box(modifier = Modifier
+                            .fillMaxSize()
+                            .clickable {
+                                onClick(clicked.value)
+                            }, contentAlignment = Alignment.Center){
                             Text(text = "Selanjutnya", fontSize = 16.sp, color = CoinvestDarkPurple)
                         }
                     }

@@ -56,7 +56,7 @@ fun LoginAwal3(
                 Spacer(modifier = Modifier.height(32.dp))
                 //Image(painter = painterResource(id = R.drawable.dot1), contentDescription = "Dot")
                 Spacer(modifier = Modifier.height(8.dp))
-                Image(painter = painterResource(id = R.drawable.logintengah3), contentDescription ="", modifier = Modifier.padding(start = 40.dp, end = 40.dp, bottom = 40.dp).clickable {
+                Image(painter = painterResource(id = R.drawable.logintengah3), contentDescription ="", modifier = Modifier.padding(start = 60.dp, end = 60.dp, bottom = 60.dp).clickable {
                     onClick()
                 } )
             }

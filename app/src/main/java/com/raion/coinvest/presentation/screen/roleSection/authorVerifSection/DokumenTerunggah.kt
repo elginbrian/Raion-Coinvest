@@ -42,13 +42,15 @@ import com.google.firebase.auth.auth
 import com.raion.coinvest.R
 import com.raion.coinvest.data.remote.firebaseStorage.model.VerifDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
+import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 
 @Composable
 //@Preview
 fun DokumenTerunggah(
     prevData: VerifDataClass,
-    onFinished: (Pair<VerifDataClass, UserDataClass>) -> Unit
+    onFinished: (Pair<VerifDataClass, UserDataClass>) -> Unit,
+    onTapBack: () -> Unit
 ) {
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
@@ -84,7 +86,9 @@ fun DokumenTerunggah(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment     = Alignment.CenterVertically
                     ){
-                        Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint = Color.White)
+                        Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint = Color.White, modifier = Modifier.clickable {
+                            onTapBack()
+                        })
                         Text(text = "Verifikasi Berkas", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
                         Spacer(modifier = Modifier.width(20.dp))
                     }
@@ -120,7 +124,7 @@ fun DokumenTerunggah(
                     .padding(24.dp), contentAlignment = Alignment.Center){
                     Card (modifier = Modifier
                         .width(266.dp)
-                        .height(62.dp),colors = CardDefaults.cardColors(Color.White)) {
+                        .height(62.dp), colors = CardDefaults.cardColors(CoinvestBase)) {
                         Box(modifier = Modifier.fillMaxSize().clickable {
                             val verif = VerifDataClass(
                                 userId      = prevData.userId,

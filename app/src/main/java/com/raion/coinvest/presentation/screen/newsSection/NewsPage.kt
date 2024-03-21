@@ -61,7 +61,8 @@ fun NewsPage(
     newsList: MutableList<NewsDataClass>,
     newsId: String,
     onClickComment: (String) -> Unit,
-    onTapProfile: (UserDataClass) -> Unit
+    onTapProfile: (UserDataClass) -> Unit,
+    onTapBack: () -> Unit
 ){
     val thisNews = newsList.filter { news -> news.newsId.equals(newsId) }
     val likeList    = remember { mutableStateOf<MutableList<LikeDataClass>>(mutableListOf()) }
@@ -86,7 +87,7 @@ fun NewsPage(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment     = Alignment.CenterVertically
                 ){
-                    Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button")
+                    Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", modifier = Modifier.clickable { onTapBack() })
 
                     Icon(imageVector = Icons.Rounded.Flag, contentDescription = "Back button")
                 }

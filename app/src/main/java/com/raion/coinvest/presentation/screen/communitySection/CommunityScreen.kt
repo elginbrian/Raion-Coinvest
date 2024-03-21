@@ -92,20 +92,20 @@ fun CommunityScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(60.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        horizontalArrangement = Arrangement.Center,
                         verticalAlignment     = Alignment.CenterVertically
                     ){
-                        Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint =  if(isSystemInDarkTheme()){
-                            CoinvestBase
-                        } else {
-                            CoinvestBlack
-                        })
+//                        Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint =  if(isSystemInDarkTheme()){
+//                            CoinvestBase
+//                        } else {
+//                            CoinvestBlack
+//                        })
                         Text(text = "Forum & Komunitas", fontSize = 16.sp, fontWeight = FontWeight.Bold, color =  if(isSystemInDarkTheme()){
                             CoinvestBase
                         } else {
                             CoinvestBlack
                         })
-                        Spacer(modifier = Modifier.width(20.dp))
+//                        Spacer(modifier = Modifier.width(20.dp))
                     }
 
                     SearchBar(){

@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -53,6 +55,8 @@ import com.raion.coinvest.data.remote.firestore.model.CourseDataClass
 import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
+import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 import com.raion.coinvest.presentation.designSystem.Pink80
 import com.raion.coinvest.presentation.navigation.CoinvestUserFlow
@@ -74,6 +78,15 @@ fun DashboardAwal(
 ) {
     val cryptoResult = remember { mutableStateOf(GetTrendingSearchList(coins = listOf())) }
     viewModel.getTrendingSearchList { cryptoResult.value = it }
+    viewModel.updateUserData(
+        UserDataClass(
+            userId = Firebase.auth.currentUser?.uid,
+            userName = Firebase.auth.currentUser?.displayName,
+            profilePicture = "",
+            accountType = "",
+            email = Firebase.auth.currentUser?.email
+        )
+    )
 
     val courseList = remember { mutableStateOf<MutableList<CourseDataClass>>(mutableListOf()) }
     viewModel.getCourse {
@@ -90,7 +103,7 @@ fun DashboardAwal(
                 modifier = Modifier
                     .fillMaxSize()
                     .fillMaxWidth(),
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
@@ -134,15 +147,19 @@ fun DashboardAwal(
                                         AsyncImage(
                                             model = Firebase.auth.currentUser?.photoUrl.toString(),
                                             contentDescription = "profile picture",
-                                            modifier = Modifier.fillMaxSize().clickable {
-                                                onClickProfile(UserDataClass(
-                                                    userId   = Firebase.auth.currentUser?.uid,
-                                                    userName = Firebase.auth.currentUser?.displayName,
-                                                    email    = Firebase.auth.currentUser?.email,
-                                                    profilePicture = Firebase.auth.currentUser?.photoUrl.toString(),
-                                                    accountType = ""
-                                                ))
-                                            },
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .clickable {
+                                                    onClickProfile(
+                                                        UserDataClass(
+                                                            userId = Firebase.auth.currentUser?.uid,
+                                                            userName = Firebase.auth.currentUser?.displayName,
+                                                            email = Firebase.auth.currentUser?.email,
+                                                            profilePicture = Firebase.auth.currentUser?.photoUrl.toString(),
+                                                            accountType = ""
+                                                        )
+                                                    )
+                                                },
                                             contentScale = ContentScale.Crop
                                         )
                                     }
@@ -153,12 +170,13 @@ fun DashboardAwal(
                                         fontSize = 12.sp
                                     )
                                     Spacer(modifier = Modifier.width(200.dp))
-                                    Image(
-                                        painter = painterResource(id = R.drawable.lonceng),
-                                        contentDescription = "",
-                                        modifier = Modifier.size(32.dp)
-                                    )
-
+                                    Box(modifier = Modifier.size(20.dp)){
+                                        Image(
+                                            painter = painterResource(id = R.drawable.lonceng),
+                                            contentDescription = "",
+                                            modifier = Modifier.fillMaxSize()
+                                        )
+                                    }
                                 }
                                 Spacer(modifier = Modifier.height(16.dp))
                                 SearchBar {
@@ -175,12 +193,18 @@ fun DashboardAwal(
                         modifier = Modifier
                             .fillMaxWidth(0.85f)
                             .height(150.dp),
-                        colors = CardDefaults.cardColors(CoinvestBase),
+                        colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                            CoinvestBlack
+                        } else {
+                        CoinvestLightGrey
+                    }),
                         elevation = CardDefaults.cardElevation(8.dp)
                     ) {
-                        LazyRow(modifier = Modifier.fillMaxSize().clickable {
-                            onChangeScreen(CoinvestUserFlow.StocksScreen.name)
-                        }) {
+                        LazyRow(modifier = Modifier
+                            .fillMaxSize()
+                            .clickable {
+                                onChangeScreen(CoinvestUserFlow.StocksScreen.name)
+                            }) {
                             items(
                                 items = cryptoResult.value.coins.sortedBy { it.item.name },
                                 key = {
@@ -210,6 +234,14 @@ fun DashboardAwal(
                             Text(text = "Lihat Semua", modifier = Modifier.clickable {
                                 onChangeScreen(CoinvestUserFlow.MentorScreen.name)
                             })
+                        }
+                    }
+                }
+                item {
+                    if(courseList.value.isEmpty()){
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                            CircularProgressIndicator(color = CoinvestDarkPurple)
                         }
                     }
                 }
@@ -250,6 +282,14 @@ fun DashboardAwal(
                         }
                     }
                     Spacer(modifier = Modifier.padding(8.dp))
+                }
+                item {
+                    if(newsList.value.isEmpty()){
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                            CircularProgressIndicator(color = CoinvestDarkPurple)
+                        }
+                    }
                 }
                 items(newsList.value) {
                     CompactNewsCard(news = it){

@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +43,7 @@ import com.raion.coinvest.R
 import com.raion.coinvest.data.remote.auth.EmailAuthRepository
 import com.raion.coinvest.data.remote.auth.model.SignInResult
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestBorder
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 import com.raion.coinvest.presentation.widget.transparentTextField.TransparentTextField
@@ -112,6 +114,7 @@ fun LoginHome(
                             .height(21.dp))
                     Spacer(modifier = Modifier.width(16.dp))
                     TransparentTextField(
+                        textStyle = LocalTextStyle.current.copy(CoinvestBlack),
                         text = email.value,
                         onValueChange = {
                             if ((it.all { char -> char.isDefined() || char.isWhitespace() })) {
@@ -147,6 +150,7 @@ fun LoginHome(
                             .height(21.dp))
                     Spacer(modifier = Modifier.width(16.dp))
                     TransparentTextField(
+                        textStyle = LocalTextStyle.current.copy(CoinvestBlack),
                         text = password.value,
                         onValueChange = {
                             if ((it.all { char -> char.isDefined() || char.isWhitespace() })) {
@@ -192,10 +196,12 @@ fun LoginHome(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() } // This is mandatory
                     ) {
-                        onSignInWithEmail(Pair(email.value, password.value))
-                        email.value = ""
-                        password.value = ""
-                        onChangeScreen()
+                        if(email.value.isNotEmpty() && password.value.isNotEmpty()){
+                            onSignInWithEmail(Pair(email.value, password.value))
+                            email.value = ""
+                            password.value = ""
+                            onChangeScreen()
+                        }
 //                        signInResult.value = signInResult.value?.apply {
 //                            val result   = onSignInWithEmail(Pair(email.value, password.value))
 //                            isSuccess    = result.isSuccess

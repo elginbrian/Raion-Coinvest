@@ -40,7 +40,7 @@ fun TransparentTextField(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(2.dp))
         BasicTextField(
             value = text,
             onValueChange = onValueChange,

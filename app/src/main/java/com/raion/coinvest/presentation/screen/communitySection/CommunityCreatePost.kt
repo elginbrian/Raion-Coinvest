@@ -55,7 +55,8 @@ import java.util.UUID
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CommunityCreatePost(
-    onUploadPost: (PostDataClass) -> Unit
+    onUploadPost: (PostDataClass) -> Unit,
+    onTapBack: () -> Unit
 ){
     val content          = remember { mutableStateOf("") }
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
@@ -92,7 +93,8 @@ fun CommunityCreatePost(
                                 CoinvestBase
                             } else {
                                 CoinvestBlack
-                            }
+                            },
+                            modifier = Modifier.clickable { onTapBack() }
                         )
                         Text(
                             text = "Forum & Komunitas",

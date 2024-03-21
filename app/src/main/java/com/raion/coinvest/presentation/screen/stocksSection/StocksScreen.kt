@@ -112,7 +112,11 @@ fun StocksScreen(
                         Card(modifier = Modifier
                             .fillMaxWidth(0.9f)
                             .height(150.dp),
-                            colors = CardDefaults.cardColors(CoinvestBase),
+                            colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                                CoinvestBlack
+                            } else {
+                                CoinvestLightGrey
+                            }),
                             elevation = CardDefaults.cardElevation(8.dp)
                         ) {
                             LazyRow(modifier = Modifier.fillMaxSize()){

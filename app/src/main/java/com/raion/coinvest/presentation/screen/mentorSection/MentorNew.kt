@@ -56,7 +56,8 @@ import java.util.UUID
 @Composable
 //@Preview
 fun MentorNew(
-    onTapLanjutkan: (CourseDataClass) -> Unit
+    onTapLanjutkan: (CourseDataClass) -> Unit,
+    onTapBack: () -> Unit
 ){
     val title       = remember { mutableStateOf("") }
     val description = remember { mutableStateOf("") }
@@ -86,7 +87,7 @@ fun MentorNew(
                             CoinvestBase
                         } else {
                             CoinvestBlack
-                        })
+                        }, modifier = Modifier.clickable { onTapBack() })
                         Spacer(modifier = Modifier.padding(8.dp))
                         Text(text = "Upload Mentorship", fontWeight = FontWeight.SemiBold, fontSize = 15.sp, color =  if(isSystemInDarkTheme()){
                             CoinvestBase

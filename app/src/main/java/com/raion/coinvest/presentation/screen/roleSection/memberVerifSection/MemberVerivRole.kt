@@ -10,6 +10,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,6 +52,7 @@ import com.raion.coinvest.R
 import com.raion.coinvest.data.remote.firebaseStorage.model.VerifDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestBorder
 import com.raion.coinvest.presentation.designSystem.CoinvestGrey
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
@@ -60,10 +63,11 @@ import com.raion.coinvest.presentation.widget.transparentTextField.TransparentTe
 @Composable
 //@Preview
 fun MemberVerivRole(
-    onFinished: (Pair<VerifDataClass, UserDataClass>) -> Unit
+    onFinished: (Pair<VerifDataClass, UserDataClass>) -> Unit,
+    onTapBack: () -> Unit
 ){
-    val username = remember { mutableStateOf("") }
-    val userId   = remember { mutableStateOf("") }
+    val username = remember { mutableStateOf(Firebase.auth.currentUser?.email?.substringBefore('@').toString()) }
+    val userId   = remember { mutableStateOf(Firebase.auth.currentUser?.uid.toString()) }
 
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
@@ -89,7 +93,9 @@ fun MemberVerivRole(
                 verticalAlignment     = Alignment.CenterVertically
             ){
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button")
+                    Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", modifier = Modifier.clickable {
+                        onTapBack()
+                    })
                     
                 }
 
@@ -160,13 +166,16 @@ fun MemberVerivRole(
                 Column(modifier = Modifier) {
                     Spacer(modifier = Modifier.padding(32.dp))
                     Card(modifier = Modifier.fillMaxSize(),
-                        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp), colors = CardDefaults.cardColors(
-                            Color.White)
+                        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp), colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
                     ) {
                         Column(modifier = Modifier
                             .fillMaxSize()
                             .padding(start = 30.dp, end = 30.dp, top = 60.dp)) {
-                            Text(text = "Username", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 15.dp, bottom = 4.dp))
+                            Text(text = "Username", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 15.dp, bottom = 4.dp), color =  if(isSystemInDarkTheme()){
+                                CoinvestBase
+                            } else {
+                                CoinvestBlack
+                            })
                             Card(
                                 modifier = Modifier
                                     .width(320.dp)
@@ -174,7 +183,11 @@ fun MemberVerivRole(
 
                                 shape = RoundedCornerShape(8.dp),
                                 border = BorderStroke(1.dp, CoinvestBorder),
-                                colors = CardDefaults.cardColors(Color.White)
+                                colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                                    MaterialTheme.colorScheme.background
+                                } else {
+                                    CoinvestBase
+                                })
                             ) {
                                 Column(modifier = Modifier
                                     .fillMaxSize()
@@ -193,7 +206,11 @@ fun MemberVerivRole(
                                 }
                             }
                             Spacer(modifier = Modifier.height(20.dp))
-                            Text(text = "UserID", fontWeight = FontWeight.Bold,modifier = Modifier.padding(start = 15.dp, bottom = 4.dp))
+                            Text(text = "UserID", fontWeight = FontWeight.Bold,modifier = Modifier.padding(start = 15.dp, bottom = 4.dp), color =  if(isSystemInDarkTheme()){
+                                CoinvestBase
+                            } else {
+                                CoinvestBlack
+                            })
                             Card(
                                 modifier = Modifier
                                     .width(320.dp)
@@ -201,7 +218,11 @@ fun MemberVerivRole(
 
                                 shape = RoundedCornerShape(8.dp),
                                 border = BorderStroke(1.dp, CoinvestBorder),
-                                colors = CardDefaults.cardColors(Color.White)
+                                colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                                    MaterialTheme.colorScheme.background
+                                } else {
+                                    CoinvestBase
+                                })
                             ) {
                                 Column(modifier = Modifier
                                     .fillMaxSize()
@@ -210,14 +231,24 @@ fun MemberVerivRole(
                                     TransparentTextField(
                                         text = userId.value,
                                         onValueChange = {
-                                            if ((it.all { char -> char.isDefined() || char.isWhitespace() })) {
-                                                userId.value = it
-                                            }
+//                                            if ((it.all { char -> char.isDefined() || char.isWhitespace() })) {
+//                                                userId.value = it
+//                                            }
                                         }, onFocusChange = {},
                                         fontSize = 28.sp,
                                         singleLine = true
                                     )
                                 }
+                            }
+                            Box(modifier = Modifier
+                                .fillMaxWidth()
+                                .height(30.dp)
+                                .padding(end = 15.dp), contentAlignment = Alignment.CenterEnd){
+                                Text(text = "UserId tidak dapat diubah", fontSize = 11.sp, color =  if(isSystemInDarkTheme()){
+                                    CoinvestBase
+                                } else {
+                                    CoinvestBlack
+                                })
                             }
 //                            Spacer(modifier = Modifier.height(40.dp))
 //                            Card(
@@ -244,7 +275,11 @@ fun MemberVerivRole(
                     Card(
                         modifier = Modifier.size(120.dp),
                         shape = CircleShape,
-                        colors = CardDefaults.cardColors(CoinvestLightGrey)
+                        colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                            CoinvestBlack
+                        } else {
+                            CoinvestLightGrey
+                        })
                     ) {
                         Box(modifier = Modifier
                             .fillMaxWidth()

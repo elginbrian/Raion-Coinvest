@@ -3,6 +3,7 @@ package com.raion.coinvest.presentation.screen.stocksSection
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -55,7 +56,8 @@ import com.raion.coinvest.presentation.widget.transparentTextField.TransparentTe
 @Composable
 fun StocksPage(
     stocksId: String,
-    stocksList: GetTrendingSearchList
+    stocksList: GetTrendingSearchList,
+    onTapBack: () -> Unit
 ){
     val thisStocks = stocksList.coins.filter { coin -> coin.item.id.equals(stocksId) }
     val amount = remember { mutableDoubleStateOf(1.0) }
@@ -87,7 +89,7 @@ fun StocksPage(
                             CoinvestBase
                         } else {
                             CoinvestBlack
-                        })
+                        }, modifier = Modifier.clickable { onTapBack() })
                         Text(text = thisStocks[0].item.symbol, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if(isSystemInDarkTheme()){
                             CoinvestBase
                         } else {

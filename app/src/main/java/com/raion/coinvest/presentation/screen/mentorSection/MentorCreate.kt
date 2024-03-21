@@ -68,7 +68,8 @@ import java.util.UUID
 fun MentorCreate(
     viewModel: MentorViewModel,
     newCourse: CourseDataClass,
-    onTapPost: (CourseDataClass) -> Unit
+    onTapPost: (CourseDataClass) -> Unit,
+    onTapBack: () -> Unit
 ){
     val selectedVideoUri = remember { mutableStateOf<Uri?>(null) }
     val singleVideoPickerLauncher = rememberLauncherForActivityResult(
@@ -106,7 +107,7 @@ fun MentorCreate(
                             CoinvestBase
                         } else {
                             CoinvestBlack
-                        })
+                        }, modifier = Modifier.clickable { onTapBack() })
                         Spacer(modifier = Modifier.padding(8.dp))
                         Text(text = "Upload Mentorship", fontWeight = FontWeight.SemiBold, fontSize = 15.sp, color = if(isSystemInDarkTheme()){
                             CoinvestBase

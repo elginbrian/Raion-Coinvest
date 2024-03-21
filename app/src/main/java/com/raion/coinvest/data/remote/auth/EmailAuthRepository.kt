@@ -80,9 +80,9 @@ class EmailAuthRepository @Inject constructor(
         }
     }
 
-    suspend fun updateAuthData(userDataClass: UserDataClass, verif: VerifDataClass){
+    suspend fun updateAuthData(userDataClass: UserDataClass){
         val user = Firebase.auth.currentUser
-        val newPhotoUrl = imageRepository.getUserProfile(userDataClass.userId.toString())
+        val newPhotoUrl = imageRepository.getUserProfile(Firebase.auth.currentUser?.uid.toString())
 
         val profileUpdates = userProfileChangeRequest {
             displayName = userDataClass.userName

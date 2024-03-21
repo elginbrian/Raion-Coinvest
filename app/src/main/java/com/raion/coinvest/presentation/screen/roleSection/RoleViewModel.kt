@@ -22,7 +22,7 @@ class RoleViewModel @Inject constructor(
     fun verifUser(verif: VerifDataClass, user: UserDataClass) = viewModelScope.launch {
         imageRepository.uploadVerifImage(verif)
         userCollections.addUsersToFireStore(user)
-        authRepository.updateAuthData(user, verif)
+        authRepository.updateAuthData(user)
         if(user.accountType == "member"){
             imageRepository.uploadProfilePict(user)
         }

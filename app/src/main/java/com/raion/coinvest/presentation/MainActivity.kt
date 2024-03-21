@@ -9,16 +9,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,7 +28,9 @@ import com.raion.coinvest.data.remote.firestore.model.CourseDataClass
 import com.raion.coinvest.data.remote.firestore.model.NewsDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
-import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
+import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
+import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 import com.raion.coinvest.presentation.screen.communitySection.CommunityCreatePost
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostReply
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostReplying
@@ -80,7 +77,7 @@ import com.raion.coinvest.presentation.screen.roleSection.memberVerifSection.Mem
 import com.raion.coinvest.presentation.screen.roleSection.mentorVerifSection.MentorDokumenTerunggah
 import com.raion.coinvest.presentation.screen.roleSection.mentorVerifSection.SertifikatMentor
 import com.raion.coinvest.presentation.screen.roleSection.mentorVerifSection.SertifikatOJK
-import com.raion.coinvest.presentation.widget.transparentSystemBar.TransparentSystemBar
+import com.raion.coinvest.presentation.widget.adaptiveSystemBar.AdaptiveSystemBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -95,11 +92,10 @@ class MainActivity : ComponentActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
             CoinvestTheme {
-                TransparentSystemBar()
+                AdaptiveSystemBar()
                 // NavGraph
                 val navController = rememberNavController()
 
@@ -128,7 +124,12 @@ class MainActivity : ComponentActivity() {
                         entryPointList[0]
                     } else {
                         CoinvestUserFlow.IntroScreen.name
-                    }
+                    },
+                    modifier = Modifier.background(if(isSystemInDarkTheme()){
+                        CoinvestBlack
+                    } else {
+                        CoinvestBase
+                    })
                 ){
                     composable(CoinvestUserFlow.IntroScreen.name){
                         LoginAwal3 {
@@ -180,10 +181,13 @@ class MainActivity : ComponentActivity() {
                     var prevData: VerifDataClass = VerifDataClass("","", Uri.EMPTY, Uri.EMPTY)
                     composable(CoinvestUserFlow.AuthorRegisterScreen.name){
 
-                        BerkasPengalaman{
+                        BerkasPengalaman(onTapBack = {
+                            navController.navigate(CoinvestUserFlow.RoleSectionScreen.name)
+                            }, onNextPage = {
                             prevData = it
                             navController.navigate(CoinvestUserFlow.AuthorRegisterScreen2.name)
                         }
+                        )
                     }
                     composable(CoinvestUserFlow.AuthorRegisterScreen2.name){
 
@@ -192,7 +196,8 @@ class MainActivity : ComponentActivity() {
                                 prevData = it
                                 navController.navigate(CoinvestUserFlow.AuthorRegisterScreen3.name)
                             },
-                            prevData = prevData
+                            prevData = prevData,
+                            onTapBack = { navController.navigate(CoinvestUserFlow.AuthorRegisterScreen.name)}
                         )
 
 
@@ -203,7 +208,8 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate(CoinvestUserFlow.HomeScreen.name)
                                 roleViewModel.verifUser(it.first, it.second)
                             },
-                            prevData = prevData
+                            prevData = prevData,
+                            onTapBack = { navController.navigate(CoinvestUserFlow.AuthorRegisterScreen2.name)}
                         )
 
                     }
@@ -213,15 +219,18 @@ class MainActivity : ComponentActivity() {
                             onFinished = {
                                 navController.navigate(CoinvestUserFlow.HomeScreen.name)
                                 roleViewModel.verifUser(it.first, it.second)
-                            }
+                            },
+                            onTapBack = { navController.navigate(CoinvestUserFlow.RoleSectionScreen.name) }
                         )
                     }
 
                     composable(CoinvestUserFlow.MentorRegisterScreen.name){
-                        SertifikatOJK {
+                        SertifikatOJK(onNextPage = {
                             navController.navigate(CoinvestUserFlow.MentorRegisterScreen2.name)
                             prevData = it
-                        }
+                        }, onTapBack = {
+                            navController.navigate(CoinvestUserFlow.RoleSectionScreen.name)
+                        })
                     }
                     composable(CoinvestUserFlow.MentorRegisterScreen2.name){
                         SertifikatMentor(
@@ -229,7 +238,8 @@ class MainActivity : ComponentActivity() {
                                 prevData = it
                                 navController.navigate(CoinvestUserFlow.AuthorRegisterScreen3.name)
                             },
-                            prevData = prevData
+                            prevData = prevData,
+                            onTapBack = { navController.navigate(CoinvestUserFlow.MentorRegisterScreen.name) }
                         )
                     }
                     composable(CoinvestUserFlow.MentorRegisterScreen3.name){
@@ -238,7 +248,8 @@ class MainActivity : ComponentActivity() {
                             onFinished = {
                                 navController.navigate(CoinvestUserFlow.HomeScreen.name)
                                 roleViewModel.verifUser(it.first, it.second)
-                            }
+                            },
+                            onTapBack = { navController.navigate(CoinvestUserFlow.MentorRegisterScreen2.name) }
                         )
                     }
 
@@ -293,7 +304,8 @@ class MainActivity : ComponentActivity() {
                             viewModel   = viewModel,
                             courseId    = courseId,
                             courseList  = courseList,
-                            onChangeTab = { navController.navigate(route = entryPointList[it]) }
+                            onChangeTab = { navController.navigate(route = entryPointList[it]) },
+                            onTapBack   = { navController.navigate(CoinvestUserFlow.MentorScreen.name) }
                         )
                     }
                     composable(CoinvestUserFlow.MentorNew.name){
@@ -301,7 +313,8 @@ class MainActivity : ComponentActivity() {
                             onTapLanjutkan = {
                                 newCourse = it
                                 navController.navigate(CoinvestUserFlow.MentorCreate.name)
-                            }
+                            },
+                            onTapBack = { navController.navigate(CoinvestUserFlow.MentorScreen.name) }
                         )
                     }
                     composable(CoinvestUserFlow.MentorCreate.name){
@@ -312,7 +325,8 @@ class MainActivity : ComponentActivity() {
                             onTapPost = {
                                 viewModel.addCourse(it)
                                 navController.navigate(CoinvestUserFlow.MentorScreen.name)
-                            }
+                            },
+                            onTapBack = { navController.navigate(CoinvestUserFlow.MentorNew.name) }
                         )
                     }
 
@@ -336,7 +350,8 @@ class MainActivity : ComponentActivity() {
                     composable(CoinvestUserFlow.StocksPage.name){
                         StocksPage(
                             stocksId = stocksId,
-                            stocksList = stocksList
+                            stocksList = stocksList,
+                            onTapBack = { navController.navigate(CoinvestUserFlow.StocksScreen.name) }
                         )
                     }
 
@@ -368,7 +383,7 @@ class MainActivity : ComponentActivity() {
                         CommunityCreatePost(onUploadPost = {
                             viewModel.addNewPost(it)
                             navController.navigate(route = CoinvestUserFlow.CommunityScreen.name)
-                        })
+                        }, onTapBack = { navController.navigate(CoinvestUserFlow.CommunityScreen.name) })
                     }
                     composable(CoinvestUserFlow.CommunityPostReply.name){
                         val viewModel: CommunityViewModel by viewModels()
@@ -380,7 +395,8 @@ class MainActivity : ComponentActivity() {
                             onTapProfile = {
                                 selectedUser.value = it
                                 navController.navigate(CoinvestUserFlow.UserProfileScreen.name)
-                            }
+                            },
+                            onTapBack = {navController.navigate(CoinvestUserFlow.CommunityScreen.name) }
                         )
                     }
                     composable(CoinvestUserFlow.CommunityPostReplying.name){
@@ -396,7 +412,8 @@ class MainActivity : ComponentActivity() {
                             onTapProfile = {
                                 selectedUser.value = it
                                 navController.navigate(CoinvestUserFlow.UserProfileScreen.name)
-                            }
+                            },
+                            onTapBack = { navController.navigate(CoinvestUserFlow.CommunityPostReply.name) }
                         )
                     }
                     composable(CoinvestUserFlow.CommunitySearchScreen.name){
@@ -450,7 +467,8 @@ class MainActivity : ComponentActivity() {
                             onTapProfile = {
                                 selectedUser.value = it
                                 navController.navigate(CoinvestUserFlow.UserProfileScreen.name)
-                            }
+                            },
+                            onTapBack = { navController.navigate(CoinvestUserFlow.NewsScreen.name) }
                         )
                     }
                     composable(CoinvestUserFlow.NewsCreate.name){
@@ -458,7 +476,7 @@ class MainActivity : ComponentActivity() {
                         NewsCreate(onCreateNews = {
                             viewModel.addNews(it)
                             navController.navigate(route = entryPointList[4])
-                        } )
+                        }, onTapBack = { navController.navigate(CoinvestUserFlow.NewsScreen.name) } )
                     }
                     composable(CoinvestUserFlow.NewsReply.name){
                         val viewModel: NewsViewModel by viewModels()
@@ -469,7 +487,8 @@ class MainActivity : ComponentActivity() {
                             onTapProfile = {
                                 selectedUser.value = it
                                 navController.navigate(CoinvestUserFlow.UserProfileScreen.name)
-                            }
+                            },
+                            onTapBack = { navController.navigate(CoinvestUserFlow.NewsPage.name) }
                         )
                     }
                     composable(CoinvestUserFlow.NewsReplying.name){
@@ -477,7 +496,7 @@ class MainActivity : ComponentActivity() {
                         NewsReplying(parentId = newsId, onUploadPost = {
                             viewModel.addNewComment(it)
                             navController.navigate(route = CoinvestUserFlow.NewsReply.name)
-                        })
+                        }, onTapBack = { navController.navigate(CoinvestUserFlow.NewsReply.name) })
                     }
 
 

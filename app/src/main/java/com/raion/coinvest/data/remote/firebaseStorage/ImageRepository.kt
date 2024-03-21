@@ -4,6 +4,7 @@ import android.content.ContentValues.TAG
 import android.net.Uri
 import android.util.Log
 import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.google.firebase.storage.storage
 import com.google.firebase.storage.storageMetadata
 import com.raion.coinvest.data.remote.firebaseStorage.model.VerifDataClass
@@ -137,7 +138,7 @@ class ImageRepository {
         }
 
         if(Uri.parse(userDataClass.profilePicture) != Uri.EMPTY){
-            val uploadTask = storageRef.child("profile_picture/${userDataClass.userId}").putFile(Uri.parse(userDataClass.profilePicture), metadata)
+            val uploadTask = storageRef.child("profile_picture/${Firebase.auth.currentUser?.uid.toString()}/${Firebase.auth.currentUser?.uid.toString()}").putFile(Uri.parse(userDataClass.profilePicture), metadata)
 
             uploadTask.addOnProgressListener {
                 val progress = (100.0 * it.bytesTransferred) / it.totalByteCount
@@ -153,7 +154,7 @@ class ImageRepository {
     }
 
     suspend fun getUserProfile(userId: String): Uri = suspendCoroutine { continuation ->
-        val pathReference = storageRef.child("profile_picture/$userId")
+        val pathReference = storageRef.child("profile_picture/$userId/$userId")
         pathReference.downloadUrl.addOnSuccessListener {
             Log.d(TAG, "getUserProfile Success")
             continuation.resume(it)

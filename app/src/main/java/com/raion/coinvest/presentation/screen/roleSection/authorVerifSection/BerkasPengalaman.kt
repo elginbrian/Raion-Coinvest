@@ -40,13 +40,15 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.raion.coinvest.R
 import com.raion.coinvest.data.remote.firebaseStorage.model.VerifDataClass
+import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import java.util.UUID
 
 @Composable
 //@Preview
 fun BerkasPengalaman(
-    onNextPage: (VerifDataClass) -> Unit
+    onNextPage: (VerifDataClass) -> Unit,
+    onTapBack: () -> Unit
 ) {
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
@@ -82,7 +84,9 @@ fun BerkasPengalaman(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment     = Alignment.CenterVertically
                     ){
-                        Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint = Color.White)
+                        Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint = Color.White, modifier = Modifier.clickable {
+                            onTapBack()
+                        })
                         Text(text = "Verifikasi Berkas", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
                         Spacer(modifier = Modifier.width(20.dp))
                     }
@@ -92,8 +96,8 @@ fun BerkasPengalaman(
                     Text(text = "Pengalaman", color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(15.dp))
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        Text(text = "1) Isi dengan format JPG, PNG,  atau PDF", modifier = Modifier.padding(start = 15.dp, end = 15.dp), color = Color.White)
-                        Text(text = "2) Tulis dengan format nama_pengalaman.pdf", modifier = Modifier.padding(start = 15.dp, end = 15.dp), color = Color.White)
+                        Text(text = "1) Isi dengan format JPG atau PNG", modifier = Modifier.padding(start = 15.dp, end = 15.dp), color = Color.White)
+                        Text(text = "2) Tulis dengan format nama_pengalaman.jpg", modifier = Modifier.padding(start = 15.dp, end = 15.dp), color = Color.White)
                         Text(text = "3) Data tidak lebih dari 2 MB", modifier = Modifier.padding(start = 15.dp, end = 15.dp), color = Color.White)
                     }
                 }
@@ -137,16 +141,18 @@ fun BerkasPengalaman(
                     .padding(24.dp), contentAlignment = Alignment.Center){
                     Card (modifier = Modifier
                         .width(266.dp)
-                        .height(62.dp),colors = CardDefaults.cardColors(Color.White)) {
+                        .height(62.dp),colors = CardDefaults.cardColors(CoinvestBase)) {
                         Box(modifier = Modifier.fillMaxSize().clickable {
-                            onNextPage(
-                                VerifDataClass(
-                                userId = Firebase.auth.currentUser?.uid ?: UUID.randomUUID().toString(),
-                                accountType = "author",
-                                document1 = selectedImageUri.value ?: Uri.EMPTY,
-                                document2 = Uri.EMPTY
-                            )
-                            )
+                            if(selectedImageUri.value != null){
+                                onNextPage(
+                                    VerifDataClass(
+                                        userId = Firebase.auth.currentUser?.uid ?: UUID.randomUUID().toString(),
+                                        accountType = "author",
+                                        document1 = selectedImageUri.value ?: Uri.EMPTY,
+                                        document2 = Uri.EMPTY
+                                    )
+                                )
+                            }
                         }, contentAlignment = Alignment.Center){
                             Text(text = "Simpan dan lanjutkan", fontSize = 16.sp, color = CoinvestDarkPurple)
                         }

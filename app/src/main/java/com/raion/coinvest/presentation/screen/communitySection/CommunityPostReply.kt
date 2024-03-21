@@ -2,6 +2,7 @@ package com.raion.coinvest.presentation.screen.communitySection
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -49,7 +50,8 @@ fun CommunityPostReply(
     articleList: MutableList<PostDataClass>,
     articleId: String,
     onTapPost: () -> Unit,
-    onTapProfile: (UserDataClass) -> Unit
+    onTapProfile: (UserDataClass) -> Unit,
+    onTapBack: () -> Unit
 ){
     val thisArticle   = articleList.filter { article -> article.postId.equals(articleId) }
     val replyList     = remember { mutableStateOf<MutableList<CommentDataClass>>(mutableListOf()) }
@@ -87,7 +89,8 @@ fun CommunityPostReply(
                                 CoinvestBase
                             } else {
                                 CoinvestBlack
-                            }
+                            },
+                            modifier = Modifier.clickable { onTapBack() }
                         )
                         Text(
                             text = "Forum & Komunitas",

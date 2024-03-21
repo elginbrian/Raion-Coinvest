@@ -66,7 +66,8 @@ fun CommunityPostReplying(
     articleList: MutableList<PostDataClass>,
     articleId: String,
     onUploadReply: (CommentDataClass) -> Unit,
-    onTapProfile: (UserDataClass) -> Unit
+    onTapProfile: (UserDataClass) -> Unit,
+    onTapBack: () -> Unit,
 ){
     val thisArticle   = articleList.filter { article -> article.postId.equals(articleId) }
 
@@ -109,7 +110,8 @@ fun CommunityPostReplying(
                                 CoinvestBase
                             } else {
                                 CoinvestBlack
-                            }
+                            },
+                            modifier = Modifier.clickable { onTapBack() }
                         )
                         Text(
                             text = "Forum & Komunitas",

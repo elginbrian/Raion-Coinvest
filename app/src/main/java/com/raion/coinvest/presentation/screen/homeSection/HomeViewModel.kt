@@ -23,6 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val emailAuthRepository: EmailAuthRepository,
     private val apiRepository: ApiRepository,
     private val courseCollections: CourseCollections,
     private val videoRepository: VideoRepository,
@@ -31,6 +32,8 @@ class HomeViewModel @Inject constructor(
 ): ViewModel() {
     private var isFetching = false
     private var isFetching2 = false
+    fun updateUserData(userDataClass: UserDataClass) = viewModelScope.launch { emailAuthRepository.updateAuthData(userDataClass) }
+
     fun getTrendingSearchList(
         onFinished: (GetTrendingSearchList) -> Unit
     ){

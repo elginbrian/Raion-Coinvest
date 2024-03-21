@@ -72,7 +72,8 @@ import java.util.UUID
 @Composable
 //@Preview
 fun NewsCreate(
-    onCreateNews: (NewsDataClass) -> Unit
+    onCreateNews: (NewsDataClass) -> Unit,
+    onTapBack: () -> Unit
 ){
 
     val header           = remember { mutableStateOf("") }
@@ -96,7 +97,9 @@ fun NewsCreate(
                 verticalAlignment     = Alignment.CenterVertically
             ){
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button")
+                    Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", modifier = Modifier.clickable {
+                        onTapBack()
+                    })
                     Spacer(modifier = Modifier.padding(8.dp))
                     Text(text = "Buat Berita", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
                 }

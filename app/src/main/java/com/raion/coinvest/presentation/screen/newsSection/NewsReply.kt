@@ -3,6 +3,7 @@ package com.raion.coinvest.presentation.screen.newsSection
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +42,7 @@ import com.raion.coinvest.data.remote.firestore.model.LikeDataClass
 import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
+import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestDarkPurple
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostCard
 
@@ -49,7 +52,8 @@ fun NewsReply(
     newsId: String,
     viewModel: NewsViewModel,
     onTapFloatingButton: () -> Unit,
-    onTapProfile: (UserDataClass) -> Unit
+    onTapProfile: (UserDataClass) -> Unit,
+    onTapBack: () -> Unit
 ){
     val commentList = remember {
         mutableStateOf<MutableList<CommentDataClass>>(mutableListOf())
@@ -67,7 +71,11 @@ fun NewsReply(
         topBar = {
             Card(
                 shape = RectangleShape,
-                colors = CardDefaults.cardColors(CoinvestBase)
+                colors = CardDefaults.cardColors(if(isSystemInDarkTheme()){
+                    MaterialTheme.colorScheme.background
+                } else {
+                    CoinvestBase
+                })
             ){
                 Column(
                     modifier = Modifier.padding(16.dp),
@@ -81,8 +89,16 @@ fun NewsReply(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment     = Alignment.CenterVertically
                     ){
-                        Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button")
-                        Text(text = "Komentar", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", modifier = Modifier.clickable { onTapBack() }, tint =  if(isSystemInDarkTheme()){
+                            CoinvestBase
+                        } else {
+                            CoinvestBlack
+                        })
+                        Text(text = "Komentar", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if(isSystemInDarkTheme()){
+                            CoinvestBase
+                        } else {
+                            CoinvestBlack
+                        })
                         Spacer(modifier = Modifier.width(20.dp))
                     }
                 }

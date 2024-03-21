@@ -52,7 +52,8 @@ fun MentorVideoPlayer(
     viewModel: MentorViewModel,
     courseId: String,
     courseList: MutableList<CourseDataClass>,
-    onChangeTab: (Int) -> Unit
+    onChangeTab: (Int) -> Unit,
+    onTapBack: () -> Unit
 ){
     val thisCourse = courseList.filter { course -> course.courseId.equals(courseId) }
 
@@ -68,7 +69,7 @@ fun MentorVideoPlayer(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment     = Alignment.CenterVertically
             ){
-                Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint = Color.White)
+                Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Back button", tint = Color.White, modifier = Modifier.clickable { onTapBack() })
             }
         },
         content = {
