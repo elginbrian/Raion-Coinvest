@@ -61,7 +61,7 @@ fun CompactCourseCard(
         AsyncImage(model = course.courseOwner.profilePicture, contentDescription = "course banner",
             modifier = Modifier
                 .fillMaxWidth()
-                .height(84.dp).clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)), contentScale = ContentScale.Crop)
+                .height(100.dp).clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)), contentScale = ContentScale.Crop)
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceBetween) {

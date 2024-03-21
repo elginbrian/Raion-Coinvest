@@ -7,6 +7,9 @@ enum class CoinvestUserFlow{
 
     // Login Section
     IntroScreen,
+    IntroScreen2,
+    IntroScreen3,
+    IntroScreen4,
     LoginScreen,                // 1
     RoleSectionScreen,          // 2
 

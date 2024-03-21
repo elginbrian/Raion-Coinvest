@@ -36,10 +36,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
 import com.raion.coinvest.data.remote.api.model.Data
 import com.raion.coinvest.data.remote.api.model.GetTrendingSearchList
 import com.raion.coinvest.data.remote.api.model.GetTrendingStocks
@@ -156,15 +159,37 @@ fun StocksScreen(
                                     }
                                     Spacer(modifier = Modifier.padding(8.dp))
                                     Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
-                                        Text(text = it.item.name, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
-                                        Text(text = "rank: " + it.item.marketCapRank)
+                                        Text(text = it.item.symbol, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                                        Text(text = it.item.data.priceChangePercentage24h["usd"].toString().substring(0,4)+"%", color = if(it.item.data.priceChangePercentage24h["usd"] ?: 0.0 >= 0){
+                                            if(isSystemInDarkTheme()){
+                                                Color.Green
+                                            } else {
+                                                Color(0xFF056927)
+                                            }
+                                        } else {
+                                            Color(0xFFF00500)
+                                        })
                                     }
+                                }
+                                Card(modifier = Modifier
+                                    .width(120.dp)
+                                    .height(40.dp),
+                                    colors = CardDefaults.cardColors(Color.Transparent)
+                                ) {
+                                    AsyncImage(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data(it.item.data.sparkline)
+                                            .decoderFactory(SvgDecoder.Factory())
+                                            .build(),
+                                        contentDescription = "sparkline",
+                                        modifier = Modifier.fillMaxSize()
+                                    )
                                 }
                                 Row(modifier = Modifier.fillMaxHeight()) {
                                     Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center,
                                         horizontalAlignment = Alignment.End) {
                                         Text(text = it.item.data.price, fontSize = 16.sp)
-                                        Text(text = "1 " + it.item.symbol)
+                                        Text(text = it.item.data.marketCap, fontSize = 10.sp)
                                     }
                                 }
                             }

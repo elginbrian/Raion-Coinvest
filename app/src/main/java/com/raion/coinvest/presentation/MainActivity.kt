@@ -9,6 +9,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.mutableStateOf
@@ -30,7 +32,6 @@ import com.raion.coinvest.data.remote.firestore.model.PostDataClass
 import com.raion.coinvest.data.remote.firestore.model.UserDataClass
 import com.raion.coinvest.presentation.designSystem.CoinvestBase
 import com.raion.coinvest.presentation.designSystem.CoinvestBlack
-import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
 import com.raion.coinvest.presentation.screen.communitySection.CommunityCreatePost
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostReply
 import com.raion.coinvest.presentation.screen.communitySection.CommunityPostReplying
@@ -41,7 +42,7 @@ import com.raion.coinvest.presentation.screen.debugging.DebugScreen5
 import com.raion.coinvest.presentation.screen.debugging.DebugViewModel
 import com.raion.coinvest.presentation.screen.debugging.DebugViewModel2
 import com.raion.coinvest.presentation.designSystem.CoinvestTheme
-import com.raion.coinvest.presentation.screen.loginSection.LoginHome
+import com.raion.coinvest.presentation.screen.loginSection.LoginScreen
 import com.raion.coinvest.presentation.screen.loginSection.LoginViewModel
 import com.raion.coinvest.presentation.navigation.CoinvestUserFlow
 import com.raion.coinvest.presentation.screen.communityProfileSection.CommunityFollowerScreen
@@ -50,7 +51,10 @@ import com.raion.coinvest.presentation.screen.communitySearchSection.CommunitySe
 import com.raion.coinvest.presentation.screen.communitySearchSection.CommunitySearchScreen
 import com.raion.coinvest.presentation.screen.homeSection.DashboardAwal
 import com.raion.coinvest.presentation.screen.homeSection.HomeViewModel
-import com.raion.coinvest.presentation.screen.loginSection.LoginAwal3
+import com.raion.coinvest.presentation.screen.loginSection.IntroScreen1
+import com.raion.coinvest.presentation.screen.loginSection.IntroScreen2
+import com.raion.coinvest.presentation.screen.loginSection.IntroScreen3
+import com.raion.coinvest.presentation.screen.loginSection.IntroScreen4
 import com.raion.coinvest.presentation.screen.mentorSection.MentorCreate
 import com.raion.coinvest.presentation.screen.mentorSection.MentorNew
 import com.raion.coinvest.presentation.screen.mentorSection.MentorScreen
@@ -131,13 +135,83 @@ class MainActivity : ComponentActivity() {
                         CoinvestBase
                     })
                 ){
-                    composable(CoinvestUserFlow.IntroScreen.name){
-                        LoginAwal3 {
+                    composable(CoinvestUserFlow.IntroScreen.name, enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(700)
+                            )
+                        }){
+                        IntroScreen1 {
+                            navController.navigate(CoinvestUserFlow.IntroScreen2.name)
+                        }
+                    }
+                    composable(CoinvestUserFlow.IntroScreen2.name, enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(700)
+                            )
+                        }){
+                        IntroScreen2 {
+                            navController.navigate(CoinvestUserFlow.IntroScreen3.name)
+                        }
+                    }
+                    composable(CoinvestUserFlow.IntroScreen3.name, enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(700)
+                            )
+                        }){
+                        IntroScreen3 {
+                            navController.navigate(CoinvestUserFlow.IntroScreen4.name)
+                        }
+                    }
+                    composable(CoinvestUserFlow.IntroScreen4.name, enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(700)
+                            )
+                        }){
+                        IntroScreen4 {
                             navController.navigate(CoinvestUserFlow.LoginScreen.name)
                         }
                     }
 
-                    composable(CoinvestUserFlow.LoginScreen.name){
+                    composable(CoinvestUserFlow.LoginScreen.name, enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(700)
+                            )
+                        }){
                         val viewModel: LoginViewModel by viewModels()
                         val launcher = rememberLauncherForActivityResult(
                             contract = ActivityResultContracts.StartIntentSenderForResult(),
@@ -150,9 +224,9 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         )
-                        LoginHome(
+                        LoginScreen(
                             viewModel = viewModel,
-                            onSignInWithEmail = { return@LoginHome viewModel.createUserWithEmail(it.first, it.second) },
+                            onSignInWithEmail = { return@LoginScreen viewModel.createUserWithEmail(it.first, it.second) },
                             onSignInWithGoogle = {
                                 lifecycleScope.launch {
                                     val signInIntentSender = googleAuthClient.signIn()
@@ -168,7 +242,18 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     val roleViewModel: RoleViewModel by viewModels()
-                    composable(CoinvestUserFlow.RoleSectionScreen.name){
+                    composable(CoinvestUserFlow.RoleSectionScreen.name, enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(700)
+                            )
+                        }){
                         RoleScreen(
                             onClick = { when(it){
                                 -1 -> { navController.navigate(CoinvestUserFlow.RoleSectionScreen.name) }
@@ -179,7 +264,18 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     var prevData: VerifDataClass = VerifDataClass("","", Uri.EMPTY, Uri.EMPTY)
-                    composable(CoinvestUserFlow.AuthorRegisterScreen.name){
+                    composable(CoinvestUserFlow.AuthorRegisterScreen.name, enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(700)
+                            )
+                        }){
 
                         BerkasPengalaman(onTapBack = {
                             navController.navigate(CoinvestUserFlow.RoleSectionScreen.name)
@@ -189,7 +285,18 @@ class MainActivity : ComponentActivity() {
                         }
                         )
                     }
-                    composable(CoinvestUserFlow.AuthorRegisterScreen2.name){
+                    composable(CoinvestUserFlow.AuthorRegisterScreen2.name, enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(700)
+                            )
+                        }){
 
                         BerkasPortofolio(
                             onNextPage = {
@@ -202,7 +309,18 @@ class MainActivity : ComponentActivity() {
 
 
                     }
-                    composable(CoinvestUserFlow.AuthorRegisterScreen3.name){
+                    composable(CoinvestUserFlow.AuthorRegisterScreen3.name, enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(700)
+                            )
+                        }){
                         DokumenTerunggah(
                             onFinished = {
                                 navController.navigate(CoinvestUserFlow.HomeScreen.name)
@@ -214,7 +332,18 @@ class MainActivity : ComponentActivity() {
 
                     }
 
-                    composable(CoinvestUserFlow.MemberRegisterScreen.name){
+                    composable(CoinvestUserFlow.MemberRegisterScreen.name, enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(700)
+                            )
+                        }){
                         MemberVerivRole(
                             onFinished = {
                                 navController.navigate(CoinvestUserFlow.HomeScreen.name)
@@ -224,7 +353,18 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    composable(CoinvestUserFlow.MentorRegisterScreen.name){
+                    composable(CoinvestUserFlow.MentorRegisterScreen.name, enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(700)
+                            )
+                        }){
                         SertifikatOJK(onNextPage = {
                             navController.navigate(CoinvestUserFlow.MentorRegisterScreen2.name)
                             prevData = it
@@ -232,7 +372,18 @@ class MainActivity : ComponentActivity() {
                             navController.navigate(CoinvestUserFlow.RoleSectionScreen.name)
                         })
                     }
-                    composable(CoinvestUserFlow.MentorRegisterScreen2.name){
+                    composable(CoinvestUserFlow.MentorRegisterScreen2.name, enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(700)
+                            )
+                        }){
                         SertifikatMentor(
                             onNextPage = {
                                 prevData = it
@@ -242,7 +393,18 @@ class MainActivity : ComponentActivity() {
                             onTapBack = { navController.navigate(CoinvestUserFlow.MentorRegisterScreen.name) }
                         )
                     }
-                    composable(CoinvestUserFlow.MentorRegisterScreen3.name){
+                    composable(CoinvestUserFlow.MentorRegisterScreen3.name, enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(700)
+                            )
+                        }){
                         MentorDokumenTerunggah(
                             prevData = prevData,
                             onFinished = {

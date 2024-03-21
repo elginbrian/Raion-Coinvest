@@ -56,6 +56,7 @@ import com.raion.coinvest.presentation.designSystem.CoinvestBlack
 import com.raion.coinvest.presentation.designSystem.CoinvestBorder
 import com.raion.coinvest.presentation.designSystem.CoinvestGrey
 import com.raion.coinvest.presentation.designSystem.CoinvestLightGrey
+import com.raion.coinvest.presentation.designSystem.CoinvestLightPurple
 import com.raion.coinvest.presentation.designSystem.CoinvestPurple
 import com.raion.coinvest.presentation.widget.transparentTextField.TransparentTextField
 
@@ -82,7 +83,7 @@ fun MemberVerivRole(
     )
 
     Scaffold(
-        containerColor = CoinvestGrey,
+        containerColor = CoinvestLightPurple,
         topBar = {
             Row(
                 modifier = Modifier

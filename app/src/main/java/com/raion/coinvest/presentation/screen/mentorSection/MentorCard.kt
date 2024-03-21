@@ -84,7 +84,11 @@ fun MentorCard(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ){
-                    Text(text = "Rp."+course.coursePrice)
+                    Text(text = "Rp."+course.coursePrice, color =  if(isSystemInDarkTheme()){
+                        CoinvestBase
+                    } else {
+                        CoinvestBlack
+                    })
 
                     Card(modifier = Modifier
                         .width(70.dp)
